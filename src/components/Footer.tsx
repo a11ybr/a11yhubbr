@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { Github, Twitter, Linkedin, Heart } from "lucide-react";
-
+import { Linkedin, Instagram, Github, Twitter, Facebook, Heart } from "lucide-react";
 const footerLinks = {
   plataforma: [
     { label: "Página inicial", href: "/" },
@@ -48,9 +47,11 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3">
               {[
-                { icon: Github, label: "GitHub", href: "#" },
-                { icon: Twitter, label: "Twitter", href: "#" },
-                { icon: Linkedin, label: "LinkedIn", href: "#" },
+                { icon: Github, label: "GitHub", href: "http://GitHub.com/a11yhubbr" },
+                { icon: Twitter, label: "Twitter", href: "http://Twitter.com/a11yhubbr" },
+                { icon: Linkedin, label: "LinkedIn", href: "http://LinkedIn.com/company/a11yhubbr" },
+                { icon: Instagram, label: "Instagram", href: "http://Instagram.com/a11yhubbr" },
+                { icon: Facebook, label: "Facebook", href: "http://Facebook.com/a11yhubbr" },
               ].map(({ icon: Icon, label, href }) => (
                 <a
                   key={label}
@@ -58,7 +59,7 @@ export function Footer() {
                   aria-label={label}
                   className="w-8 h-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-primary hover:bg-primary-light transition-colors no-underline"
                 >
-                  <Icon size={16} aria-hidden />
+                  <Icon size={16} role="img" aria-label={label} />
                 </a>
               ))}
             </div>
