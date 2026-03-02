@@ -7,8 +7,8 @@ type Props = {
 
 export function EventoFields({ form, onChange }: Props) {
   return (
-    <fieldset className="border rounded-xl p-6 space-y-4">
-      <legend className="text-sm font-bold">Evento</legend>
+    <fieldset className="space-y-4">
+      <legend className="block text-lg font-medium">Destaques do Evento</legend>
 
       <select
         className="input-base"

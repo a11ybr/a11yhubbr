@@ -1,52 +1,54 @@
 export type FormState = {
-    tipo: string;
-    titulo: string;
-    url: string;
-    descricao: string;
+  tipo: string;
+  titulo: string;
+  url: string;
+  descricao: string;
 
-    pais: string;
-    ano: string;
-    publicoAlvo: string[];
-    nivel: string;
+  ano?: number;
+  publicoAlvo: string[];
+  nivel: string;
 
-    imagem: File | null;
-    imagemAlt: string;
+  imagem: File | null;
+  imagemAlt: string;
 
-    // Sites
-    modeloNegocio?: string;
-    estagioProduto?: string;
-    modeloAcesso?: string;
+  // Multimídia
+  tema?: string;
+  formato?: string[];
+  formatoOutro?: string;
+  plataformas?: string[];
+  plataformaOutro?: string;
+  frequencia?: string;
+  transcricao?: boolean;
+  legendas?: string;
+  recursosAdicionais?: string[];
 
-    // Podcasts
-    tema?: string;
-    formato: string[]
-    formatoOutro?: string
+  // Sites
+  modeloNegocio?: string;
+  estagioProduto?: string;
+  modeloAcesso?: string;
 
-    // Cursos
-    modalidade?: string;
-    gratuitoPago?: string;
+  // Cursos
+  modalidade?: string;
+  gratuitoPago?: string;
 
-    // Comunidades
-    plataforma?: string;
-    acesso?: string;
+  // Comunidade
+  plataforma?: string;
+  acesso?: string;
 
-    // Eventos
-    tipoEvento?: string;
-    categoriaEvento?: string;
+  // Eventos
+  tipoEvento?: string;
+  categoriaEvento?: string;
 
-    // Ferramentas
-    tipoFerramenta?: string;
-    modeloFerramenta?: string;
+  // Ferramentas
+  tipoFerramenta?: string;
+  modeloFerramenta?: string;
 
-    // Artigos
-    autoria?: string;
-    tipoArtigo?: string;
+  // Artigos
+  autoria?: string;
+  tipoArtigo?: string;
+  tipoArtigoOutro?: string;
 
-    // YouTube
-    focoCanal?: string;
-    tipoConteudoYT?: string;
-
-    nome: string;
-    email: string;
-    aceite: boolean;
+  nome: string;
+  email: string;
+  aceite: boolean;
 };

@@ -70,11 +70,17 @@ export function ProfileCard({
       {/* Links */}
       {links.length > 0 && (
         <div className="flex items-center gap-2 pt-1 border-t border-border">
-          {links.map((link) => {
-            const Icon = link.icon === "linkedin" ? Linkedin : link.icon === "globe" ? Globe : ExternalLink;
+          {links.map((link, index) => {
+            const Icon =
+              link.icon === "linkedin"
+                ? Linkedin
+                : link.icon === "globe"
+                  ? Globe
+                  : ExternalLink;
+
             return (
               <a
-                key={link.href}
+                key={`${link.label}-${index}`}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"

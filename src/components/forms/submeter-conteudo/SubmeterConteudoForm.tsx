@@ -7,13 +7,12 @@ import { ImageFields } from "./ImageFields";
 import { SubmitterFields } from "./SubmitterFields";
 
 import { SitesFields } from "./types-specific/SitesFields";
-import { PodcastFields } from "./types-specific/PodcastFields";
+import { MultimidiaFields } from "./types-specific/MultimidiaFields";
 import { CursoFields } from "./types-specific/CursoFields";
 import { ComunidadeFields } from "./types-specific/ComunidadeFields";
 import { EventoFields } from "./types-specific/EventoFields";
 import { FerramentaFields } from "./types-specific/FerramentaFields";
 import { ArtigoFields } from "./types-specific/ArtigoFields";
-import { YouTubeFields } from "./types-specific/YouTubeFields";
 
 const validateByType = (form: FormState): string[] => {
   const errors: string[] = [];
@@ -33,11 +32,18 @@ const validateByType = (form: FormState): string[] => {
       if (!form.estagioProduto) errors.push("Selecione o estágio do produto.");
       if (!form.modeloAcesso) errors.push("Selecione o modelo de acesso.");
       break;
-
-    case "podcasts":
-      if (!form.tema) errors.push("Informe o tema principal do podcast.");
-      if (!form.formato) errors.push("Selecione o formato do podcast.");
+    case "canal":
+      if (!form.tema) errors.push("Informe o tema.");
+      if (!form.formato || form.formato.length === 0)
+        errors.push("Selecione ao menos um formato.");
+      if (!form.plataformas || form.plataformas.length === 0)
+        errors.push("Selecione ao menos uma plataforma.");
       break;
+
+    // case "podcasts":
+    //   if (!form.tema) errors.push("Informe o tema principal do podcast.");
+    //   if (!form.formato) errors.push("Selecione o formato do podcast.");
+    //   break;
 
     case "cursos":
       if (!form.modalidade) errors.push("Selecione a modalidade do curso.");
@@ -64,11 +70,11 @@ const validateByType = (form: FormState): string[] => {
       if (!form.tipoArtigo) errors.push("Selecione o tipo de artigo.");
       break;
 
-    case "youtube":
-      if (!form.focoCanal) errors.push("Selecione o foco do canal.");
-      if (!form.tipoConteudoYT)
-        errors.push("Selecione o tipo de conteúdo do canal.");
-      break;
+    // case "youtube":
+    //   if (!form.focoCanal) errors.push("Selecione o foco do canal.");
+    //   if (!form.tipoConteudoYT)
+    //     errors.push("Selecione o tipo de conteúdo do canal.");
+    //   break;
   }
 
   return errors;
@@ -190,9 +196,6 @@ export function SubmeterConteudoForm() {
       {form.tipo === "sites" && (
         <SitesFields form={form} onChange={handleChange} />
       )}
-      {form.tipo === "podcasts" && (
-        <PodcastFields form={form} onChange={handleChange} />
-      )}
       {form.tipo === "cursos" && (
         <CursoFields form={form} onChange={handleChange} />
       )}
@@ -208,8 +211,8 @@ export function SubmeterConteudoForm() {
       {form.tipo === "artigos" && (
         <ArtigoFields form={form} onChange={handleChange} />
       )}
-      {form.tipo === "youtube" && (
-        <YouTubeFields form={form} onChange={handleChange} />
+      {form.tipo === "multimidia" && (
+        <MultimidiaFields form={form} onChange={handleChange} />
       )}
 
       <SubmitterFields form={form} onChange={handleChange} />

@@ -27,7 +27,7 @@ export default function SubmeterConteudoPage() {
           Contribua com a comunidade enviando recursos relevantes sobre acessibilidade.
         </p>
         <p className="text-muted-foreground pt-4 text-sm leading-relaxed">
-          Campos marcados com <span aria-hidden="true" className="text-destructive">*</span> são obrigatórios
+          Campos marcados com <span aria-hidden="true" className="text-destructive">*</span> são obrigatórios.
         </p>
       </header>
 

@@ -8,19 +8,26 @@ type Props = {
 export function SubmitterFields({ form, onChange }: Props) {
     return (
         <fieldset className="space-y-4">
-            <legend className="text-sm font-bold">
-                Quem está submetendo?
+            <legend className="block text-lg font-medium">
+                Responsável pela submissão
             </legend>
-
-            <input
-                type="text"
-                className="input-base"
-                placeholder="Nome"
-                value={form.nome}
-                onChange={(e) => onChange("nome", e.target.value)}
-                required
-            />
-
+            <p className="mt-4 text-xs text-muted-foreground text-left">
+                Precisamos dessas informações para entrar em contato caso haja dúvidas sobre o conteúdo submetido.?<br />Elas não serão públicas.
+            </p>
+            <div className="space-y-2">
+                <label htmlFor="content-name-submitter" className="block text-sm font-medium">
+                    Qual seu nome?<span aria-hidden="true" className="text-destructive">*</span>
+                </label>
+                <input
+                    id="content-name-submitter"
+                    type="text"
+                    className="input-base"
+                    placeholder="Nome"
+                    value={form.nome}
+                    onChange={(e) => onChange("nome", e.target.value)}
+                    required
+                />
+            </div>
             <input
                 type="email"
                 className="input-base"

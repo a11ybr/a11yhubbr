@@ -7,31 +7,73 @@ type Props = {
 
 export function CursoFields({ form, onChange }: Props) {
   return (
-    <fieldset className="border rounded-xl p-6 space-y-4">
-      <legend className="text-sm font-bold">Curso ou material</legend>
+    <fieldset className="space-y-4">
+      <legend className="block text-lg font-medium">Destaques do Curso ou Material</legend>
+      <div className="space-y-3">
+        <span className="block text-sm font-medium">
+          Modalidade
+          <span aria-hidden="true" className="text-destructive">*</span>
+        </span>
 
-      <select
-        className="input-base"
-        value={form.modalidade || ""}
-        onChange={(e) => onChange("modalidade", e.target.value)}
-        required
-      >
-        <option value="">Modalidade</option>
-        <option value="online">Online</option>
-        <option value="presencial">Presencial</option>
-        <option value="hibrido">Híbrido</option>
-      </select>
+        <div className="flex flex-row gap-2">
+          {[
+            { value: "online", label: "Online" },
+            { value: "presencial", label: "Presencial" },
+            { value: "hibrido", label: "Híbrido" },
+          ].map((option) => (
+            <div className="flex flex-row pl-2 text-sm gap-8">
+              <label
+                key={option.value}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="modalidade"
+                  value={option.value}
+                  checked={form.modalidade === option.value}
+                  onChange={(e) =>
+                    onChange("modalidade", e.target.value)
+                  }
+                  required
+                />
+                <span>{option.label}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="space-y-3">
+        <span className="block text-sm font-medium">
+          Preço
+          <span aria-hidden="true" className="text-destructive">*</span>
+        </span>
 
-      <select
-        className="input-base"
-        value={form.gratuitoPago || ""}
-        onChange={(e) => onChange("gratuitoPago", e.target.value)}
-        required
-      >
-        <option value="">Gratuito ou pago</option>
-        <option value="gratuito">Gratuito</option>
-        <option value="pago">Pago</option>
-      </select>
+        <div className="flex flex-row gap-2">
+          {[
+            { value: "gratuito", label: "Gratuito" },
+            { value: "pago", label: "Pago" },
+          ].map((option) => (
+            <div className="flex flex-row pl-2 text-sm gap-8">
+              <label
+                key={option.value}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="gratuitoPago"
+                  value={option.value}
+                  checked={form.gratuitoPago === option.value}
+                  onChange={(e) =>
+                    onChange("gratuitoPago", e.target.value)
+                  }
+                  required
+                />
+                <span>{option.label}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
     </fieldset>
   );
 }

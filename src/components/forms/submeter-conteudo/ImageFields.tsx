@@ -11,7 +11,7 @@ export function ImageFields({ form, onChange }: Props) {
 
 
     <fieldset className="space-y-4">
-      <legend className="block text-lg font-medium">Imagem representativa</legend>
+      <legend className="block text-lg font-medium">Foto, imagem ou logotipo</legend>
       <label className="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition">
         <Upload className="mb-3 h-6 w-6 text-muted-foreground" />
         <span className="text-sm font-medium">

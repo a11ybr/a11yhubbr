@@ -7,7 +7,8 @@ import { NewsletterModule } from "@/components/NewsletterModule";
 import { Tag } from "@/components/ui/Tag";
 import { Button } from "../components/ui/button";
 import { Button as DayPickerButton } from "react-day-picker";
-
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase"; // ajuste se necessário
 
 const categories: { label: string; count: number; icon: LucideIcon }[] = [
   { label: "WCAG & Diretrizes", count: 48, icon: ClipboardList },
@@ -112,14 +113,52 @@ const upcomingEvents = [
   }];
 
 
-const stats = [
-  { label: "Conteúdos publicados", value: "1.240+", icon: FileText },
-  { label: "Profissionais cadastrados", value: "850+", icon: Users },
-  { label: "Eventos realizados", value: "96", icon: CalendarDays },
-  { label: "Categorias ativas", value: "18", icon: Layers }];
 
 
+type CommunityStats = {
+  active_profiles: number;
+  represented_specializations: number;
+  published_contents: number;
+  approved_events: number;
+};
 export default function Index() {
+  const [stats, setStats] = useState<CommunityStats | null>(null);
+
+  useEffect(() => {
+    async function fetchStats() {
+      const { data } = await supabase
+        .from("community_stats")
+        .select("*")
+        .eq("id", 1)
+        .single();
+
+      if (data) setStats(data);
+    }
+
+    fetchStats();
+
+    const channel = supabase
+      .channel("community-stats")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "community_stats",
+          filter: "id=eq.1",
+        },
+        (payload) => {
+          console.log("Realtime payload:", payload);
+          setStats(payload.new as CommunityStats);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   return (
     <main id="main-content">
       {/* Hero */}
@@ -136,44 +175,104 @@ export default function Index() {
               <span style={{ color: "hsl(var(--primary))" }}>pela comunidade</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-              O a11yBR reúne artigos, tutoriais, projetos, recursos e profissionais dedicados à inclusão digital no Brasil. Conteúdo colaborativo, revisado e sempre gratuito.
+              O <strong>A11yBR</strong> reúne artigos, tutoriais, projetos, recursos e profissionais dedicados à inclusão digital no Brasil. Conteúdo colaborativo, revisado e sempre gratuito.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
-                to="/conteudo"
-              >
-
-                <Button variant="default">
-                  Explorar conteúdo <ArrowRight size={15} aria-hidden />                </Button>
+                to="/conteudo">
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-primary-foreground transition-colors flex-shrink-0"
+                  style={{ background: "hsl(var(--primary))" }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "hsl(var(--primary-hover))";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "hsl(var(--primary))";
+                  }}
+                >
+                  Inscrever-se
+                  <ArrowRight size={15} aria-hidden />
+                </button>
               </Link>
               <Link
-                to="/submeter"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-semibold text-foreground border border-border hover:border-primary hover:text-primary no-underline transition-colors bg-background">
-
-                Submeter conteúdo
+                to="/submeter">
+                <Button variant="ghost" className="flex items-center gap-2">
+                  Submeter conteúdo
+                </Button>
               </Link>
+
             </div>
           </div>
         </div>
-      </section>
+        {/* Stats strip */}
+        {stats && (
+          <div
+            aria-label="Estatísticas da comunidade"
+            className="border-y container-site mb-16 rounded-lg border py-12"
+            style={{ background: "hsl(var(--card))" }}
+          >
 
-      {/* Stats strip */}
-      <section
-        aria-label="Estatísticas da comunidade"
-        className="border-b border-border py-[32px] bg-primary"
-        style={{ background: "hsl(var(--primary))" }}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0 lg:divide-x lg:divide-white/20">
 
-        <div className="container-site py-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x lg:divide-white/20">
-            {stats.map(({ label, value, icon: Icon }) =>
-              <div key={label} className="flex flex-col items-start lg:items-center text-center gap-1 lg:px-6">
-                <span className="text-2xl font-extrabold text-white">{value}</span>
-                <span className="text-xs font-medium text-white/70">{label}</span>
+              {/* Conteúdos */}
+              <div className="flex flex-col items-center text-center gap-3 lg:px-8">
+                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center">
+                  <FileText size={24} className="text-primary" aria-hidden />
+                </div>
+                <span className="text-3xl font-extrabold text-foreground">
+                  {stats.published_contents}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Conteúdos <br />publicados
+                </span>
               </div>
-            )}
+
+              {/* Perfis */}
+              <div className="flex flex-col items-center text-center gap-3 lg:px-8">
+                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center">
+                  <Users size={24} className="text-primary" aria-hidden />
+                </div>
+                <span className="text-3xl font-extrabold text-foreground">
+                  {stats.active_profiles}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Perfis <br />ativos
+                </span>
+              </div>
+
+              {/* Eventos */}
+              <div className="flex flex-col items-center text-center gap-3 lg:px-8">
+                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center">
+                  <CalendarDays size={24} className="text-primary" aria-hidden />
+                </div>
+                <span className="text-3xl font-extrabold text-foreground">
+                  {stats.approved_events}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Eventos <br />catalogados
+                </span>
+              </div>
+
+              {/* Especializações */}
+              <div className="flex flex-col items-center text-center gap-3 lg:px-8">
+                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center">
+                  <Layers size={24} className="text-primary" aria-hidden />
+                </div>
+                <span className="text-3xl font-extrabold text-foreground">
+                  {stats.represented_specializations}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Especializações <br />representadas
+                </span>
+              </div>
+
+            </div>
           </div>
-        </div>
+        )}
       </section>
+
+
 
       {/* Categories */}
       <section

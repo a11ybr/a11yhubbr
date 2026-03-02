@@ -7,8 +7,8 @@ type Props = {
 
 export function FerramentaFields({ form, onChange }: Props) {
   return (
-    <fieldset className="border rounded-xl p-6 space-y-4">
-      <legend className="text-sm font-bold">Ferramenta</legend>
+    <fieldset className="space-y-4">
+      <legend className="block text-lg font-medium">Destaques da Ferramenta</legend>
 
       <select
         className="input-base"

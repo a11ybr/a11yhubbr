@@ -7,8 +7,8 @@ type Props = {
 
 export function YouTubeFields({ form, onChange }: Props) {
   return (
-    <fieldset className="border rounded-xl p-6 space-y-4">
-      <legend className="text-sm font-bold">Canal do YouTube</legend>
+    <fieldset className="space-y-4">
+      <legend className="block text-lg font-medium">Canal do Canal YouTube</legend>
 
       <select
         className="input-base"
