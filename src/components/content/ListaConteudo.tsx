@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { ContentCard } from "@/components/cards/ContentCard";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface Props {
   categoria: string;
@@ -12,6 +12,12 @@ export default function ListaConteudo({ categoria }: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!isSupabaseConfigured || !supabase) {
+        setDados([]);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
 
       const { data, error } = await supabase
@@ -39,9 +45,11 @@ export default function ListaConteudo({ categoria }: Props) {
           key={item.id}
           title={item.title}
           excerpt={item.description}
-          type={item.type}
+          type={item.type === "tutorial" || item.type === "projeto" ? item.type : "artigo"}
+          tags={Array.isArray(item.metadata?.publicoAlvo) ? item.metadata.publicoAlvo : []}
           href={item.url}
           author={item.author_name}
+          date={item.created_at ? new Date(item.created_at).toLocaleDateString("pt-BR") : "Sem data"}
         />
       ))}
     </div>

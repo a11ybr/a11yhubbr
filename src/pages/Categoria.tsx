@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import SidebarFiltros from "@/components/SidebarFiltros";
 
 export default function Categoria() {
@@ -17,6 +17,12 @@ export default function Categoria() {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
+    if (!isSupabaseConfigured || !supabase) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
     let query = supabase.from("contents").select("*");

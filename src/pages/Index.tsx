@@ -8,8 +8,7 @@ import { Tag } from "@/components/ui/Tag";
 import { Button } from "../components/ui/button";
 import { Button as DayPickerButton } from "react-day-picker";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase"; // ajuste se necessário
-
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 const categories: { label: string; count: number; icon: LucideIcon }[] = [
   { label: "WCAG & Diretrizes", count: 48, icon: ClipboardList },
   { label: "Tecnologia Assistiva", count: 32, icon: Accessibility },
@@ -125,6 +124,10 @@ export default function Index() {
   const [stats, setStats] = useState<CommunityStats | null>(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) {
+      return;
+    }
+
     async function fetchStats() {
       const { data } = await supabase
         .from("community_stats")
