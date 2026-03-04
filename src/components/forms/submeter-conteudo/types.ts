@@ -3,8 +3,9 @@ export type FormState = {
   titulo: string;
   url: string;
   descricao: string;
+  pais: string;
 
-  ano?: number;
+  ano?: number | "";
   publicoAlvo: string[];
   nivel: string;
 
@@ -47,6 +48,10 @@ export type FormState = {
   autoria?: string;
   tipoArtigo?: string;
   tipoArtigoOutro?: string;
+
+  // YouTube
+  focoCanal?: string;
+  tipoConteudoYT?: string;
 
   nome: string;
   email: string;
