@@ -278,7 +278,7 @@ export function SubmitEvent() {
                       aria-required="true"
                     />
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 flex-column gap-8 mb-6">
                     {/* Date and Time Slots */}
                     <label className="block mb-2">
                       Datas e horários do evento{" "}
