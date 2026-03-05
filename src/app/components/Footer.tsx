@@ -1,10 +1,11 @@
-import { Link } from "react-router";
+﻿import { Link } from "react-router";
 import {
   Github,
   Twitter,
   Linkedin,
   Instagram,
-  Facebook,Heart
+  Facebook,
+  Heart,
 } from "lucide-react";
 
 export function Footer() {
@@ -104,7 +105,6 @@ export function Footer() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Logo and Description */}
           <div className="lg:col-span-1">
             <Link
               to="/"
@@ -168,7 +168,6 @@ export function Footer() {
               comunidade.
             </p>
 
-            {/* Social Links */}
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -176,6 +175,8 @@ export function Footer() {
                   <a
                     key={social.name}
                     href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded"
                     aria-label={social.name}
                   >
@@ -189,7 +190,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Platform Links */}
           <div>
             <h2 className="text-sm uppercase tracking-wider text-primary mb-4 font-bold">
               Plataforma
@@ -210,7 +210,6 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Community Links */}
           <div>
             <h2 className="text-sm uppercase tracking-wider text-primary mb-4 font-bold">
               Comunidade
@@ -231,7 +230,6 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* About Links */}
           <div>
             <h2 className="text-sm uppercase tracking-wider text-primary mb-4 font-bold">
               Sobre
@@ -253,7 +251,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="border-t border-border mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} <span className="font-semibold">A11yBR</span>. Conteúdo
@@ -281,3 +278,4 @@ export function Footer() {
     </footer>
   );
 }
+

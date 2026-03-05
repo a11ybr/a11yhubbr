@@ -1,17 +1,15 @@
-import {
+﻿import {
   Briefcase,
   Building2,
   HandMetal,
   Eye,
   FileSpreadsheet,
-  MapPin,
-  ExternalLink,
   Waypoints,
   ArrowUpDown,
   Grid3x3,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { ProfileCard } from "../components/ProfileCard";
 import { Breadcrumb } from "../components/Breadcrumb";
 
@@ -24,14 +22,10 @@ type ItemsPerPage = 8 | 16 | 24 | 32 | 40 | "all";
 
 export function Community() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeFilter, setActiveFilter] = useState<
-    string | null
-  >(null);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("name-az");
-  const [itemsToShow, setItemsToShow] =
-    useState<ItemsPerPage>(8);
+  const [itemsToShow, setItemsToShow] = useState<ItemsPerPage>(8);
 
-  // Initialize filter from URL on mount
   useEffect(() => {
     const filterFromUrl = searchParams.get("tipo");
     if (filterFromUrl) {
@@ -59,7 +53,6 @@ export function Community() {
     },
   ];
 
-  // Mock data for demonstration
   const sampleProfiles = [
     {
       id: 1,
@@ -159,15 +152,11 @@ export function Community() {
     },
   ];
 
-  // Filter profiles based on active filter
   const filteredProfiles = activeFilter
-    ? sampleProfiles.filter(
-        (profile) => profile.type === activeFilter,
-      )
+    ? sampleProfiles.filter((profile) => profile.type === activeFilter)
     : sampleProfiles;
 
-  // Sort profiles based on selected sort option
-  const sortedProfiles = filteredProfiles.sort((a, b) => {
+  const sortedProfiles = [...filteredProfiles].sort((a, b) => {
     switch (sortBy) {
       case "name-az":
         return a.name.localeCompare(b.name);
@@ -182,7 +171,6 @@ export function Community() {
     }
   });
 
-  // Limit the number of profiles shown
   const profilesToShow =
     itemsToShow === "all"
       ? sortedProfiles
@@ -190,11 +178,9 @@ export function Community() {
 
   const handleFilterClick = (type: string) => {
     if (activeFilter === type) {
-      // Remove filter if clicking on active filter
       setActiveFilter(null);
       setSearchParams({});
     } else {
-      // Set new filter
       setActiveFilter(type);
       setSearchParams({ tipo: type });
     }
@@ -202,15 +188,11 @@ export function Community() {
 
   return (
     <div className="flex-1">
-      {/* Header */}
       <section className="bg-primary text-primary-foreground py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb items={[{ label: "Comunidade" }]} />
           <div className="flex items-center gap-4 mb-6">
-            <Waypoints
-              className="w-12 h-12"
-              aria-hidden="true"
-            />
+            <Waypoints className="w-12 h-12" aria-hidden="true" />
             <h1 className="text-4xl md:text-5xl">Comunidade</h1>
           </div>
           <p className="text-xl text-primary-foreground/90 max-w-2xl">
@@ -220,7 +202,6 @@ export function Community() {
         </div>
       </section>
 
-      {/* Profile Categories */}
       <section
         className="py-12 md:py-16"
         aria-label="Categorias de perfis"
@@ -263,7 +244,6 @@ export function Community() {
             })}
           </div>
 
-          {/* Sample Profiles */}
           <div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <h2 className="text-2xl md:text-3xl">
@@ -272,9 +252,7 @@ export function Community() {
                   : "Perfis"}
               </h2>
 
-              {/* Filter Controls */}
               <div className="flex flex-wrap gap-3 w-full sm:w-auto">
-                {/* Sort Dropdown */}
                 <div className="flex-1 sm:flex-none min-w-[200px]">
                   <label
                     htmlFor="sort-select"
@@ -324,7 +302,6 @@ export function Community() {
                   </div>
                 </div>
 
-                {/* Items Per Page Dropdown */}
                 <div className="flex-1 sm:flex-none min-w-[200px]">
                   <label
                     htmlFor="items-select"
@@ -410,12 +387,12 @@ export function Community() {
                 Faça parte da maior rede de profissionais de
                 acessibilidade do Brasil.
               </p>
-              <a
-                href="/submeter/perfil"
+              <Link
+                to="/submeter/perfil"
                 className="inline-block bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
                 Submeta seu perfil
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -423,3 +400,4 @@ export function Community() {
     </div>
   );
 }
+

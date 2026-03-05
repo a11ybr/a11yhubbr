@@ -1,6 +1,6 @@
-import { Link, useLocation } from "react-router";
+﻿import { Link, NavLink, useLocation } from "react-router";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const location = useLocation();
@@ -15,13 +15,14 @@ export function Header() {
     { name: "Newsletter", path: "/newsletter" },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   return (
     <header className="bg-white border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link
             to="/"
             className="text-2xl text-primary hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
@@ -79,42 +80,34 @@ export function Header() {
             </svg>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav
-            className="hidden md:block"
-            aria-label="Navegação principal"
-          >
+          <nav className="hidden md:block" aria-label="Navegação principal">
             <ul className="flex items-center gap-8">
               {navItems.map((item) => (
                 <li key={item.path}>
-                  <Link
+                  <NavLink
                     to={item.path}
-                    className={`transition-all focus:outline-none focus:ring-1 focus:ring-primary uppercase px-2 py-1 font-semibold ${
-                      isActive(item.path) 
-                        ? "text-primary underline decoration-2 underline-offset-4 hover:decoration-[3px]" 
-                        : "text-foreground hover:text-primary hover:underline hover:decoration-2 hover:underline-offset-4"
-                    }`}
-                    aria-current={
-                      isActive(item.path) ? "page" : undefined
+                    className={({ isActive }) =>
+                      `transition-all focus:outline-none focus:ring-1 focus:ring-primary uppercase px-2 py-1 font-semibold ${
+                        isActive
+                          ? "text-primary underline decoration-2 underline-offset-4 hover:decoration-[3px]"
+                          : "text-foreground hover:text-primary hover:underline hover:decoration-2 hover:underline-offset-4"
+                      }`
                     }
                   >
                     {item.name}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* Mobile menu button */}
           <button
             type="button"
             className="md:hidden p-2 rounded text-foreground hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
-            aria-label={
-              mobileMenuOpen ? "Fechar menu" : "Abrir menu"
-            }
+            aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
           >
             {mobileMenuOpen ? (
               <X className="h-6 w-6" aria-hidden="true" />
@@ -125,30 +118,23 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <nav
-          id="mobile-menu"
-          className="md:hidden border-t border-border bg-white"
-          aria-label="Navegação mobile"
-        >
+        <nav id="mobile-menu" className="md:hidden border-t border-border bg-white" aria-label="Navegação mobile">
           <ul className="px-4 py-4 space-y-3">
             {navItems.map((item) => (
               <li key={item.path}>
-                <Link
+                <NavLink
                   to={item.path}
-                  className={`block py-2 px-3 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary ${
-                    isActive(item.path)
-                      ? "bg-accent text-primary"
-                      : "text-foreground hover:bg-accent hover:text-primary"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-current={
-                    isActive(item.path) ? "page" : undefined
+                  className={({ isActive }) =>
+                    `block py-2 px-3 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary ${
+                      isActive
+                        ? "bg-accent text-primary"
+                        : "text-foreground hover:bg-accent hover:text-primary"
+                    }`
                   }
                 >
                   {item.name}
-                </Link>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -157,3 +143,4 @@ export function Header() {
     </header>
   );
 }
+

@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+﻿import { Link } from "react-router";
 import { AlertCircle } from "lucide-react";
 
 export function NotFound() {
@@ -22,3 +22,4 @@ export function NotFound() {
     </div>
   );
 }
+

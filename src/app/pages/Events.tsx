@@ -1,4 +1,13 @@
-import { Calendar, MapPin, ExternalLink, Clock, Users, ArrowUpDown, Grid3x3, Monitor, Video, Merge } from "lucide-react";
+﻿import {
+  Calendar,
+  MapPin,
+  ExternalLink,
+  Clock,
+  ArrowUpDown,
+  Grid3x3,
+  Video,
+  Merge,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { Breadcrumb } from "../components/Breadcrumb";
@@ -26,7 +35,6 @@ export function Events() {
   const [sortBy, setSortBy] = useState<SortOption>("date-new");
   const [itemsToShow, setItemsToShow] = useState<ItemsPerPage>(8);
 
-  // Initialize filter from URL on mount
   useEffect(() => {
     const filterFromUrl = searchParams.get("tipo");
     if (filterFromUrl) {
@@ -42,17 +50,14 @@ export function Events() {
 
   const handleFilterClick = (filterType: string) => {
     if (activeFilter === filterType) {
-      // Se clicar no filtro ativo, remove o filtro
       setActiveFilter(null);
       setSearchParams({});
     } else {
-      // Ativa o novo filtro
       setActiveFilter(filterType);
       setSearchParams({ tipo: filterType });
     }
   };
 
-  // Mock data de eventos
   const sampleEvents: Event[] = [
     {
       id: 1,
@@ -152,12 +157,10 @@ export function Events() {
     },
   ];
 
-  // Filtragem
   const filteredEvents = activeFilter
     ? sampleEvents.filter((event) => event.type === activeFilter)
     : sampleEvents;
 
-  // Ordenação
   const sortedEvents = [...filteredEvents].sort((a, b) => {
     switch (sortBy) {
       case "date-new":
@@ -173,18 +176,8 @@ export function Events() {
     }
   });
 
-  // Paginação
   const eventsToDisplay =
     itemsToShow === "all" ? sortedEvents : sortedEvents.slice(0, itemsToShow);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
-  };
 
   const getTypeColor = (type: Event["type"]) => {
     switch (type) {
@@ -199,7 +192,6 @@ export function Events() {
 
   return (
     <div className="flex-1">
-      {/* Header */}
       <section className="bg-primary text-primary-foreground py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb items={[{ label: "Eventos" }]} />
@@ -214,7 +206,6 @@ export function Events() {
         </div>
       </section>
 
-      {/* Filtros por tipo de evento */}
       <FilterControls
         title="Navegue por tipo"
         filters={eventTypes}
@@ -223,19 +214,15 @@ export function Events() {
         itemLabel="eventos"
       />
 
-      {/* Controles de ordenação e visualização */}
       <section className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
-          {/* Título */}
           <h2 className="text-2xl md:text-3xl">
             {activeFilter
               ? `Eventos: ${activeFilter}`
               : "Todos os eventos"}
           </h2>
 
-          {/* Controles */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            {/* Ordenação */}
             <div className="flex items-center gap-3">
               <ArrowUpDown className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
               <label htmlFor="sort-events" className="text-sm font-medium">
@@ -254,7 +241,6 @@ export function Events() {
               </select>
             </div>
 
-            {/* Itens por página */}
             <div className="flex items-center gap-3">
               <Grid3x3 className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
               <label htmlFor="items-per-page" className="text-sm font-medium">
@@ -282,17 +268,14 @@ export function Events() {
         </div>
       </section>
 
-      {/* Lista de Eventos */}
       <section className="py-12 md:py-16" aria-label="Lista de eventos">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {eventsToDisplay.map((event) => (
               <article
                 key={event.id}
                 className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow focus-within:ring-2 focus-within:ring-primary"
               >
-                {/* Tipo do evento */}
                 <div className="flex items-center justify-between mb-4">
                   <span
                     className={`text-xs font-semibold px-3 py-1 rounded-full ${getTypeColor(
@@ -301,35 +284,31 @@ export function Events() {
                   >
                     {event.type}
                   </span>
-                  {/* {event.attendees && (
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Users className="w-4 h-4" aria-hidden="true" />
-                      <span>{event.attendees} participantes</span>
-                    </div>
-                  )} */}
                 </div>
 
-                {/* Título */}
                 <h2 className="text-xl md:text-2xl mb-3">
                   <a
-                  href={event.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary rounded"
-                >
-                  {event.title}
-                  <ExternalLink className="w-4 h-4 inline-block align-text-bottom ml-1" aria-hidden="true" />
-                </a>
-                  
-                 </h2>
+                    href={event.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary rounded"
+                  >
+                    {event.title}
+                    <ExternalLink className="w-4 h-4 inline-block align-text-bottom ml-1" aria-hidden="true" />
+                  </a>
+                </h2>
 
-                {/* Data, hora e local */}
                 <div className="space-y-2 mb-4 text-sm text-muted-foreground">
-                  
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" aria-hidden="true" />
-                      <span>{new Date(event.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })}</span>
+                      <span>
+                        {new Date(event.date).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" aria-hidden="true" />
@@ -342,16 +321,11 @@ export function Events() {
                   </div>
                 </div>
 
-                {/* Descrição */}
                 <p className="text-muted-foreground mb-4">{event.description}</p>
 
-                {/* Organizador */}
                 <p className="text-sm text-muted-foreground mb-4">
                   <span className="font-semibold">Organizado por:</span> {event.organizer}
                 </p>
-
-                {/* Link */}
-                
               </article>
             ))}
           </div>
@@ -369,3 +343,4 @@ export function Events() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Mail, CheckCircle, BookOpen, Calendar, Target} from "lucide-react";
 import { Breadcrumb } from "../components/Breadcrumb";
 
@@ -129,3 +129,4 @@ export function Newsletter() {
     </div>
   );
 }
+

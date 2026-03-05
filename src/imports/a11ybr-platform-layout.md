@@ -1,4 +1,4 @@
-Crie o layout de uma plataforma web chamada a11yBR, um hub colaborativo brasileiro focado em acessibilidade digital.
+﻿Crie o layout de uma plataforma web chamada a11yBR, um hub colaborativo brasileiro focado em acessibilidade digital.
 
 O objetivo do sistema é permitir que a comunidade envie conteúdos e perfis profissionais relacionados à acessibilidade digital. A interface deve ser limpa, editorial e focada em leitura e contribuição da comunidade.
 
