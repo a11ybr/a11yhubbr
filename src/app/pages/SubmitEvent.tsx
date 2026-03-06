@@ -1,12 +1,6 @@
 ﻿import { useState } from "react";
 import { Link } from "react-router";
-import {
-  ArrowLeft,
-  CircleCheckBig,
-  Calendar,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { CircleCheckBig, Calendar, Plus, Trash2 } from "lucide-react";
 import { Breadcrumb } from "../components/Breadcrumb";
 
 type DateTimeSlot = {
@@ -25,10 +19,9 @@ export function SubmitEvent() {
     description: "",
     organizer: "",
     link: "",
+    email: "",
   });
-  const [dateTimeSlots, setDateTimeSlots] = useState<
-    DateTimeSlot[]
-  >([
+  const [dateTimeSlots, setDateTimeSlots] = useState<DateTimeSlot[]>([
     {
       id: crypto.randomUUID(),
       startDateTime: "",
@@ -55,7 +48,6 @@ export function SubmitEvent() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
     setSubmitted(true);
   };
 
@@ -80,9 +72,7 @@ export function SubmitEvent() {
   };
 
   const removeDateTimeSlot = (id: string) => {
-    setDateTimeSlots((prev) =>
-      prev.filter((slot) => slot.id !== id),
-    );
+    setDateTimeSlots((prev) => prev.filter((slot) => slot.id !== id));
   };
 
   const updateDateTimeSlot = (
@@ -102,17 +92,11 @@ export function SubmitEvent() {
       <div className="flex-1 flex items-center justify-center py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-green-100 text-green-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CircleCheckBig
-              className="w-12 h-12"
-              aria-hidden="true"
-            />
+            <CircleCheckBig className="w-12 h-12" aria-hidden="true" />
           </div>
-          <h1 className="text-3xl md:text-4xl mb-4">
-            Evento submetido com sucesso!
-          </h1>
+          <h1 className="text-3xl md:text-4xl mb-4">Evento submetido com sucesso!</h1>
           <p className="text-lg text-muted-foreground mb-8">
-            Obrigado pela sua contribuição. Nossa equipe
-            editorial irá revisar o evento e entraremos em
+            Obrigado pela sua contribuição. Nossa equipe editorial irá revisar o evento e entraremos em
             contato em breve.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -137,7 +121,6 @@ export function SubmitEvent() {
 
   return (
     <div className="flex-1">
-      {/* Header */}
       <section className="bg-primary text-primary-foreground py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb
@@ -147,50 +130,26 @@ export function SubmitEvent() {
             ]}
           />
           <div className="flex items-center gap-4 mb-6">
-            <Calendar
-              className="w-12 h-12"
-              aria-hidden="true"
-            />
-            <h1 className="text-4xl md:text-5xl">
-              Submeter evento
-            </h1>
+            <Calendar className="w-12 h-12" aria-hidden="true" />
+            <h1 className="text-4xl md:text-5xl">Submeter evento</h1>
           </div>
           <p className="text-xl text-primary-foreground/90 max-w-2xl">
-            Divulgue workshops, conferências, meetups e outros
-            eventos sobre acessibilidade digital.
+            Divulgue workshops, conferências, meetups e outros eventos sobre acessibilidade digital.
           </p>
         </div>
       </section>
 
-      {/* Form Section with Sidebar */}
       <section className="py-12 md:py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Form */}
             <div className="lg:col-span-2">
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-8"
-              >
-                {/* Event Details */}
+              <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="border border-border rounded-lg p-6 bg-[#ffffff]">
-                  <h2 className="text-2xl mb-6">
-                    Detalhes do evento
-                  </h2>
+                  <h2 className="text-2xl mb-6">Informações principais do evento</h2>
 
-                  {/* Modality */}
                   <div className="mb-6">
-                    <label
-                      htmlFor="modality"
-                      className="block mb-2"
-                    >
-                      Modalidade{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="modality" className="block mb-2">
+                      Modalidade <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <select
                       id="modality"
@@ -201,33 +160,18 @@ export function SubmitEvent() {
                       className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
                       aria-required="true"
                     >
-                      <option value="">
-                        Selecione a modalidade
-                      </option>
+                      <option value="">Selecione a modalidade</option>
                       {modalities.map((mod) => (
-                        <option
-                          key={mod.value}
-                          value={mod.value}
-                        >
+                        <option key={mod.value} value={mod.value}>
                           {mod.label}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Event Type */}
                   <div className="mb-6">
-                    <label
-                      htmlFor="eventType"
-                      className="block mb-2"
-                    >
-                      Tipo de evento{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="eventType" className="block mb-2">
+                      Tipo de evento <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <select
                       id="eventType"
@@ -238,33 +182,18 @@ export function SubmitEvent() {
                       className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
                       aria-required="true"
                     >
-                      <option value="">
-                        Selecione o tipo de evento
-                      </option>
+                      <option value="">Selecione o tipo de evento</option>
                       {eventTypes.map((type) => (
-                        <option
-                          key={type.value}
-                          value={type.value}
-                        >
+                        <option key={type.value} value={type.value}>
                           {type.label}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Title */}
                   <div className="mb-6">
-                    <label
-                      htmlFor="title"
-                      className="block mb-2"
-                    >
-                      Título do evento{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="title" className="block mb-2">
+                      Título do evento <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <input
                       type="text"
@@ -278,47 +207,30 @@ export function SubmitEvent() {
                       aria-required="true"
                     />
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 flex-column gap-8 mb-6">
-                    {/* Date and Time Slots */}
+
+                  <div className="mb-6">
                     <label className="block mb-2">
-                      Datas e horários do evento{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                      Datas e horários do evento <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
-                    <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Para eventos com múltiplas datas, adicione todas as datas e horários.
+                    </p>
+                    <div className="space-y-4">
                       {dateTimeSlots.map((slot, index) => (
                         <div
                           key={slot.id}
-                          className="grid grid-cols-1 md:grid-cols-[1fr,1fr,auto] gap-3 items-end"
+                          className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-4 items-end"
                         >
-                          {/* Start DateTime */}
                           <div>
-                            <label
-                              htmlFor={`start-${slot.id}`}
-                              className="block mb-2 text-sm"
-                            >
-                              Início{" "}
-                              <span
-                                className="text-destructive"
-                                aria-label="obrigatório"
-                              >
-                                *
-                              </span>
+                            <label htmlFor={`start-${slot.id}`} className="block mb-2 text-sm">
+                              Início <span className="text-destructive" aria-label="obrigatório">*</span>
                             </label>
                             <input
                               type="datetime-local"
                               id={`start-${slot.id}`}
                               value={slot.startDateTime}
                               onChange={(e) =>
-                                updateDateTimeSlot(
-                                  slot.id,
-                                  "startDateTime",
-                                  e.target.value,
-                                )
+                                updateDateTimeSlot(slot.id, "startDateTime", e.target.value)
                               }
                               required
                               className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
@@ -326,30 +238,16 @@ export function SubmitEvent() {
                             />
                           </div>
 
-                          {/* End DateTime */}
                           <div>
-                            <label
-                              htmlFor={`end-${slot.id}`}
-                              className="block mb-2 text-sm"
-                            >
-                              Fim{" "}
-                              <span
-                                className="text-destructive"
-                                aria-label="obrigatório"
-                              >
-                                *
-                              </span>
+                            <label htmlFor={`end-${slot.id}`} className="block mb-2 text-sm">
+                              Fim <span className="text-destructive" aria-label="obrigatório">*</span>
                             </label>
                             <input
                               type="datetime-local"
                               id={`end-${slot.id}`}
                               value={slot.endDateTime}
                               onChange={(e) =>
-                                updateDateTimeSlot(
-                                  slot.id,
-                                  "endDateTime",
-                                  e.target.value,
-                                )
+                                updateDateTimeSlot(slot.id, "endDateTime", e.target.value)
                               }
                               required
                               className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
@@ -357,58 +255,36 @@ export function SubmitEvent() {
                             />
                           </div>
 
-                          {/* Remove Button */}
                           {dateTimeSlots.length > 1 && (
                             <button
                               type="button"
-                              onClick={() =>
-                                removeDateTimeSlot(slot.id)
-                              }
-                              className="px-4 py-3 text-destructive hover:bg-destructive/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2 transition-colors"
+                              onClick={() => removeDateTimeSlot(slot.id)}
+                              className="h-[50px] px-4 py-3 text-destructive hover:bg-destructive/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-2 transition-colors"
                               aria-label={`Remover data e horário ${index + 1}`}
                             >
-                              <Trash2
-                                className="w-5 h-5"
-                                aria-hidden="true"
-                              />
+                              <Trash2 className="w-5 h-5" aria-hidden="true" />
                             </button>
                           )}
                         </div>
                       ))}
 
-                      {/* Add Date Button */}
-                      <button
-                        type="button"
-                        onClick={addDateTimeSlot}
-                        className="text-primary hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded flex items-center gap-2 py-2"
-                      >
-                        <Plus
-                          className="w-4 h-4"
-                          aria-hidden="true"
-                        />
-                        Adicionar outra data
-                      </button>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={addDateTimeSlot}
+                          className="text-primary hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded flex items-center gap-2 py-2"
+                        >
+                          <Plus className="w-4 h-4" aria-hidden="true" />
+                          Adicionar outra data
+                        </button>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Para eventos com múltiplas datas, adicione
-                      todas as datas e horários
-                    </p>
                   </div>
 
-                  {/* Location */}
                   <div className="mb-0">
-                    <label
-                      htmlFor="location"
-                      className="block mb-2"
-                    >
-                      Localização (cidade/estado) ou ferramenta
-                      de transmissão{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="location" className="block mb-2">
+                      Localização (cidade/estado) ou ferramenta de transmissão{" "}
+                      <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <input
                       type="text"
@@ -422,32 +298,17 @@ export function SubmitEvent() {
                       aria-required="true"
                     />
                     <p className="text-sm text-muted-foreground mt-2">
-                      Para eventos presenciais/híbridos: cidade
-                      e estado. Para eventos online: plataforma
-                      utilizada
+                      Para eventos presenciais/híbridos: cidade e estado. Para eventos online: plataforma utilizada.
                     </p>
                   </div>
                 </div>
 
-                {/* Additional Information */}
                 <div className="border border-border rounded-lg p-6 bg-[#ffffff]">
-                  <h2 className="text-2xl mb-6">
-                    Informações adicionais
-                  </h2>
+                  <h2 className="text-2xl mb-6">Detalhes do evento</h2>
 
-                  {/* Description */}
                   <div className="mb-6">
-                    <label
-                      htmlFor="description"
-                      className="block mb-2"
-                    >
-                      Descrição{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="description" className="block mb-2">
+                      Descrição <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <textarea
                       id="description"
@@ -462,19 +323,9 @@ export function SubmitEvent() {
                     />
                   </div>
 
-                  {/* Organizer */}
                   <div className="mb-6">
-                    <label
-                      htmlFor="organizer"
-                      className="block mb-2"
-                    >
-                      Organizador{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="organizer" className="block mb-2">
+                      Organizador <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <input
                       type="text"
@@ -489,19 +340,9 @@ export function SubmitEvent() {
                     />
                   </div>
 
-                  {/* Link */}
                   <div className="mb-0">
-                    <label
-                      htmlFor="link"
-                      className="block mb-2"
-                    >
-                      Link do evento{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="link" className="block mb-2">
+                      Link do evento <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <input
                       type="url"
@@ -515,13 +356,34 @@ export function SubmitEvent() {
                       aria-required="true"
                     />
                     <p className="text-sm text-muted-foreground mt-2">
-                      Link para inscrição ou página oficial do
-                      evento
+                      Link para inscrição ou página oficial do evento.
                     </p>
                   </div>
                 </div>
 
-                {/* Submit Button */}
+                <div className="border border-border rounded-lg p-6 bg-[#ffffff]">
+                  <h2 className="text-2xl mb-6">Email de contato</h2>
+                  <label htmlFor="email" className="block mb-2">
+                    Email <span className="text-destructive" aria-label="obrigatório">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
+                    placeholder="seu@email.com"
+                    aria-required="true"
+                    aria-describedby="email-description-event"
+                  />
+                  <p id="email-description-event" className="text-sm text-muted-foreground mt-2">
+                    O email será privado e utilizado apenas para que a organização do a11yBR possa entrar em
+                    contato com a pessoa que realizou a submissão.
+                  </p>
+                </div>
+
                 <div className="pt-4">
                   <button
                     type="submit"
@@ -533,53 +395,25 @@ export function SubmitEvent() {
               </form>
             </div>
 
-            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
-              {/* Event Guidelines */}
               <div className="bg-accent border border-border rounded-lg p-6 bg-[#ffffff]">
-                <h2 className="text-xl mb-4">
-                  Diretrizes para eventos
-                </h2>
+                <h2 className="text-xl mb-4">Diretrizes para eventos</h2>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    • Eventos devem ter foco em acessibilidade
-                    digital
-                  </li>
-                  <li className="flex items-start gap-2">
-                    • Forneça informações completas e precisas
-                  </li>
-                  <li className="flex items-start gap-2">
-                    • Indique claramente a modalidade
-                    (presencial/online/híbrido)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    • Inclua link oficial para mais informações
-                  </li>
-                  <li className="flex items-start gap-2">
-                    • Mencione se há requisitos de
-                    acessibilidade
-                  </li>
+                  <li className="flex items-start gap-2">• Eventos devem ter foco em acessibilidade digital</li>
+                  <li className="flex items-start gap-2">• Forneça informações completas e precisas</li>
+                  <li className="flex items-start gap-2">• Indique claramente a modalidade (presencial/online/híbrido)</li>
+                  <li className="flex items-start gap-2">• Inclua link oficial para mais informações</li>
+                  <li className="flex items-start gap-2">• Mencione se há requisitos de acessibilidade</li>
                 </ul>
               </div>
 
-              {/* Review Process */}
               <div className="bg-primary border text-primary-foreground border-border rounded-lg p-6">
-                <h2 className="text-xl mb-4">
-                  Processo de revisão
-                </h2>
+                <h2 className="text-xl mb-4">Processo de revisão</h2>
                 <ol className="space-y-3">
-                  <li className="flex gap-3">
-                    1. Submissão recebida
-                  </li>
-                  <li className="flex gap-3">
-                    2. Análise editorial (até 3 dias úteis)
-                  </li>
-                  <li className="flex gap-3">
-                    3. Feedback por e-mail
-                  </li>
-                  <li className="flex gap-3">
-                    4. Publicação após aprovação
-                  </li>
+                  <li className="flex gap-3">1. Submissão recebida</li>
+                  <li className="flex gap-3">2. Análise editorial (até 3 dias úteis)</li>
+                  <li className="flex gap-3">3. Feedback por e-mail</li>
+                  <li className="flex gap-3">4. Publicação após aprovação</li>
                 </ol>
               </div>
             </div>

@@ -1,6 +1,6 @@
 ﻿import { useState } from "react";
 import { Link } from "react-router";
-import { ArrowLeft, CheckCircle, FileText } from "lucide-react";
+import { CheckCircle, FileText } from "lucide-react";
 import { Breadcrumb } from "../components/Breadcrumb";
 
 export function SubmitContent() {
@@ -11,7 +11,8 @@ export function SubmitContent() {
     description: "",
     link: "",
     author: "",
-    image: null as File | null,
+    organization: "",
+    email: "",
   });
 
   const contentTypes = [
@@ -26,7 +27,6 @@ export function SubmitContent() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
     setSubmitted(true);
   };
 
@@ -39,29 +39,16 @@ export function SubmitContent() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = e.target.files?.[0] || null;
-    setFormData((prev) => ({ ...prev, image: file }));
-  };
-
   if (submitted) {
     return (
       <div className="flex-1 flex items-center justify-center py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-green-100 text-green-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle
-              className="w-12 h-12"
-              aria-hidden="true"
-            />
+            <CheckCircle className="w-12 h-12" aria-hidden="true" />
           </div>
-          <h1 className="text-3xl md:text-4xl mb-4">
-            Conteúdo submetido com sucesso!
-          </h1>
+          <h1 className="text-3xl md:text-4xl mb-4">Conteúdo submetido com sucesso!</h1>
           <p className="text-lg text-muted-foreground mb-8">
-            Obrigado pela sua contribuição. Nossa equipe
-            editorial irá revisar o conteúdo e entraremos em
+            Obrigado pela sua contribuição. Nossa equipe editorial irá revisar o conteúdo e entraremos em
             contato em breve.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -86,7 +73,6 @@ export function SubmitContent() {
 
   return (
     <div className="flex-1">
-      {/* Header */}
       <section className="bg-primary text-primary-foreground py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumb
@@ -96,37 +82,27 @@ export function SubmitContent() {
             ]}
           />
           <div className="flex items-center gap-4 mb-6">
-            <FileText
-              className="w-12 h-12"
-              aria-hidden="true"
-            />
-            <h1 className="text-4xl md:text-5xl">
-              Submeter conteúdo
-            </h1>
+            <FileText className="w-12 h-12" aria-hidden="true" />
+            <h1 className="text-4xl md:text-5xl">Submeter conteúdo</h1>
           </div>
           <p className="text-xl text-primary-foreground/90 max-w-2xl">
-            Envie artigos, tutoriais, projetos open source,
-            recursos, eventos ou outros materiais relevantes.
+            Envie artigos, tutoriais, projetos open source, recursos, eventos ou outros materiais relevantes.
           </p>
         </div>
       </section>
 
-      {/* Form Section with Sidebar */}
       <section className="py-12 md:py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Form */}
             <div className="lg:col-span-2">
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-8"
-              >
-                {/* Content Type */}
-                <div>
-                  <h2 className="text-2xl mb-6">
-                    Tipo de conteúdo
-                  </h2>
-                  <div>
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="border border-border rounded-lg p-6 bg-[#ffffff]">
+                  <h2 className="text-2xl mb-6">Informações principais do conteúdo</h2>
+
+                  <div className="mb-6">
+                    <label htmlFor="type" className="block mb-2">
+                      Tipo de conteúdo <span className="text-destructive" aria-label="obrigatório">*</span>
+                    </label>
                     <select
                       id="type"
                       name="type"
@@ -136,40 +112,18 @@ export function SubmitContent() {
                       className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
                       aria-required="true"
                     >
-                      <option value="">
-                        Selecione o tipo de conteúdo
-                      </option>
+                      <option value="">Selecione o tipo de conteúdo</option>
                       {contentTypes.map((type) => (
-                        <option
-                          key={type.value}
-                          value={type.value}
-                        >
+                        <option key={type.value} value={type.value}>
                           {type.label}
                         </option>
                       ))}
                     </select>
                   </div>
-                </div>
 
-                {/* General Information */}
-                <div>
-                  <h2 className="text-2xl mb-6">
-                    Informações gerais
-                  </h2>
-
-                  {/* Title */}
                   <div className="mb-6">
-                    <label
-                      htmlFor="title"
-                      className="block mb-2"
-                    >
-                      Título do conteúdo{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="title" className="block mb-2">
+                      Título do conteúdo <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <input
                       type="text"
@@ -184,19 +138,9 @@ export function SubmitContent() {
                     />
                   </div>
 
-                  {/* Description */}
-                  <div className="mb-6">
-                    <label
-                      htmlFor="description"
-                      className="block mb-2"
-                    >
-                      Descrição{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                  <div className="mb-0">
+                    <label htmlFor="description" className="block mb-2">
+                      Descrição <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <textarea
                       id="description"
@@ -210,20 +154,46 @@ export function SubmitContent() {
                       aria-required="true"
                     />
                   </div>
+                </div>
 
-                  {/* Link */}
+                <div className="border border-border rounded-lg p-6 bg-[#ffffff]">
+                  <h2 className="text-2xl mb-6">Detalhes da informação</h2>
+
                   <div className="mb-6">
-                    <label
-                      htmlFor="link"
-                      className="block mb-2"
-                    >
-                      Link{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
+                    <label htmlFor="author" className="block mb-2">
+                      Autor <span className="text-destructive" aria-label="obrigatório">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="author"
+                      name="author"
+                      value={formData.author}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
+                      placeholder="Nome da pessoa autora"
+                      aria-required="true"
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label htmlFor="organization" className="block mb-2">
+                      Organização
+                    </label>
+                    <input
+                      type="text"
+                      id="organization"
+                      name="organization"
+                      value={formData.organization}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
+                      placeholder="Empresa, ONG, comunidade ou instituição"
+                    />
+                  </div>
+
+                  <div className="mb-0">
+                    <label htmlFor="link" className="block mb-2">
+                      Link do conteúdo <span className="text-destructive" aria-label="obrigatório">*</span>
                     </label>
                     <input
                       type="url"
@@ -237,36 +207,31 @@ export function SubmitContent() {
                       aria-required="true"
                     />
                   </div>
-
-                  {/* Author */}
-                  <div>
-                    <label
-                      htmlFor="author"
-                      className="block mb-2"
-                    >
-                      Autor ou organização{" "}
-                      <span
-                        className="text-destructive"
-                        aria-label="obrigatório"
-                      >
-                        *
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      id="author"
-                      name="author"
-                      value={formData.author}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
-                      placeholder="Seu nome ou nome da organização"
-                      aria-required="true"
-                    />
-                  </div>
                 </div>
 
-                {/* Submit Button */}
+                <div className="border border-border rounded-lg p-6 bg-[#ffffff]">
+                  <h2 className="text-2xl mb-6">Email de contato</h2>
+                  <label htmlFor="email" className="block mb-2">
+                    Email <span className="text-destructive" aria-label="obrigatório">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-[#ffffff]"
+                    placeholder="seu@email.com"
+                    aria-required="true"
+                    aria-describedby="email-description-content"
+                  />
+                  <p id="email-description-content" className="text-sm text-muted-foreground mt-2">
+                    O email será privado e utilizado apenas para que a organização do a11yBR possa entrar em
+                    contato com a pessoa que realizou a submissão.
+                  </p>
+                </div>
+
                 <div className="pt-4">
                   <button
                     type="submit"
@@ -278,60 +243,29 @@ export function SubmitContent() {
               </form>
             </div>
 
-            {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
-              {/* What We Accept */}
-
               <div className="border border-border rounded-lg p-6">
                 <h2 className="mb-4">O que aceitamos</h2>
                 <ol className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    1. Artigos especializados
-                  </li>
-                  <li className="flex items-start gap-2">
-                    2. Canais educativos no YouTube
-                  </li>
-                  <li className="flex items-start gap-2">
-                    3. Comunidades digitais
-                  </li>
-                  <li className="flex items-start gap-2">
-                    4. Cursos e materiais educacionais
-                  </li>
-                  <li className="flex items-start gap-2">
-                    5. Ferramentas técnicas
-                  </li>
-                  <li className="flex items-start gap-2">
-                    6. Eventos
-                  </li>
-                  <li className="flex items-start gap-2">
-                    7. Ferramentas técnicas
-                  </li>
-                  <li className="flex items-start gap-2">
-                    8. Podcasts sobre acessibilidade
-                  </li>
-                  <li className="flex items-start gap-2">
-                    9. Sites e sistemas acessíveis
-                  </li>
+                  <li className="flex items-start gap-2">1. Artigos especializados</li>
+                  <li className="flex items-start gap-2">2. Canais educativos no YouTube</li>
+                  <li className="flex items-start gap-2">3. Comunidades digitais</li>
+                  <li className="flex items-start gap-2">4. Cursos e materiais educacionais</li>
+                  <li className="flex items-start gap-2">5. Ferramentas técnicas</li>
+                  <li className="flex items-start gap-2">6. Eventos</li>
+                  <li className="flex items-start gap-2">7. Ferramentas técnicas</li>
+                  <li className="flex items-start gap-2">8. Podcasts sobre acessibilidade</li>
+                  <li className="flex items-start gap-2">9. Sites e sistemas acessíveis</li>
                 </ol>
               </div>
-
-              {/* Review Process */}
 
               <div className="bg-primary border text-primary-foreground border-border rounded-lg p-6">
                 <h2 className="mb-4">Processo de revisão</h2>
                 <ol className="space-y-3">
-                  <li className="flex gap-3">
-                    1. Submissão recebida
-                  </li>
-                  <li className="flex gap-3">
-                    2. Análise editorial (até 7 dias úteis)
-                  </li>
-                  <li className="flex gap-3">
-                    3. Feedback por e-mail
-                  </li>
-                  <li className="flex gap-3">
-                    4. Publicação após aprovação
-                  </li>
+                  <li className="flex gap-3">1. Submissão recebida</li>
+                  <li className="flex gap-3">2. Análise editorial (até 7 dias úteis)</li>
+                  <li className="flex gap-3">3. Feedback por e-mail</li>
+                  <li className="flex gap-3">4. Publicação após aprovação</li>
                 </ol>
               </div>
             </div>
