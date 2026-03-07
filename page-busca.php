@@ -6,9 +6,14 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$query_text = isset($_GET['q']) ? sanitize_text_field(wp_unslash($_GET['q'])) : '';
+$query_text = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_GET['busca'])) : '';
+if ($query_text === '' && isset($_GET['q'])) {
+    $query_text = sanitize_text_field(wp_unslash($_GET['q']));
+}
+
 $scope = isset($_GET['tipo']) ? sanitize_key(wp_unslash($_GET['tipo'])) : 'todos';
 $order = isset($_GET['ordem']) ? sanitize_key(wp_unslash($_GET['ordem'])) : 'recentes';
+$per_page = isset($_GET['itens']) ? absint($_GET['itens']) : 12;
 $paged = isset($_GET['pg']) ? max(1, absint($_GET['pg'])) : 1;
 
 $valid_scope = array('todos', 'conteudos', 'eventos', 'rede');
@@ -19,6 +24,11 @@ if (!in_array($scope, $valid_scope, true)) {
 $valid_order = array('recentes', 'antigos', 'titulo_az', 'titulo_za');
 if (!in_array($order, $valid_order, true)) {
     $order = 'recentes';
+}
+
+$allowed_per_page = array(8, 12, 24);
+if (!in_array($per_page, $allowed_per_page, true)) {
+    $per_page = 12;
 }
 
 $post_types = array('post', 'a11y_evento', 'a11y_perfil');
@@ -50,21 +60,64 @@ if ($query_text !== '') {
         's' => $query_text,
         'orderby' => $orderby,
         'order' => $order_dir,
-        'posts_per_page' => 12,
+        'posts_per_page' => $per_page,
         'paged' => $paged,
     ));
 }
 
+$count_by_scope = static function ($scope_key, $term) {
+    $types = array('post', 'a11y_evento', 'a11y_perfil');
+    if ($scope_key === 'conteudos') {
+        $types = array('post');
+    } elseif ($scope_key === 'eventos') {
+        $types = array('a11y_evento');
+    } elseif ($scope_key === 'rede') {
+        $types = array('a11y_perfil');
+    }
+
+    if ($term === '') {
+        $total = 0;
+        foreach ($types as $type) {
+            $counts = wp_count_posts($type);
+            $total += (int) (($counts && isset($counts->publish)) ? $counts->publish : 0);
+        }
+        return $total;
+    }
+
+    $q = new WP_Query(array(
+        'post_type' => $types,
+        'post_status' => 'publish',
+        's' => $term,
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+    ));
+
+    return (int) $q->found_posts;
+};
+
+$scope_cards = array(
+    'todos' => array('label' => 'Todos', 'icon' => 'fa-solid fa-layer-group'),
+    'conteudos' => array('label' => 'Conteudos', 'icon' => 'fa-regular fa-file-lines'),
+    'eventos' => array('label' => 'Eventos', 'icon' => 'fa-regular fa-calendar'),
+    'rede' => array('label' => 'Rede', 'icon' => 'fa-solid fa-users'),
+);
+
+$scope_counts = array();
+foreach (array_keys($scope_cards) as $scope_key) {
+    $scope_counts[$scope_key] = $count_by_scope($scope_key, $query_text);
+}
+
 $base_url = get_permalink();
-$build_url = static function ($args = array()) use ($base_url, $query_text, $scope, $order) {
+$build_url = static function ($args = array()) use ($base_url, $query_text, $scope, $order, $per_page) {
     $merged = array_merge(array(
-        'q' => $query_text,
+        'busca' => $query_text,
         'tipo' => $scope,
         'ordem' => $order,
+        'itens' => $per_page,
     ), $args);
 
-    if (($merged['q'] ?? '') === '') {
-        unset($merged['q']);
+    if (($merged['busca'] ?? '') === '') {
+        unset($merged['busca']);
     }
     if (($merged['tipo'] ?? 'todos') === 'todos') {
         unset($merged['tipo']);
@@ -72,15 +125,22 @@ $build_url = static function ($args = array()) use ($base_url, $query_text, $sco
     if (($merged['ordem'] ?? 'recentes') === 'recentes') {
         unset($merged['ordem']);
     }
+    if (($merged['itens'] ?? 12) === 12) {
+        unset($merged['itens']);
+    }
     if (isset($merged['pg']) && (int) $merged['pg'] <= 1) {
         unset($merged['pg']);
     }
+
     return add_query_arg($merged, $base_url);
 };
 
+$heading_suffix = $query_text !== '' ? ' para "' . $query_text . '"' : '';
+$result_count = ($search_query instanceof WP_Query) ? (int) $search_query->found_posts : 0;
+
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-search-page">
+<main class="a11yhubbr-site-main a11yhubbr-search-page a11yhubbr-content-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
@@ -96,28 +156,51 @@ get_header();
 
   <section class="a11yhubbr-section">
     <div class="a11yhubbr-container">
-      <form class="a11yhubbr-search-form" method="get" action="<?php echo esc_url($base_url); ?>">
-        <label for="a11yhubbr-search-q">Buscar</label>
-        <input id="a11yhubbr-search-q" type="search" name="q" value="<?php echo esc_attr($query_text); ?>" placeholder="Digite um termo, ex: WCAG, libras, audiodcricao" required>
+      <h2 class="a11yhubbr-content-heading">Filtrar por tipo</h2>
+      <div class="a11yhubbr-content-types-grid a11yhubbr-search-types-grid">
+        <?php foreach ($scope_cards as $scope_key => $item): ?>
+          <?php
+          $is_active = $scope === $scope_key;
+          $count = (int) ($scope_counts[$scope_key] ?? 0);
+          $count_label = $count === 1 ? '1 resultado' : $count . ' resultados';
+          $type_url = $is_active
+            ? $build_url(array('tipo' => 'todos', 'pg' => 1))
+            : $build_url(array('tipo' => $scope_key, 'pg' => 1));
+          ?>
+          <a class="a11yhubbr-content-type-card<?php echo $is_active ? ' is-active' : ''; ?>" href="<?php echo esc_url($type_url); ?>" aria-current="<?php echo $is_active ? 'true' : 'false'; ?>">
+            <span class="a11yhubbr-content-type-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
+            <strong><?php echo esc_html($item['label']); ?></strong>
+            <span><?php echo esc_html($count_label); ?></span>
+          </a>
+        <?php endforeach; ?>
+      </div>
 
-        <label for="a11yhubbr-search-tipo">Tipo</label>
-        <select id="a11yhubbr-search-tipo" name="tipo">
-          <option value="todos"<?php selected($scope, 'todos'); ?>>Todos</option>
-          <option value="conteudos"<?php selected($scope, 'conteudos'); ?>>Conteudos</option>
-          <option value="eventos"<?php selected($scope, 'eventos'); ?>>Eventos</option>
-          <option value="rede"<?php selected($scope, 'rede'); ?>>Rede</option>
-        </select>
+      <?php get_template_part('inc/components/archive-toolbar', null, array(
+        'heading' => 'Resultados de busca' . $heading_suffix,
+        'base_url' => $base_url,
+        'selected_type' => $scope,
+        'show_type_input' => ($scope !== 'todos'),
+        'search_term' => $query_text,
+        'clear_search_url' => $build_url(array('busca' => '', 'pg' => 1)),
+        'sort_name' => 'ordem',
+        'sort_options' => array(
+          'recentes' => 'Mais recentes',
+          'antigos' => 'Mais antigos',
+          'titulo_az' => 'Titulo A-Z',
+          'titulo_za' => 'Titulo Z-A',
+        ),
+        'current_sort' => $order,
+        'per_page_name' => 'itens',
+        'per_page_options' => $allowed_per_page,
+        'current_per_page' => $per_page,
+        'per_page_label_suffix' => 'itens',
+      )); ?>
 
-        <label for="a11yhubbr-search-ordem">Ordenar</label>
-        <select id="a11yhubbr-search-ordem" name="ordem">
-          <option value="recentes"<?php selected($order, 'recentes'); ?>>Mais recentes</option>
-          <option value="antigos"<?php selected($order, 'antigos'); ?>>Mais antigos</option>
-          <option value="titulo_az"<?php selected($order, 'titulo_az'); ?>>Titulo A-Z</option>
-          <option value="titulo_za"<?php selected($order, 'titulo_za'); ?>>Titulo Z-A</option>
-        </select>
-
-        <button class="a11yhubbr-btn" type="submit">Buscar</button>
-      </form>
+      <?php if ($query_text !== '' && ($scope !== 'todos' || $order !== 'recentes' || $per_page !== 12)): ?>
+        <div class="a11yhubbr-search-reset-wrap">
+          <a href="<?php echo esc_url($build_url(array('busca' => '', 'tipo' => 'todos', 'ordem' => 'recentes', 'itens' => 12, 'pg' => 1))); ?>" class="a11yhubbr-content-reset-link">Limpar filtros</a>
+        </div>
+      <?php endif; ?>
 
       <?php if ($query_text === ''): ?>
         <?php get_template_part('inc/components/empty-state', null, array(
@@ -126,17 +209,13 @@ get_header();
           'icon' => 'fa-solid fa-magnifying-glass',
         )); ?>
       <?php elseif ($search_query && $search_query->have_posts()): ?>
-        <div class="a11yhubbr-search-results-head">
-          <h2><?php echo esc_html($search_query->found_posts); ?> resultados para "<?php echo esc_html($query_text); ?>"</h2>
-          <a href="<?php echo esc_url($build_url(array('q' => '', 'pg' => 1))); ?>" class="a11yhubbr-content-reset-link">Limpar</a>
-        </div>
+        <p class="a11yhubbr-search-result-summary"><?php echo esc_html($result_count); ?> resultados encontrados.</p>
 
         <div class="a11yhubbr-content-results-grid">
           <?php while ($search_query->have_posts()): $search_query->the_post(); ?>
             <?php if (get_post_type() === 'post'): ?>
               <?php
-              $external_url = (string) get_post_meta(get_the_ID(), '_a11yhubbr_source_link', true);
-              $external_url = trim($external_url);
+              $external_url = trim((string) get_post_meta(get_the_ID(), '_a11yhubbr_source_link', true));
               $author_name = (string) get_post_meta(get_the_ID(), '_a11yhubbr_submitter_name', true);
               if ($author_name === '') {
                   $author_name = get_the_author();
@@ -208,7 +287,7 @@ get_header();
       <?php else: ?>
         <?php get_template_part('inc/components/empty-state', null, array(
           'title' => 'Nenhum resultado encontrado',
-          'message' => 'Tente outro termo de busca ou ajuste o filtro de tipo.',
+          'message' => 'Tente outro termo de busca ou ajuste os filtros.',
           'icon' => 'fa-regular fa-folder-open',
         )); ?>
       <?php endif; ?>
@@ -217,4 +296,3 @@ get_header();
   </section>
 </main>
 <?php get_footer(); ?>
-

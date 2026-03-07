@@ -3146,6 +3146,19 @@ h4 {
   font-size: 1.2rem;
 }
 
+.a11yhubbr-search-types-grid {
+  margin-bottom: 1.1rem;
+}
+
+.a11yhubbr-search-reset-wrap {
+  margin: -.4rem 0 .6rem;
+}
+
+.a11yhubbr-search-result-summary {
+  margin: 0 0 .8rem;
+  color: #495d80;
+}
+
 @media (max-width: 920px) {
   .a11yhubbr-search-form {
     grid-template-columns: 1fr;

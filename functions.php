@@ -1472,6 +1472,34 @@ function a11yhubbr_seed_legal_pages_once() {
 }
 add_action('admin_init', 'a11yhubbr_seed_legal_pages_once');
 
+function a11yhubbr_virtual_busca_template_fallback() {
+    if (!is_404()) {
+        return;
+    }
+
+    $request_path = parse_url(isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '/', PHP_URL_PATH);
+    $request_path = is_string($request_path) ? trim($request_path, '/') : '';
+
+    if ($request_path !== 'busca') {
+        return;
+    }
+
+    $template = locate_template('page-busca.php');
+    if (!is_string($template) || $template === '' || !file_exists($template)) {
+        return;
+    }
+
+    global $wp_query;
+    if ($wp_query instanceof WP_Query) {
+        $wp_query->is_404 = false;
+        status_header(200);
+    }
+
+    include $template;
+    exit;
+}
+add_action('template_redirect', 'a11yhubbr_virtual_busca_template_fallback', 1);
+
 
 
 
