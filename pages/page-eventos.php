@@ -160,6 +160,7 @@ $build_url = static function ($overrides = array ()) use ($base_url, $current_ar
 };
 
 $title_suffix = ($selected_type !== '' && isset($event_modalities[$selected_type])) ? ': ' . $event_modalities[$selected_type]['label'] : ' recentes';
+$has_active_filters = ($selected_type !== '' || $search_term !== '' || $sort !== 'recentes' || $per_page !== 8);
 
 $format_event_date = static function ($post_id) {
   $slots_raw = get_post_meta($post_id, '_a11yhubbr_event_slots', true);
@@ -255,6 +256,9 @@ get_header();
         'per_page_options' => $allowed_per_page,
         'current_per_page' => $per_page,
         'per_page_label_suffix' => 'eventos',
+        'show_reset' => $has_active_filters,
+        'reset_url' => $build_url(array('tipo' => '', 'busca' => '', 'ordem' => 'recentes', 'itens' => 8, 'pg' => 1)),
+        'reset_label' => 'Limpar filtros',
       )); ?>
 
       <?php if ($events_query->have_posts()): ?>
@@ -274,9 +278,14 @@ get_header();
             $external_url = trim($external_url);
             $location = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_location', true);
             $organizer = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_organizer', true);
+            $tag_names = wp_get_post_terms(get_the_ID(), 'post_tag', array('fields' => 'names'));
+            if (!is_array($tag_names)) {
+              $tag_names = array();
+            }
             ?>
             <?php get_template_part('inc/components/event-card', null, array(
               'label' => $modality,
+              'title_url' => get_permalink(),
               'date_text' => $format_event_date(get_the_ID()),
               'time_text' => $format_event_time(get_the_ID()),
               'title' => get_the_title(),
@@ -284,6 +293,7 @@ get_header();
               'excerpt' => $excerpt,
               'organizer' => $organizer,
               'external_url' => $external_url,
+              'tags' => $tag_names,
             )); ?>
           <?php endwhile; ?>
         </div>
@@ -316,6 +326,7 @@ get_header();
           'message' => 'N?o encontramos resultados para os filtros selecionados.',
           'cta_label' => 'Submeter evento',
           'cta_url' => function_exists('a11yhubbr_get_submit_event_url') ? a11yhubbr_get_submit_event_url() : home_url('/submeter/submeter-eventos'),
+          'cta_class' => 'a11yhubbr-btn-context',
           'icon' => 'fa-regular fa-calendar',
         )); ?>
       <?php endif; ?>

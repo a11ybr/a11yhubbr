@@ -43,7 +43,7 @@ get_header();
             <textarea name="mensagem" rows="6" required></textarea>
           </label>
           <div class="a11yhubbr-form-actions">
-            <button type="submit" class="a11yhubbr-btn">Enviar mensagem</button>
+            <button type="submit" class="a11yhubbr-btn a11yhubbr-btn-primary">Enviar mensagem</button>
           </div>
         </form>
       </article>

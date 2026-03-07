@@ -17,6 +17,9 @@ $defaults = array(
     'per_page_options' => array(),
     'current_per_page' => 8,
     'per_page_label_suffix' => 'itens',
+    'show_reset' => false,
+    'reset_url' => '',
+    'reset_label' => 'Limpar filtros',
 );
 
 $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $defaults;
@@ -63,5 +66,14 @@ $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $def
         </select>
       </label>
     </div>
+
+    <?php if (!empty($args['show_reset']) && !empty($args['reset_url'])): ?>
+      <div class="a11yhubbr-content-control-group a11yhubbr-content-control-group-reset">
+        <a class="a11yhubbr-btn a11yhubbr-btn-tertiary a11yhubbr-content-reset-action" href="<?php echo esc_url((string) $args['reset_url']); ?>">
+          <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i>
+          <?php echo esc_html((string) $args['reset_label']); ?>
+        </a>
+      </div>
+    <?php endif; ?>
   </form>
 </div>

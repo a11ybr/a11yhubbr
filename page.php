@@ -19,7 +19,10 @@ get_header();
   <section class="a11yhubbr-container a11yhubbr-section">
     <div class="a11yhubbr-content-single">
       <?php while (have_posts()): the_post(); ?>
-        <article class="a11yhubbr-rich-content">
+        <article class="a11yhubbr-rich-content a11yhubbr-card " >
+          <p class="a11yhubbr-updated-at">
+            Última atualização: <time datetime="<?php echo esc_attr(get_the_modified_date('c')); ?>"><?php echo esc_html(get_the_modified_date('F \d\e Y')); ?></time>
+          </p>
           <?php the_content(); ?>
         </article>
       <?php endwhile; ?>
@@ -27,7 +30,6 @@ get_header();
   </section>
 </main>
 <?php get_footer(); ?>
-
 
 
 

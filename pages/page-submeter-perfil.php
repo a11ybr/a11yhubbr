@@ -49,11 +49,12 @@ get_header();
               <label>Tipo de perfil *
                 <select name="profile_type" required>
                   <option value="">Selecione</option>
-                  <option>Profissional de tecnologia</option>
+                  <option>Profissional de IT</option>
                   <option>Empresa ou ONG</option>
                   <option>Intérprete de Libras</option>
                   <option>Audiodescritor</option>
                   <option>Tradutor de Braille</option>
+                  <option>Comunidade</option>
                 </select>
               </label>
               <label>Nome ou nome da organização *
@@ -75,7 +76,7 @@ get_header();
               <label>Website
                 <input type="url" name="website">
               </label>
-              <label>Tags (separadas por vérgulas)
+              <label>Tags (separadas por vírgulas)
                 <input type="text" name="tags" placeholder="design inclusivo, libras, consultoria">
               </label>
               <p class="a11yhubbr-help">Use tags para destacar especialidades e temas de atuação.</p>
@@ -90,6 +91,11 @@ get_header();
                         <option value="github">GitHub</option>
                         <option value="instagram">Instagram</option>
                         <option value="x">X/Twitter</option>
+                        <option value="medium">Medium</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="threads">Threads</option>
+                        <option value="bluesky">Bluesky</option>
+                        <option value="telegram">Telegram</option>
                         <option value="facebook">Facebook</option>
                         <option value="website">Outro website</option>
                       </select>
@@ -104,7 +110,7 @@ get_header();
                   <button type="button" class="a11yhubbr-link-btn" id="add-social-link">+ Adicionar rede social</button>
                 </div>
               </fieldset>
-              <label>Foto de perfil
+              <label>Imagem do perfil
                 <input type="file" name="profile_image" accept="image/jpeg,image/png,image/webp">
               </label>
             </section>
@@ -119,18 +125,18 @@ get_header();
             </section>
 
             <div class="a11yhubbr-form-actions">
-              <button class="a11yhubbr-btn a11yhubbr-form-submit" type="submit" name="a11yhubbr_profile_submit" value="1">Enviar perfil</button>
+              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_profile_submit" value="1">Enviar perfil</button>
             </div>
           </form>
         </div>
 
         <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
           <section class="a11yhubbr-side-card">
-            <h2>Diretrizes para perfis</h2>
+            <h2>Diretrizes para perfil</h2>
             <ul>
               <li>Informe atuação real em acessibilidade.</li>
               <li>Use dados verificáveis e atualizados.</li>
-              <li>Inclua links profissionais vélidos.</li>
+              <li>Inclua links profissionais válidos.</li>
               <li>Descrição clara e objetiva do perfil.</li>
             </ul>
           </section>
@@ -150,9 +156,3 @@ get_header();
   </section>
 </main>
 <?php get_footer(); ?>
-
-
-
-
-
-

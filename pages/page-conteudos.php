@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 $types = function_exists('a11yhubbr_get_content_type_map') ? a11yhubbr_get_content_type_map() : array();
-$display_types = array_diff_key($types, array('eventos' => true));
+$display_types = array_diff_key($types, array('eventos' => true, 'redes' => true, 'comunidades' => true));
 
 $raw_type = isset($_GET['tipo']) ? sanitize_text_field(wp_unslash($_GET['tipo'])) : '';
 $selected_type = '';
@@ -68,7 +68,7 @@ if ($selected_type !== '' && isset($display_types[$selected_type])) {
     array(
       'taxonomy' => 'category',
       'field' => 'slug',
-      'terms' => array('eventos'),
+      'terms' => array('eventos', 'redes', 'comunidades'),
       'operator' => 'NOT IN',
     ),
   );
@@ -110,6 +110,7 @@ $build_url = static function ($overrides = array ()) use ($base_url, $current_ar
 };
 
 $title_suffix = ($selected_type !== '' && isset($display_types[$selected_type])) ? ': ' . ($type_labels[$selected_type] ?? $display_types[$selected_type]['label']) : ' recentes';
+$has_active_filters = ($selected_type !== '' || $search_term !== '' || $sort !== 'recentes' || $per_page !== 8);
 get_header();
 ?>
 <main class="a11yhubbr-site-main a11yhubbr-content-page">
@@ -166,6 +167,9 @@ get_header();
         'per_page_options' => $allowed_per_page,
         'current_per_page' => $per_page,
         'per_page_label_suffix' => 'itens',
+        'show_reset' => $has_active_filters,
+        'reset_url' => $build_url(array('tipo' => '', 'busca' => '', 'ordem' => 'recentes', 'itens' => 8, 'pg' => 1)),
+        'reset_label' => 'Limpar filtros',
       )); ?>
 
       <?php if ($content_query->have_posts()): ?>
@@ -175,11 +179,13 @@ get_header();
             <?php
             $category_terms = get_the_terms(get_the_ID(), 'category');
             $post_type_label = '';
+            $post_type_icon = 'fa-regular fa-file-lines';
             if (!empty($category_terms) && !is_wp_error($category_terms)) {
               foreach ($types as $slug => $type) {
                 foreach ($category_terms as $term) {
                   if ($term->slug === $slug) {
                     $post_type_label = $term->name;
+                    $post_type_icon = isset($type['icon']) ? (string) $type['icon'] : 'fa-regular fa-file-lines';
                     break 2;
                   }
                 }
@@ -193,21 +199,27 @@ get_header();
             if ($excerpt === '') {
               $excerpt = wp_trim_words(wp_strip_all_tags(get_the_content(null, false, get_the_ID())), 24);
             }
-            $external_url = get_post_meta(get_the_ID(), '_a11yhubbr_source_link', true);
-            $external_url = is_string($external_url) ? trim($external_url) : '';
             $author_name = (string) get_post_meta(get_the_ID(), '_a11yhubbr_submitter_name', true);
             if ($author_name === '') {
               $author_name = get_the_author();
             }
+            $tag_names = wp_get_post_terms(get_the_ID(), 'post_tag', array('fields' => 'names'));
+            if (!is_array($tag_names)) {
+              $tag_names = array();
+            }
             ?>
             <?php get_template_part('inc/components/content-card', null, array(
               'label' => $post_type_label,
+              'badge_icon' => $post_type_icon,
               'date_iso' => get_the_date('c'),
               'date_text' => get_the_date('d/m/Y'),
               'title' => get_the_title(),
+              'title_url' => get_permalink(),
               'excerpt' => $excerpt,
               'author' => $author_name,
-              'external_url' => $external_url,
+              'tags' => $tag_names,
+              'action_url' => get_permalink(),
+              'action_label' => 'Acessar',
             )); ?>
           <?php endwhile; ?>
         </div>
@@ -240,6 +252,7 @@ get_header();
           'message' => 'N?o encontramos resultados para os filtros selecionados.',
           'cta_label' => 'Submeter conte?do',
           'cta_url' => function_exists('a11yhubbr_get_submit_content_url') ? a11yhubbr_get_submit_content_url() : home_url('/submeter/submeter-conteudo'),
+          'cta_class' => 'a11yhubbr-btn-context',
           'icon' => 'fa-regular fa-file-lines',
         )); ?>
       <?php endif; ?>

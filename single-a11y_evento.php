@@ -16,18 +16,89 @@ get_header();
 <main class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-event-page">
   <?php while (have_posts()): the_post(); ?>
     <?php
-    $modality = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_modality', true);
-    $event_type = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_type', true);
-    $location = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_location', true);
-    $organizer = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_organizer', true);
-    $event_link = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_link', true);
-    $slots_raw = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_slots', true);
+    $post_id = get_the_ID();
+    $modality = (string) get_post_meta($post_id, '_a11yhubbr_event_modality', true);
+    $event_type = (string) get_post_meta($post_id, '_a11yhubbr_event_type', true);
+    $location = (string) get_post_meta($post_id, '_a11yhubbr_event_location', true);
+    $organizer = (string) get_post_meta($post_id, '_a11yhubbr_event_organizer', true);
+    $event_link = trim((string) get_post_meta($post_id, '_a11yhubbr_event_link', true));
+    $slots_raw = (string) get_post_meta($post_id, '_a11yhubbr_event_slots', true);
     $slots = json_decode($slots_raw, true);
     if (!is_array($slots)) {
         $slots = array();
     }
-    $tags = get_the_terms(get_the_ID(), 'post_tag');
-    $permalink = get_permalink();
+
+    $tags = get_the_terms($post_id, 'post_tag');
+    $tag_ids = wp_get_post_terms($post_id, 'post_tag', array('fields' => 'ids'));
+    $permalink = get_permalink($post_id);
+
+    $raw_content = (string) get_post_field('post_content', $post_id);
+    $legacy_markers = array(
+        'Modalidade:',
+        'Tipo de evento:',
+        'Localizacao:',
+        'Organizador:',
+        'Link:',
+        'Datas e horarios:',
+        'Tags:',
+    );
+
+    $filtered_lines = array();
+    foreach (preg_split('/\R/u', $raw_content) as $line) {
+        $trimmed = ltrim((string) $line);
+        $is_legacy = false;
+        foreach ($legacy_markers as $marker) {
+            if (stripos($trimmed, $marker) === 0) {
+                $is_legacy = true;
+                break;
+            }
+        }
+        if ($is_legacy) {
+            break;
+        }
+        $filtered_lines[] = $line;
+    }
+
+    $content_to_render = trim(implode("\n", $filtered_lines));
+    if ($content_to_render === '') {
+        $content_to_render = $raw_content;
+    }
+    $content_to_render = apply_filters('the_content', $content_to_render);
+    $event_badge_parts = array();
+    if ($event_type !== '') {
+        $event_badge_parts[] = $event_type;
+    }
+    if ($modality !== '') {
+        $event_badge_parts[] = $modality;
+    }
+    $event_badge_label = trim(implode(' ', $event_badge_parts));
+    if ($event_badge_label === '') {
+        $event_badge_label = 'Evento';
+    }
+
+    $related_event_query = null;
+    if (!empty($tag_ids)) {
+        $related_event_query = new WP_Query(array(
+            'post_type' => 'a11y_evento',
+            'post_status' => 'publish',
+            'posts_per_page' => 3,
+            'post__not_in' => array($post_id),
+            'ignore_sticky_posts' => true,
+            'tag__in' => array_map('intval', $tag_ids),
+        ));
+    }
+
+    if (!($related_event_query instanceof WP_Query) || !$related_event_query->have_posts()) {
+        $related_event_query = new WP_Query(array(
+            'post_type' => 'a11y_evento',
+            'post_status' => 'publish',
+            'posts_per_page' => 3,
+            'post__not_in' => array($post_id),
+            'ignore_sticky_posts' => true,
+            'orderby' => 'date',
+            'order' => 'DESC',
+        ));
+    }
 
     a11yhubbr_render_page_header(array(
         'breadcrumbs' => array(
@@ -35,10 +106,11 @@ get_header();
             array('label' => 'Eventos', 'url' => home_url('/eventos')),
             array('label' => get_the_title()),
         ),
-        'icon' => 'fa-regular fa-calendar',
+        'icon' => '',
         'title' => get_the_title(),
-        'summary' => get_the_excerpt() !== '' ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content(null, false, get_the_ID())), 28),
+        'summary' => '',
         'use_page_context' => false,
+        'context' => 'eventos',
     ));
     ?>
 
@@ -46,24 +118,28 @@ get_header();
       <div class="a11yhubbr-container a11yhubbr-single-layout">
         <article class="a11yhubbr-card a11yhubbr-rich-content">
           <div class="a11yhubbr-single-meta-head">
-            <span class="a11yhubbr-content-item-badge"><?php echo esc_html($modality !== '' ? $modality : 'Evento'); ?></span>
-            <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time>
+            <span class="a11yhubbr-content-item-badge a11yhubbr-content-item-badge--eventos"><?php echo esc_html($event_badge_label); ?></span>
+            <?php if ($event_link !== ''): ?>
+              <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($event_link); ?>" target="_blank" rel="noopener noreferrer">
+                Acessar evento <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+            <?php endif; ?>
           </div>
 
-          <?php the_content(); ?>
+          <div class="a11yhubbr-single-content-body"><?php echo wp_kses_post($content_to_render); ?></div>
 
           <?php if (!empty($tags) && !is_wp_error($tags)): ?>
             <h3>Tags</h3>
             <div class="a11yhubbr-single-tags">
               <?php foreach ($tags as $tag): ?>
-                <span><?php echo esc_html($tag->name); ?></span>
+                <a href="<?php echo esc_url(add_query_arg(array('busca' => $tag->name, 'tipo' => 'eventos'), home_url('/busca/'))); ?>"><?php echo esc_html($tag->name); ?></a>
               <?php endforeach; ?>
             </div>
           <?php endif; ?>
 
           <?php if (!empty($slots)): ?>
             <div class="a11yhubbr-single-slot-list">
-              <h3>Datas e horérios</h3>
+              <h3>Datas e horários</h3>
               <ul>
                 <?php foreach ($slots as $index => $slot): ?>
                   <?php
@@ -83,13 +159,12 @@ get_header();
 
         <aside class="a11yhubbr-single-aside-stack">
           <div class="a11yhubbr-side-card a11yhubbr-single-side">
-            <h2>Informações do evento</h2>
+            <h2>Detalhes da submissão</h2>
             <dl>
-              <?php if ($modality !== ''): ?><div><dt>Modalidade</dt><dd><?php echo esc_html($modality); ?></dd></div><?php endif; ?>
-              <?php if ($event_type !== ''): ?><div><dt>Tipo de evento</dt><dd><?php echo esc_html($event_type); ?></dd></div><?php endif; ?>
+              <div><dt>Tipo</dt><dd><?php echo esc_html($event_type !== '' ? $event_type : 'Evento'); ?></dd></div>
+              <div><dt>Data</dt><dd><time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time></dd></div>
               <?php if ($location !== ''): ?><div><dt>Localização</dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
               <?php if ($organizer !== ''): ?><div><dt>Organizador</dt><dd><?php echo esc_html($organizer); ?></dd></div><?php endif; ?>
-              <?php if ($event_link !== ''): ?><div><dt>Link externo</dt><dd><a href="<?php echo esc_url($event_link); ?>" target="_blank" rel="noopener noreferrer">Acessar evento <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></dd></div><?php endif; ?>
             </dl>
           </div>
 
@@ -102,6 +177,58 @@ get_header();
         </aside>
       </div>
     </section>
+
+    <?php if ($related_event_query instanceof WP_Query && $related_event_query->have_posts()): ?>
+      <section class="a11yhubbr-section a11yhubbr-single-related">
+        <div class="a11yhubbr-container">
+          <h2 class="a11yhubbr-content-heading">Eventos relacionados</h2>
+          <div class="a11yhubbr-content-results-grid">
+            <?php while ($related_event_query->have_posts()): $related_event_query->the_post(); ?>
+              <?php
+              $related_modality = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_modality', true);
+              $related_type = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_type', true);
+              $related_badge_parts = array();
+              if ($related_type !== '') {
+                  $related_badge_parts[] = $related_type;
+              }
+              if ($related_modality !== '') {
+                  $related_badge_parts[] = $related_modality;
+              }
+              $related_badge_label = trim(implode(' ', $related_badge_parts));
+              if ($related_badge_label === '') {
+                  $related_badge_label = 'Evento';
+              }
+              $related_link = trim((string) get_post_meta(get_the_ID(), '_a11yhubbr_event_link', true));
+              $related_location = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_location', true);
+              $related_organizer = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_organizer', true);
+              $related_excerpt = get_the_excerpt();
+              $related_tags = wp_get_post_terms(get_the_ID(), 'post_tag', array('fields' => 'names'));
+              if (!is_array($related_tags)) {
+                  $related_tags = array();
+              }
+              if ($related_excerpt === '') {
+                  $related_excerpt = wp_trim_words(wp_strip_all_tags(get_post_field('post_content', get_the_ID())), 22);
+              }
+              ?>
+              <?php get_template_part('inc/components/event-card', null, array(
+                'label' => $related_badge_label,
+                'title' => get_the_title(),
+                'title_url' => get_permalink(),
+                'external_url' => $related_link,
+                'date_text' => get_the_date('d/m/Y'),
+                'time_text' => '',
+                'location' => $related_location,
+                'excerpt' => $related_excerpt,
+                'organizer' => $related_organizer,
+                'tags' => $related_tags,
+                'badge_class' => 'a11yhubbr-content-item-badge--eventos',
+              )); ?>
+            <?php endwhile; ?>
+          </div>
+        </div>
+      </section>
+    <?php endif; ?>
+    <?php wp_reset_postdata(); ?>
   <?php endwhile; ?>
 </main>
 <?php get_footer(); ?>

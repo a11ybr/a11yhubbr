@@ -7,6 +7,11 @@ if (!defined('ABSPATH')) {
 }
 
 $community_types = array(
+  'comunidades' => array(
+    'label' => 'Comunidades',
+    'icon' => 'fa-solid fa-users',
+    'aliases' => array('Comunidade', 'Comunidades', 'Rede', 'Redes'),
+  ),
   'profissionais-tecnologia' => array(
     'label' => 'Profissionais de IT',
     'icon' => 'fa-solid fa-briefcase',
@@ -171,6 +176,7 @@ $build_url = static function ($overrides = array ()) use ($base_url, $current_ar
 };
 
 $title_suffix = ($selected_type !== '' && isset($community_types[$selected_type])) ? ': ' . $community_types[$selected_type]['label'] : '';
+$has_active_filters = ($selected_type !== '' || $search_term !== '' || $sort !== 'nome_az' || $per_page !== 8);
 
 get_header();
 ?>
@@ -181,7 +187,7 @@ get_header();
       array('label' => 'Página inicial', 'url' => home_url('/')),
       array('label' => 'Rede'),
     ),
-    'icon' => 'fa-solid fa-users',
+    'icon' => 'fa-solid fa-circle-nodes',
   ));
   ?>
 
@@ -226,6 +232,9 @@ get_header();
         'per_page_options' => $allowed_per_page,
         'current_per_page' => $per_page,
         'per_page_label_suffix' => 'perfis',
+        'show_reset' => $has_active_filters,
+        'reset_url' => $build_url(array('tipo' => '', 'busca' => '', 'ordem' => 'nome_az', 'itens' => 8, 'pg' => 1)),
+        'reset_label' => 'Limpar filtros',
       )); ?>
 
       <?php if ($profiles_query->have_posts()): ?>
@@ -280,6 +289,7 @@ get_header();
           'message' => 'N?o encontramos perfis para os filtros selecionados.',
           'cta_label' => 'Submeter perfil',
           'cta_url' => function_exists('a11yhubbr_get_submit_profile_url') ? a11yhubbr_get_submit_profile_url() : home_url('/submeter/submeter-perfil'),
+          'cta_class' => 'a11yhubbr-btn-context',
           'icon' => 'fa-regular fa-id-card',
         )); ?>
       <?php endif; ?>

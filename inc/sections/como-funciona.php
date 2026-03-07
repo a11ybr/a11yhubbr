@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
       <article class="a11yhubbr-about-flow-card">
         <span class="a11yhubbr-about-flow-icon " aria-hidden="true"><i class="fa-solid fa-arrow-up-from-bracket"></i></span>
         <h3>Submissão comunitéria</h3>
-        <p>Qualquer pessoa pode sugerir conteúdo, evento ou cadastrar perfil.</p>
+        <p>Qualquer pessoa pode sugerir conteúdo, evento ou cadastrar comunidade.</p>
       </article>
       <article class="a11yhubbr-about-flow-card">
         <span class="a11yhubbr-about-flow-icon " aria-hidden="true"><i class="fa-regular fa-circle-check"></i></span>

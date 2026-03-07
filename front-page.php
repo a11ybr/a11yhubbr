@@ -17,15 +17,15 @@ $total_collaborations = $count_post + $count_event + $count_profile;
     <div class="a11yhubbr-container">
       <div class="a11yhubbr-home-v2-hero-content">
         <div class="a11yhubbr-home-v2-kicker-row">
-          <p class="a11yhubbr-home-v2-kicker" aria-label="<?php echo esc_attr(number_format_i18n($total_collaborations)); ?> colaborações publicadas">
+          <p class="budge is-gree" aria-label="<?php echo esc_attr(number_format_i18n($total_collaborations)); ?> colaborações publicadas">
             <?php echo esc_html(number_format_i18n($total_collaborations)); ?> colaborações
           </p>
         </div>
         <h1><mark class="a11yhubbr-hero-mark">Acessibilidade</mark> digital em português, <mark class="a11yhubbr-hero-mark">pela comunidade</mark></h1>
         <p>Um diretório colaborativo que documenta, organiza e amplifica o trabalho de quem constrói um Brasil digital mais inclusivo.</p>
         <div class="a11yhubbr-actions">
-          <a class="a11yhubbr-btn a11yhubbr-btn-light" href="<?php echo esc_url(home_url('/conteudos')); ?>">Explorar conteúdos<i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i></a>
-          <a class="a11yhubbr-btn a11yhubbr-btn-outline" href="<?php echo esc_url(function_exists('a11yhubbr_get_submit_content_url') ? a11yhubbr_get_submit_content_url() : home_url('/submeter/submeter-conteudo')); ?>">Submeter conteúdo</a>
+          <a class="a11yhubbr-btn a11yhubbr-btn-secondary a11yhubbr-btn-light" href="<?php echo esc_url(home_url('/conteudos')); ?>"><i class="fa-regular fa-file-lines"></i>Explorar conteúdos</a>
+          <a class="a11yhubbr-btn a11yhubbr-btn-alternative a11yhubbr-header-submit-btn" href="<?php echo esc_url(function_exists('a11yhubbr_get_submit_content_url') ? a11yhubbr_get_submit_content_url() : home_url('/submeter/submeter-conteudo')); ?>"><i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>Submeter conteúdo</a>
         </div>
       </div>
     </div>
@@ -39,7 +39,6 @@ $total_collaborations = $count_post + $count_event + $count_profile;
       <?php
       $content_categories = array(
         array('title' => 'Artigos', 'desc' => 'conteúdos escritos com anélise, opiniéo ou estudo de caso', 'icon' => 'fa-regular fa-file-lines', 'tipo' => 'artigos'),
-        array('title' => 'Comunidades', 'desc' => 'espaéos de networking e troca sobre acessibilidade', 'icon' => 'fa-solid fa-users', 'tipo' => 'comunidades'),
         array('title' => 'Livros e materiais', 'desc' => 'livros, guias e materiais de referéncia', 'icon' => 'fa-solid fa-book-open', 'tipo' => 'cursos-materiais'),
         array('title' => 'Ferramentas', 'desc' => 'recursos técnicos para auditoria e testes de acessibilidade', 'icon' => 'fa-solid fa-wrench', 'tipo' => 'ferramentas'),
         array('title' => 'Multimédia', 'desc' => 'podcasts e canais de védeo', 'icon' => 'fa-solid fa-headphones', 'tipo' => 'multimidia'),
@@ -143,22 +142,28 @@ $total_collaborations = $count_post + $count_event + $count_profile;
             $external_url = trim((string) get_post_meta(get_the_ID(), '_a11yhubbr_event_link', true));
             $location = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_location', true);
             $organizer = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_organizer', true);
+            $tag_names = wp_get_post_terms(get_the_ID(), 'post_tag', array('fields' => 'names'));
+            if (!is_array($tag_names)) {
+              $tag_names = array();
+            }
             ?>
             <?php get_template_part('inc/components/event-card', null, array(
               'label' => $modality,
               'title' => get_the_title(),
+              'title_url' => get_permalink(),
               'external_url' => $external_url,
               'date_text' => $format_home_event_date(get_the_ID()),
               'time_text' => $format_home_event_time(get_the_ID()),
               'location' => $location,
               'excerpt' => $excerpt,
               'organizer' => $organizer,
+              'tags' => $tag_names,
             )); ?>
           <?php endwhile; ?>
         </div>
 
         <div class="a11yhubbr-home-v2-center">
-          <a class="a11yhubbr-btn" href="<?php echo esc_url(home_url('/eventos')); ?>">Ver todos os eventos</a>
+          <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url(home_url('/eventos')); ?>">Ver todos os eventos</a>
         </div>
       <?php else: ?>
         <?php get_template_part('inc/components/empty-state', null, array(
@@ -179,6 +184,7 @@ $total_collaborations = $count_post + $count_event + $count_profile;
 
       <?php
       $community_categories = array(
+        array('title' => 'Comunidades', 'desc' => 'espaços de networking e troca sobre acessibilidade', 'icon' => 'fa-solid fa-users', 'tipo' => 'Comunidades'),
         array('title' => 'Profissionais de tecnologia', 'desc' => 'designers, desenvolvedores, QA, product managers', 'icon' => 'fa-solid fa-briefcase', 'tipo' => 'Profissionais de tecnologia'),
         array('title' => 'Empresas e ONGs', 'desc' => 'organizações comprometidas com acessibilidade', 'icon' => 'fa-regular fa-building', 'tipo' => 'Empresas e ONGs'),
         array('title' => 'Intérpretes de Libras', 'desc' => 'profissionais de comunicação em língua de sinais', 'icon' => 'fa-regular fa-hand', 'tipo' => 'Interpretes de Libras'),
@@ -187,6 +193,7 @@ $total_collaborations = $count_post + $count_event + $count_profile;
       );
 
       $community_aliases = array(
+        'Comunidades' => array('Comunidade', 'Comunidades', 'Rede', 'Redes'),
         'Profissionais de tecnologia' => array('Profissional de tecnologia', 'Profissionais de tecnologia', 'Profissionais de IT'),
         'Empresas e ONGs' => array('Empresa ou ONG', 'Empresas e ONGs'),
         'Interpretes de Libras' => array('Intérprete de Libras', 'Interprete de Libras', 'Intérpretes de Libras'),
@@ -236,11 +243,10 @@ $total_collaborations = $count_post + $count_event + $count_profile;
       </div>
 
       <div class="a11yhubbr-home-v2-center">
-        <a class="a11yhubbr-btn" href="<?php echo esc_url(home_url('/rede')); ?>">Ver toda a rede</a>
+        <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url(home_url('/rede')); ?>">Ver toda a rede</a>
       </div>
     </div>
   </section>
 
 </main>
 <?php get_footer(); ?>
-

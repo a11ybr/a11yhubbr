@@ -117,7 +117,7 @@
   </div>
 
   <div class="a11yhubbr-container a11yhubbr-footer-copy">
-    <p>&copy; <?php echo esc_html(date_i18n('Y')); ?> <strong>A11YBR</strong>. Conteudo disponivel sob licenca Creative Commons CC BY 4.0</p>
+    <p>&copy; <?php echo esc_html(date_i18n('Y')); ?> <strong>A11YBR</strong>. Conteudo disponivel sob licenca <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons CC BY 4.0</a></p>
     <p>Feito com <span class="a11yhubbr-heart" aria-hidden="true"><i class="fa-regular fa-heart"></i></span> pela comunidade brasileira</p>
   </div>
 </footer>

@@ -12,6 +12,7 @@ $defaults = array(
     'show_external_link' => true,
     'external_label' => 'Site',
     'show_social' => true,
+    'badge_class' => '',
 );
 
 $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $defaults;
@@ -39,49 +40,36 @@ if ($social_raw !== '') {
     $decoded = json_decode($social_raw, true);
     if (is_array($decoded)) {
         foreach ($decoded as $item) {
-            if (!is_array($item)) {
-                continue;
+            $network = '';
+            if (is_array($item)) {
+                $url = esc_url_raw($item['url'] ?? '');
+                $network = sanitize_key((string) ($item['network'] ?? ''));
+            } else {
+                $url = esc_url_raw((string) $item);
             }
-            $url = esc_url_raw($item['url'] ?? '');
             if ($url !== '') {
-                $social_links[] = $url;
+                $social_links[] = array(
+                    'url' => $url,
+                    'network' => $network,
+                );
             }
         }
     } else {
         foreach (explode(',', $social_raw) as $part) {
             $url = esc_url_raw(trim($part));
             if ($url !== '') {
-                $social_links[] = $url;
+                $social_links[] = array(
+                    'url' => $url,
+                    'network' => '',
+                );
             }
         }
     }
 }
 
-$social_icon_from_url = static function ($url) {
-    $host = wp_parse_url($url, PHP_URL_HOST);
-    $host = is_string($host) ? strtolower($host) : '';
-
-    if (strpos($host, 'linkedin') !== false) {
-        return 'fa-brands fa-linkedin-in';
-    }
-    if (strpos($host, 'github') !== false) {
-        return 'fa-brands fa-github';
-    }
-    if (strpos($host, 'instagram') !== false) {
-        return 'fa-brands fa-instagram';
-    }
-    if (strpos($host, 'twitter') !== false || strpos($host, 'x.com') !== false) {
-        return 'fa-brands fa-x-twitter';
-    }
-    if (strpos($host, 'facebook') !== false) {
-        return 'fa-brands fa-facebook-f';
-    }
-
-    return 'fa-solid fa-globe';
-};
-
-$profile_url = $website !== '' ? esc_url_raw($website) : (!empty($social_links) ? $social_links[0] : '');
+$profile_url = $website !== '' ? esc_url_raw($website) : (!empty($social_links) ? (string) ($social_links[0]['url'] ?? '') : '');
 $details_url = is_string($args['details_url']) && $args['details_url'] !== '' ? $args['details_url'] : get_permalink($post_id);
+$badge_class = trim((string) $args['badge_class']);
 
 $initials = '';
 foreach (preg_split('/\s+/', trim($title)) as $word) {
@@ -112,7 +100,7 @@ if (!is_string($excerpt) || trim($excerpt) === '') {
 
     <div class="a11yhubbr-community-profile-head-copy">
       <?php if ($args['badge_label'] !== ''): ?>
-        <span class="a11yhubbr-content-item-badge"><?php echo esc_html((string) $args['badge_label']); ?></span>
+        <span class="a11yhubbr-content-item-badge<?php echo $badge_class !== '' ? ' ' . esc_attr($badge_class) : ''; ?>"><?php echo esc_html((string) $args['badge_label']); ?></span>
       <?php endif; ?>
       <h3>
         <a href="<?php echo esc_url($details_url); ?>"><?php echo esc_html($title); ?></a>
@@ -127,11 +115,16 @@ if (!is_string($excerpt) || trim($excerpt) === '') {
   <p class="a11yhubbr-community-desc"><?php echo esc_html($excerpt); ?></p>
   <?php if (!empty($args['show_social']) && !empty($social_links)): ?>
     <div class="a11yhubbr-community-social">
-      <?php foreach ($social_links as $social_url): ?>
-        <a href="<?php echo esc_url($social_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="Abrir rede social">
-          <i class="<?php echo esc_attr($social_icon_from_url($social_url)); ?>" aria-hidden="true"></i>
+      <?php foreach ($social_links as $social_item): ?>
+        <?php
+        $social_url = (string) ($social_item['url'] ?? '');
+        $social_network = (string) ($social_item['network'] ?? '');
+        ?>
+        <a class="a11yhubbr-social-link is-<?php echo esc_attr(function_exists('a11yhubbr_get_social_network_key') ? a11yhubbr_get_social_network_key($social_url, $social_network) : 'website'); ?>" href="<?php echo esc_url($social_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="Abrir rede social">
+          <i class="<?php echo esc_attr(function_exists('a11yhubbr_get_social_icon_class') ? a11yhubbr_get_social_icon_class($social_url, $social_network) : 'fa-solid fa-globe'); ?>" aria-hidden="true"></i>
         </a>
       <?php endforeach; ?>
     </div>
   <?php endif; ?>
 </article>
+

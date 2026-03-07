@@ -23,10 +23,10 @@ $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $def
 
   <div class="a11yhubbr-actions">
     <?php if (!empty($args['primary']['label']) && !empty($args['primary']['url'])): ?>
-      <a class="a11yhubbr-btn" href="<?php echo esc_url($args['primary']['url']); ?>"><?php echo esc_html($args['primary']['label']); ?></a>
+      <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($args['primary']['url']); ?>"><?php echo esc_html($args['primary']['label']); ?></a>
     <?php endif; ?>
     <?php if (!empty($args['secondary']['label']) && !empty($args['secondary']['url'])): ?>
-      <a class="a11yhubbr-btn a11yhubbr-btn-light" href="<?php echo esc_url($args['secondary']['url']); ?>"><?php echo esc_html($args['secondary']['label']); ?></a>
+      <a class="a11yhubbr-btn a11yhubbr-btn-secondary a11yhubbr-btn-light" href="<?php echo esc_url($args['secondary']['url']); ?>"><?php echo esc_html($args['secondary']['label']); ?></a>
     <?php endif; ?>
   </div>
 </div>

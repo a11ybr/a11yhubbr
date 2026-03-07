@@ -57,7 +57,7 @@ $faq_groups = array(
   'Cadastro de Iniciativas' => array(
     array(
       'q' => 'Quais tipos de iniciativas podem ser cadastradas?',
-      'a' => 'Aceitamos ferramentas, bibliotecas, cursos, comunidades, consultorias, eventos, podcasts, blogs, canais e qualquer outro recurso relacionado à acessibilidade digital. A iniciativa deve ter presença online verificável e estar em atividade.',
+      'a' => 'Aceitamos ferramentas, bibliotecas, livros e materiais, comunidades, consultorias, eventos, podcasts, blogs, canais e qualquer outro recurso relacionado à acessibilidade digital. A iniciativa deve ter presença online verificável e estar em atividade.',
     ),
     array(
       'q' => 'Quanto tempo leva para minha iniciativa ser aprovada?',
@@ -75,7 +75,7 @@ $faq_groups = array(
   'Navegação e Uso' => array(
     array(
       'q' => 'Como posso buscar iniciativas específicas?',
-      'a' => 'Você pode explorar por categorias, usar a busca por palavras-chave, ou filtrar por tipo de iniciativa (ferramenta, curso, comunidade, etc.). Também é possível navegar pelas páginas de pessoas e organizações para descobrir suas iniciativas associadas.',
+      'a' => 'Você pode explorar por categorias, usar a busca por palavras-chave, ou filtrar por tipo de iniciativa (ferramenta, livros e materiais, comunidade, etc.). Também é possível navegar pelas páginas de pessoas e organizações para descobrir suas iniciativas associadas.',
     ),
     array(
       'q' => 'A plataforma é acessível?',
@@ -97,7 +97,7 @@ $faq_groups = array(
     ),
     array(
       'q' => 'Posso contribuir com o código da plataforma?',
-      'a' => 'Claro! O projeto é open source e aceitamos contribuições. Visite nosso repositório no <a href="http://github.com/a11ybr/a11yhubbr">GitHub</a> para ver as issues abertas, propor melhorias ou enviar pull requests.',
+      'a' => 'Claro! O projeto é open source e aceitamos contribuições. Visite nosso repositório no GitHub para ver as issues abertas, propor melhorias ou enviar pull requests.',
     ),
 
   ),
@@ -141,8 +141,8 @@ get_header();
   ));
   ?>
 
-  <section class="a11yhubbr-about-section">
-    <div class="a11yhubbr-container">
+  <section class="a11yhubbr-about-section a11yhubbr-section-intro">
+    <div class="a11yhubbr-container a11yhubbr-card">
       <article>
         <h2>Nossa visão</h2>
         <p>O <strong>A11YBR</strong> existe para documentar, organizar e amplificar o trabalho de quem constrói um
@@ -152,22 +152,17 @@ get_header();
           formatos, regiões e abordagens, criamos oportunidades para que pessoas encontrem recursos, colaborem entre si
           e fortaleéam a rede de acessibilidade digital brasileira.</p>
       </article>
-    </div>
-  </section>
 
-<section class="a11yhubbr-section">
-    <div class="a11yhubbr-container">
-      <h2 class="a11yhubbr-section-title">O que somos e o que não somos</h2>
       <div class="a11yhubbr-cards-grid">
         <article class="a11yhubbr-guideline-list-card is-accepted">
-          <h3><i class="fa-regular fa-circle-check"></i> O que somos</h3>
+          <h3 class="a11yhubbr-section-subtitle"><i class="fa-regular fa-circle-check"></i> O que somos</h3>
           <ul>
             <?php foreach ($accepted as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; ?>
           </ul>
         </article>
 
         <article class="a11yhubbr-guideline-list-card is-rejected">
-          <h3><i class="fa-regular fa-circle-xmark"></i> O que não somos</h3>
+          <h3 class="a11yhubbr-section-subtitle"><i class="fa-regular fa-circle-xmark"></i> O que não somos</h3>
           <ul>
             <?php foreach ($not_accepted as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; ?>
           </ul>

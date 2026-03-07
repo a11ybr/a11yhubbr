@@ -43,8 +43,8 @@ if (!defined('ABSPATH')) {
       <a class="a11yhubbr-header-search-btn" href="<?php echo esc_url(function_exists('a11yhubbr_get_search_page_url') ? a11yhubbr_get_search_page_url() : home_url('/busca')); ?>" aria-label="Buscar no site">
         <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       </a>
-      <a class="a11yhubbr-btn a11yhubbr-header-submit-btn" href="<?php echo esc_url(home_url('/submeter')); ?>">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <a class="a11yhubbr-btn a11yhubbr-btn-alternative a11yhubbr-header-submit-btn" href="<?php echo esc_url(home_url('/submeter')); ?>">
+        <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
         Submeter
       </a>
     </div>

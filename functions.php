@@ -97,31 +97,31 @@ function a11yhubbr_get_page_url_by_template($template, $fallback_path = '/') {
 }
 
 function a11yhubbr_get_submit_content_url() {
-    return a11yhubbr_get_page_url_by_template('page-submeter-conteudo.php', '/submeter/submeter-conteudo');
+    return a11yhubbr_get_page_url_by_template('pages/page-submeter-conteudo.php', '/submeter/submeter-conteudo');
 }
 
 function a11yhubbr_get_submit_event_url() {
-    return a11yhubbr_get_page_url_by_template('page-submeter-eventos.php', '/submeter/submeter-eventos');
+    return a11yhubbr_get_page_url_by_template('pages/page-submeter-eventos.php', '/submeter/submeter-eventos');
 }
 
 function a11yhubbr_get_submit_profile_url() {
-    return a11yhubbr_get_page_url_by_template('page-submeter-perfil.php', '/submeter/submeter-perfil');
+    return a11yhubbr_get_page_url_by_template('pages/page-submeter-perfil.php', '/submeter/submeter-perfil');
 }
 
 function a11yhubbr_get_accessibility_page_url() {
-    return a11yhubbr_get_page_url_by_template('page-acessibilidade.php', '/acessibilidade');
+    return a11yhubbr_get_page_url_by_template('pages/page-acessibilidade.php', '/acessibilidade');
 }
 
 function a11yhubbr_get_terms_page_url() {
-    return a11yhubbr_get_page_url_by_template('page-termos-de-uso.php', '/termos-de-uso');
+    return a11yhubbr_get_page_url_by_template('pages/page-termos-de-uso.php', '/termos-de-uso');
 }
 
 function a11yhubbr_get_privacy_page_url() {
-    return a11yhubbr_get_page_url_by_template('page-politica-de-privacidade.php', '/politica-de-privacidade');
+    return a11yhubbr_get_page_url_by_template('pages/page-politica-de-privacidade.php', '/politica-de-privacidade');
 }
 
 function a11yhubbr_get_search_page_url() {
-    return a11yhubbr_get_page_url_by_template('page-busca.php', '/busca');
+    return a11yhubbr_get_page_url_by_template('pages/page-busca.php', '/busca');
 }
 
 function a11yhubbr_is_submit_path_active() {
@@ -174,7 +174,6 @@ add_filter('wp_nav_menu_objects', 'a11yhubbr_filter_primary_menu_items', 10, 2);
 function a11yhubbr_get_content_type_map() {
     return array(
         'artigos' => array('label' => 'Artigos', 'icon' => 'fa-regular fa-file-lines'),
-        'comunidades' => array('label' => 'Comunidades', 'icon' => 'fa-solid fa-users'),
         'cursos-materiais' => array('label' => 'Livros e Materiais', 'icon' => 'fa-solid fa-book-open'),
         'eventos' => array('label' => 'Eventos', 'icon' => 'fa-regular fa-calendar'),
         'ferramentas' => array('label' => 'Ferramentas', 'icon' => 'fa-solid fa-wrench'),
@@ -192,6 +191,14 @@ function a11yhubbr_get_content_type_by_slug($slug) {
 function a11yhubbr_get_content_type_slug_from_input($value) {
     $normalized = sanitize_title((string) $value);
     $types = a11yhubbr_get_content_type_map();
+    $legacy_aliases = array(
+        'cursos-e-materiais' => 'cursos-materiais',
+        'curso-e-material' => 'cursos-materiais',
+    );
+
+    if (isset($legacy_aliases[$normalized])) {
+        return $legacy_aliases[$normalized];
+    }
 
     if (isset($types[$normalized])) {
         return $normalized;
@@ -204,6 +211,121 @@ function a11yhubbr_get_content_type_slug_from_input($value) {
     }
 
     return '';
+}
+
+function a11yhubbr_get_social_icon_class($url, $network = '') {
+    $network = sanitize_key((string) $network);
+    $network_map = array(
+        'linkedin' => 'fa-brands fa-linkedin-in',
+        'github' => 'fa-brands fa-github',
+        'gitlab' => 'fa-brands fa-gitlab',
+        'instagram' => 'fa-brands fa-instagram',
+        'x' => 'fa-brands fa-x-twitter',
+        'twitter' => 'fa-brands fa-x-twitter',
+        'facebook' => 'fa-brands fa-facebook-f',
+        'threads' => 'fa-brands fa-threads',
+        'bluesky' => 'fa-brands fa-bluesky',
+        'telegram' => 'fa-brands fa-telegram',
+        'whatsapp' => 'fa-brands fa-whatsapp',
+        'youtube' => 'fa-brands fa-youtube',
+        'tiktok' => 'fa-brands fa-tiktok',
+        'medium' => 'fa-brands fa-medium',
+        'behance' => 'fa-brands fa-behance',
+        'dribbble' => 'fa-brands fa-dribbble',
+        'discord' => 'fa-brands fa-discord',
+        'mastodon' => 'fa-brands fa-mastodon',
+        'devto' => 'fa-brands fa-dev',
+    );
+
+    if ($network !== '' && isset($network_map[$network])) {
+        return $network_map[$network];
+    }
+
+    $host = wp_parse_url((string) $url, PHP_URL_HOST);
+    $host = is_string($host) ? strtolower($host) : '';
+
+    if ($host === '') {
+        return 'fa-solid fa-globe';
+    }
+
+    $map = array(
+        'linkedin.com' => 'fa-brands fa-linkedin-in',
+        'github.com' => 'fa-brands fa-github',
+        'gitlab.com' => 'fa-brands fa-gitlab',
+        'instagram.com' => 'fa-brands fa-instagram',
+        'twitter.com' => 'fa-brands fa-x-twitter',
+        'x.com' => 'fa-brands fa-x-twitter',
+        'facebook.com' => 'fa-brands fa-facebook-f',
+        'threads.net' => 'fa-brands fa-threads',
+        'bsky.app' => 'fa-brands fa-bluesky',
+        'telegram.org' => 'fa-brands fa-telegram',
+        't.me' => 'fa-brands fa-telegram',
+        'wa.me' => 'fa-brands fa-whatsapp',
+        'whatsapp.com' => 'fa-brands fa-whatsapp',
+        'youtube.com' => 'fa-brands fa-youtube',
+        'youtu.be' => 'fa-brands fa-youtube',
+        'tiktok.com' => 'fa-brands fa-tiktok',
+        'medium.com' => 'fa-brands fa-medium',
+        'behance.net' => 'fa-brands fa-behance',
+        'dribbble.com' => 'fa-brands fa-dribbble',
+        'discord.com' => 'fa-brands fa-discord',
+        'mastodon.social' => 'fa-brands fa-mastodon',
+        'dev.to' => 'fa-brands fa-dev',
+    );
+
+    foreach ($map as $domain => $icon) {
+        if (strpos($host, $domain) !== false) {
+            return $icon;
+        }
+    }
+
+    return 'fa-solid fa-globe';
+}
+
+function a11yhubbr_get_social_network_key($url, $network = '') {
+    $network = sanitize_key((string) $network);
+    if ($network !== '' && $network !== 'website') {
+        return $network;
+    }
+
+    $host = wp_parse_url((string) $url, PHP_URL_HOST);
+    $host = is_string($host) ? strtolower($host) : '';
+    if ($host === '') {
+        return 'website';
+    }
+
+    $domain_map = array(
+        'linkedin.com' => 'linkedin',
+        'github.com' => 'github',
+        'gitlab.com' => 'gitlab',
+        'instagram.com' => 'instagram',
+        'twitter.com' => 'x',
+        'x.com' => 'x',
+        'facebook.com' => 'facebook',
+        'threads.net' => 'threads',
+        'bsky.app' => 'bluesky',
+        'telegram.org' => 'telegram',
+        't.me' => 'telegram',
+        'wa.me' => 'whatsapp',
+        'whatsapp.com' => 'whatsapp',
+        'youtube.com' => 'youtube',
+        'youtu.be' => 'youtube',
+        'tiktok.com' => 'tiktok',
+        'medium.com' => 'medium',
+        'behance.net' => 'behance',
+        'dribbble.com' => 'dribbble',
+        'discord.com' => 'discord',
+        'mastodon.social' => 'mastodon',
+        'dev.to' => 'devto',
+    );
+
+    foreach ($domain_map as $domain => $key) {
+        if (strpos($host, $domain) !== false) {
+            return $key;
+        }
+    }
+
+    return 'website';
 }
 
 function a11yhubbr_find_posts_by_term($post_type, $term, $meta_keys = array(), $post_status = 'publish') {
@@ -305,6 +427,93 @@ function a11yhubbr_migrate_legacy_content_type_meta_to_category() {
 }
 add_action('admin_init', 'a11yhubbr_migrate_legacy_content_type_meta_to_category');
 
+function a11yhubbr_migrate_legacy_network_posts_to_profiles() {
+    if (!is_admin()) {
+        return;
+    }
+
+    if (get_option('a11yhubbr_network_posts_to_profiles_done_v1') === '1') {
+        return;
+    }
+
+    $source_posts = get_posts(array(
+        'post_type' => 'post',
+        'post_status' => array('publish', 'pending', 'draft'),
+        'posts_per_page' => -1,
+        'fields' => 'ids',
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'category',
+                'field' => 'slug',
+                'terms' => array('redes', 'comunidades'),
+            ),
+        ),
+    ));
+
+    if (empty($source_posts)) {
+        update_option('a11yhubbr_network_posts_to_profiles_done_v1', '1', false);
+        return;
+    }
+
+    foreach ($source_posts as $source_id) {
+        $source_id = (int) $source_id;
+        if ($source_id <= 0) {
+            continue;
+        }
+
+        $already_migrated = (int) get_post_meta($source_id, '_a11yhubbr_migrated_profile_id', true);
+        if ($already_migrated > 0) {
+            continue;
+        }
+
+        $source = get_post($source_id);
+        if (!$source instanceof WP_Post) {
+            continue;
+        }
+
+        $status = in_array($source->post_status, array('publish', 'pending', 'draft'), true)
+            ? $source->post_status
+            : 'pending';
+
+        $new_id = wp_insert_post(array(
+            'post_type' => 'a11y_perfil',
+            'post_status' => $status,
+            'post_title' => get_the_title($source_id),
+            'post_excerpt' => (string) $source->post_excerpt,
+            'post_content' => (string) $source->post_content,
+        ), true);
+
+        if (is_wp_error($new_id)) {
+            continue;
+        }
+
+        $source_link = (string) get_post_meta($source_id, '_a11yhubbr_source_link', true);
+        $source_email = (string) get_post_meta($source_id, '_a11yhubbr_contact_email', true);
+        $source_org = (string) get_post_meta($source_id, '_a11yhubbr_submitter_org', true);
+
+        update_post_meta($new_id, '_a11yhubbr_profile_type', 'Comunidade');
+        update_post_meta($new_id, '_a11yhubbr_profile_role', $source_org !== '' ? $source_org : 'Comunidade');
+        update_post_meta($new_id, '_a11yhubbr_profile_location', '');
+        update_post_meta($new_id, '_a11yhubbr_profile_website', $source_link);
+        update_post_meta($new_id, '_a11yhubbr_contact_email', $source_email);
+        update_post_meta($new_id, '_a11yhubbr_migrated_from_post', $source_id);
+        update_post_meta($source_id, '_a11yhubbr_migrated_profile_id', (int) $new_id);
+
+        $tags = wp_get_post_terms($source_id, 'post_tag', array('fields' => 'names'));
+        if (!is_wp_error($tags) && !empty($tags)) {
+            wp_set_post_terms($new_id, $tags, 'post_tag', false);
+        }
+
+        $thumb_id = get_post_thumbnail_id($source_id);
+        if ($thumb_id) {
+            set_post_thumbnail($new_id, (int) $thumb_id);
+        }
+    }
+
+    update_option('a11yhubbr_network_posts_to_profiles_done_v1', '1', false);
+}
+add_action('admin_init', 'a11yhubbr_migrate_legacy_network_posts_to_profiles');
+
 function a11yhubbr_rename_books_category_once() {
     if (get_option('a11yhubbr_books_category_renamed_v1') === '1') {
         return;
@@ -322,6 +531,52 @@ function a11yhubbr_rename_books_category_once() {
 }
 add_action('init', 'a11yhubbr_rename_books_category_once');
 
+function a11yhubbr_get_header_context() {
+    $queried_id = (int) get_queried_object_id();
+    $template = $queried_id > 0 ? (string) get_page_template_slug($queried_id) : '';
+    $post_type = $queried_id > 0 ? (string) get_post_type($queried_id) : '';
+
+    $lineage_slugs = array();
+    if ($queried_id > 0 && get_post_type($queried_id) === 'page') {
+        $ancestor_ids = get_post_ancestors($queried_id);
+        $ancestor_ids[] = $queried_id;
+        foreach ($ancestor_ids as $ancestor_id) {
+            $slug = (string) get_post_field('post_name', (int) $ancestor_id);
+            if ($slug !== '') {
+                $lineage_slugs[] = sanitize_title($slug);
+            }
+        }
+    }
+
+    if ($post_type === 'a11y_evento' || is_post_type_archive('a11y_evento') || $template === 'pages/page-eventos.php' || in_array('eventos', $lineage_slugs, true)) {
+        return 'eventos';
+    }
+
+    if ($post_type === 'a11y_perfil' || is_post_type_archive('a11y_perfil') || $template === 'pages/page-rede.php' || in_array('rede', $lineage_slugs, true) || in_array('comunidade', $lineage_slugs, true)) {
+        return 'rede';
+    }
+
+    if ($post_type === 'post' || $template === 'pages/page-conteudos.php' || $template === 'pages/page-busca.php' || is_home() || is_category() || is_tag() || is_search() || in_array('conteudos', $lineage_slugs, true)) {
+        return 'conteudos';
+    }
+
+    return 'default';
+}
+
+function a11yhubbr_add_context_body_class($classes) {
+    $context = a11yhubbr_get_header_context();
+    if (!is_array($classes)) {
+        $classes = array();
+    }
+
+    if (is_string($context) && $context !== '') {
+        $classes[] = 'a11yhubbr-context-' . sanitize_html_class($context);
+    }
+
+    return array_values(array_unique($classes));
+}
+add_filter('body_class', 'a11yhubbr_add_context_body_class');
+
 function a11yhubbr_render_page_header($args = array()) {
     $defaults = array(
         'breadcrumbs' => array(),
@@ -329,6 +584,7 @@ function a11yhubbr_render_page_header($args = array()) {
         'title' => '',
         'summary' => '',
         'use_page_context' => true,
+        'context' => '',
     );
 
     $data = wp_parse_args($args, $defaults);
@@ -337,6 +593,10 @@ function a11yhubbr_render_page_header($args = array()) {
     $summary = (string) $data['summary'];
     $use_page_context = !empty($data['use_page_context']);
     $breadcrumbs = is_array($data['breadcrumbs']) ? $data['breadcrumbs'] : array();
+    $context = sanitize_key((string) $data['context']);
+    if ($context === '' && $use_page_context) {
+        $context = a11yhubbr_get_header_context();
+    }
 
     if ($use_page_context) {
         $queried_id = get_queried_object_id();
@@ -356,7 +616,12 @@ function a11yhubbr_render_page_header($args = array()) {
         }
     }
 
-    echo '<section class="a11yhubbr-page-header a11yhubbr-home-v2-hero">';
+    $section_classes = array('a11yhubbr-page-header', 'a11yhubbr-home-v2-hero');
+    if ($context !== '' && $context !== 'default') {
+        $section_classes[] = 'a11yhubbr-page-header--' . sanitize_html_class($context);
+    }
+
+    echo '<section class="' . esc_attr(implode(' ', $section_classes)) . '">';
     echo '<div class="a11yhubbr-container">';
 
     if (!empty($breadcrumbs)) {
@@ -382,7 +647,9 @@ function a11yhubbr_render_page_header($args = array()) {
     }
 
     echo '<h1 class="a11yhubbr-page-header-title">';
-    echo '<span class="a11yhubbr-page-header-icon" aria-hidden="true"><i class="' . esc_attr($icon_class) . '"></i></span>';
+    if ($icon_class !== '') {
+        echo '<span class="a11yhubbr-page-header-icon" aria-hidden="true"><i class="' . esc_attr($icon_class) . '"></i></span>';
+    }
     echo esc_html($title);
     echo '</h1>';
 
@@ -400,43 +667,43 @@ function a11yhubbr_sync_pages_title_excerpt_once() {
     }
 
     $map = array(
-        'page-conteudos.php' => array(
-            'title' => 'Conteudos',
+        'pages/page-conteudos.php' => array(
+            'title' => 'Conteúdos',
             'excerpt' => 'Explore recursos organizados por tipo para facilitar sua busca por conhecimento em acessibilidade.',
         ),
-        'page-rede.php' => array(
+        'pages/page-rede.php' => array(
             'title' => 'Rede',
             'excerpt' => 'Profissionais e organizações que atuam com acessibilidade digital.',
         ),
-        'page-eventos.php' => array(
+        'pages/page-eventos.php' => array(
             'title' => 'Eventos',
             'excerpt' => 'Conferencias, workshops, meetups e webinars sobre acessibilidade digital.',
         ),
-        'page-submeter.php' => array(
+        'pages/page-submeter.php' => array(
             'title' => 'Submeter',
             'excerpt' => 'Envie conteudos, eventos e perfis para fortalecer a comunidade.',
         ),
-        'page-submeter-conteudo.php' => array(
+        'pages/page-submeter-conteudo.php' => array(
             'title' => 'Submeter conteudo',
             'excerpt' => 'Compartilhe artigos, ferramentas, livros e outros recursos sobre acessibilidade.',
         ),
-        'page-submeter-eventos.php' => array(
+        'pages/page-submeter-eventos.php' => array(
             'title' => 'Submeter evento',
             'excerpt' => 'Divulgue workshops, conferencias, meetups e webinars sobre acessibilidade.',
         ),
-        'page-submeter-perfil.php' => array(
+        'pages/page-submeter-perfil.php' => array(
             'title' => 'Submeter perfil',
             'excerpt' => 'Cadastre profissionais e organizacoes da comunidade de acessibilidade.',
         ),
-        'page-sobre.php' => array(
+        'pages/page-sobre.php' => array(
             'title' => 'Sobre a A11YBR',
             'excerpt' => 'O que somos, por que existimos e como funciona a plataforma.',
         ),
-        'page-diretrizes.php' => array(
+        'pages/page-diretrizes.php' => array(
             'title' => 'Diretrizes da comunidade',
             'excerpt' => 'Critérios de publicação, padrões de qualidade e regras de convivência da plataforma.',
         ),
-        'page-contato.php' => array(
+        'pages/page-contato.php' => array(
             'title' => 'Contato',
             'excerpt' => 'Canal para sugerir alterações, reportar informações desatualizadas e tirar dévidas.',
         ),
@@ -484,10 +751,10 @@ function a11yhubbr_ensure_diretrizes_page_once() {
             'post_excerpt' => 'Critérios de publicação, padrões de qualidade e regras de convivência da plataforma.',
         ));
         if (!is_wp_error($page_id) && $page_id > 0) {
-            update_post_meta((int) $page_id, '_wp_page_template', 'page-diretrizes.php');
+            update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-diretrizes.php');
         }
     } else {
-        update_post_meta((int) $page->ID, '_wp_page_template', 'page-diretrizes.php');
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-diretrizes.php');
     }
 
     update_option('a11yhubbr_diretrizes_page_created_v1', '1', false);
@@ -509,10 +776,10 @@ function a11yhubbr_ensure_contato_page_once() {
             'post_excerpt' => 'Canal para sugerir alterações, reportar informações desatualizadas e tirar dévidas.',
         ));
         if (!is_wp_error($page_id) && $page_id > 0) {
-            update_post_meta((int) $page_id, '_wp_page_template', 'page-contato.php');
+            update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-contato.php');
         }
     } else {
-        update_post_meta((int) $page->ID, '_wp_page_template', 'page-contato.php');
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-contato.php');
     }
 
     update_option('a11yhubbr_contato_page_created_v1', '1', false);
@@ -529,7 +796,7 @@ function a11yhubbr_rename_community_to_rede_once() {
         'post_status' => array('publish', 'draft', 'pending', 'private'),
         'numberposts' => -1,
         'meta_key' => '_wp_page_template',
-        'meta_value' => 'page-rede.php',
+        'meta_value' => 'pages/page-rede.php',
     ));
     $legacy_pages = get_posts(array(
         'post_type' => 'page',
@@ -574,7 +841,7 @@ function a11yhubbr_rename_community_to_rede_once() {
             'post_name' => 'rede',
             'post_excerpt' => 'Profissionais e organizações que atuam com acessibilidade digital.',
         ));
-        update_post_meta((int) $page->ID, '_wp_page_template', 'page-rede.php');
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-rede.php');
     }
 
     $page_rede = get_page_by_path('rede');
@@ -585,7 +852,7 @@ function a11yhubbr_rename_community_to_rede_once() {
             'post_title' => 'Rede',
             'post_excerpt' => 'Profissionais e organizações que atuam com acessibilidade digital.',
         ));
-        update_post_meta((int) $page_rede->ID, '_wp_page_template', 'page-rede.php');
+        update_post_meta((int) $page_rede->ID, '_wp_page_template', 'pages/page-rede.php');
     }
 
     $menu_ids = wp_get_nav_menus(array('fields' => 'ids'));
@@ -839,6 +1106,36 @@ function a11yhubbr_get_submission_config() {
     );
 }
 
+function a11yhubbr_get_content_context_config() {
+    return array(
+        'year_enabled_types' => array('artigos', 'multimidia', 'sites-sistemas', 'cursos-materiais'),
+        'depth_enabled_types' => array('artigos', 'cursos-materiais', 'ferramentas', 'multimidia', 'sites-sistemas'),
+        'choices' => array(
+            'depth' => array('introdutorio', 'intermediario', 'avancado'),
+            'article_kind' => array('academico', 'ativismo', 'estudo-caso', 'opinativo', 'tecnico', 'outro'),
+            'book_modality' => array('online', 'presencial', 'hibrido', 'nao-se-aplica'),
+            'book_price' => array('gratuito', 'pago'),
+            'tool_type' => array('auditoria-automatica', 'testes-manuais', 'contraste', 'design-system', 'plugin', 'outros'),
+            'tool_model' => array('open-source', 'freemium', 'pago'),
+            'media_channel_type' => array('audio', 'video'),
+            'media_format' => array('entrevista', 'mesa-redonda', 'solo', 'tecnico', 'storytelling', 'outro'),
+            'media_platform' => array('spotify', 'apple', 'site', 'youtube', 'deezer', 'amazon-music', 'outro'),
+            'media_frequency' => array('semanal', 'quinzenal', 'mensal', 'pontual'),
+            'site_business_model' => array('saas', 'e-commerce-marketplace', 'open-source', 'governamental'),
+            'site_stage' => array('mvp', 'em-crescimento', 'estavel', 'legado'),
+            'site_access_model' => array('aberto', 'login-obrigatorio'),
+        ),
+    );
+}
+
+function a11yhubbr_sanitize_choice($value, $allowed) {
+    $normalized = sanitize_title((string) $value);
+    if (!is_array($allowed)) {
+        return '';
+    }
+    return in_array($normalized, $allowed, true) ? $normalized : '';
+}
+
 function a11yhubbr_detect_form_type() {
     $config = a11yhubbr_get_submission_config();
 
@@ -855,7 +1152,10 @@ function a11yhubbr_sanitize_submission_data($type) {
     $raw = wp_unslash($_POST);
 
     if ($type === 'content') {
+        $context_config = a11yhubbr_get_content_context_config();
+        $choices = isset($context_config['choices']) && is_array($context_config['choices']) ? $context_config['choices'] : array();
         $type_slug = a11yhubbr_get_content_type_slug_from_input($raw['type'] ?? '');
+        $year_value = isset($raw['year_publication']) ? absint($raw['year_publication']) : 0;
         return array(
             'type' => $type_slug,
             'title' => sanitize_text_field($raw['title'] ?? ''),
@@ -865,6 +1165,22 @@ function a11yhubbr_sanitize_submission_data($type) {
             'link' => esc_url_raw($raw['link'] ?? ''),
             'tags' => a11yhubbr_parse_tags_from_input($raw['tags'] ?? ''),
             'email' => sanitize_email($raw['email'] ?? ''),
+            'year_publication' => $year_value > 0 ? $year_value : '',
+            'depth' => a11yhubbr_sanitize_choice($raw['depth'] ?? '', $choices['depth'] ?? array()),
+            'article_authors' => sanitize_text_field($raw['article_authors'] ?? ''),
+            'article_kind' => a11yhubbr_sanitize_choice($raw['article_kind'] ?? '', $choices['article_kind'] ?? array()),
+            'book_modality' => a11yhubbr_sanitize_choice($raw['book_modality'] ?? '', $choices['book_modality'] ?? array()),
+            'book_price' => a11yhubbr_sanitize_choice($raw['book_price'] ?? '', $choices['book_price'] ?? array()),
+            'tool_type' => a11yhubbr_sanitize_choice($raw['tool_type'] ?? '', $choices['tool_type'] ?? array()),
+            'tool_model' => a11yhubbr_sanitize_choice($raw['tool_model'] ?? '', $choices['tool_model'] ?? array()),
+            'media_theme' => sanitize_text_field($raw['media_theme'] ?? ''),
+            'media_channel_type' => a11yhubbr_sanitize_choice($raw['media_channel_type'] ?? '', $choices['media_channel_type'] ?? array()),
+            'media_format' => a11yhubbr_sanitize_choice($raw['media_format'] ?? '', $choices['media_format'] ?? array()),
+            'media_platform' => a11yhubbr_sanitize_choice($raw['media_platform'] ?? '', $choices['media_platform'] ?? array()),
+            'media_frequency' => a11yhubbr_sanitize_choice($raw['media_frequency'] ?? '', $choices['media_frequency'] ?? array()),
+            'site_business_model' => a11yhubbr_sanitize_choice($raw['site_business_model'] ?? '', $choices['site_business_model'] ?? array()),
+            'site_stage' => a11yhubbr_sanitize_choice($raw['site_stage'] ?? '', $choices['site_stage'] ?? array()),
+            'site_access_model' => a11yhubbr_sanitize_choice($raw['site_access_model'] ?? '', $choices['site_access_model'] ?? array()),
         );
     }
 
@@ -932,6 +1248,45 @@ function a11yhubbr_sanitize_submission_data($type) {
     );
 }
 
+function a11yhubbr_validate_content_submission_data($data) {
+    if (!is_array($data)) {
+        return false;
+    }
+
+    if (empty($data['type']) || !a11yhubbr_get_content_type_by_slug($data['type'])) {
+        return false;
+    }
+
+    if (empty($data['title']) || empty($data['description']) || empty($data['author']) || empty($data['link']) || empty($data['email'])) {
+        return false;
+    }
+
+    if (!filter_var($data['link'], FILTER_VALIDATE_URL) || !is_email($data['email'])) {
+        return false;
+    }
+
+    $type_slug = (string) $data['type'];
+    $context_config = a11yhubbr_get_content_context_config();
+    $year_enabled = $context_config['year_enabled_types'] ?? array();
+    $depth_enabled = $context_config['depth_enabled_types'] ?? array();
+
+    if (!in_array($type_slug, $year_enabled, true)) {
+        $data['year_publication'] = '';
+    } elseif (!empty($data['year_publication'])) {
+        $current = (int) gmdate('Y');
+        $year = (int) $data['year_publication'];
+        if ($year < 1900 || $year > ($current + 1)) {
+            return false;
+        }
+    }
+
+    if (!in_array($type_slug, $depth_enabled, true)) {
+        $data['depth'] = '';
+    }
+
+    return true;
+}
+
 function a11yhubbr_create_pending_content_post($data) {
     $title = $data['title'] !== '' ? $data['title'] : 'Submissao sem titulo';
     $type_slug = a11yhubbr_get_content_type_slug_from_input($data['type'] ?? '');
@@ -941,33 +1296,12 @@ function a11yhubbr_create_pending_content_post($data) {
     $type_data = a11yhubbr_get_content_type_by_slug($type_slug);
     $type_label = $type_data['label'] ?? 'Artigos';
 
-    $body = array();
-    $body[] = $data['description'];
-    $body[] = '';
-    $body[] = 'Tipo de conteudo: ' . $type_label;
-
-    if (!empty($data['author'])) {
-        $body[] = '';
-        $body[] = 'Autor indicado: ' . $data['author'];
-    }
-
-    if (!empty($data['organization'])) {
-        $body[] = 'Organizacao: ' . $data['organization'];
-    }
-
-    if (!empty($data['link'])) {
-        $body[] = 'Link de referencia: ' . $data['link'];
-    }
-    if (!empty($data['tags'])) {
-        $body[] = 'Tags: ' . implode(', ', $data['tags']);
-    }
-
     $postarr = array(
         'post_type'    => 'post',
         'post_status'  => 'pending',
         'post_title'   => $title,
         'post_excerpt' => wp_trim_words(wp_strip_all_tags($data['description']), 28),
-        'post_content' => implode("\n", $body),
+        'post_content' => (string) $data['description'],
     );
 
     $post_id = wp_insert_post($postarr, true);
@@ -989,6 +1323,22 @@ function a11yhubbr_create_pending_content_post($data) {
     update_post_meta($post_id, '_a11yhubbr_submitter_org', $data['organization']);
     update_post_meta($post_id, '_a11yhubbr_source_link', $data['link']);
     update_post_meta($post_id, '_a11yhubbr_contact_email', $data['email']);
+    update_post_meta($post_id, '_a11yhubbr_content_year_publication', $data['year_publication']);
+    update_post_meta($post_id, '_a11yhubbr_content_depth', $data['depth']);
+    update_post_meta($post_id, '_a11yhubbr_content_article_authors', $data['article_authors']);
+    update_post_meta($post_id, '_a11yhubbr_content_article_kind', $data['article_kind']);
+    update_post_meta($post_id, '_a11yhubbr_content_book_modality', $data['book_modality']);
+    update_post_meta($post_id, '_a11yhubbr_content_book_price', $data['book_price']);
+    update_post_meta($post_id, '_a11yhubbr_content_tool_type', $data['tool_type']);
+    update_post_meta($post_id, '_a11yhubbr_content_tool_model', $data['tool_model']);
+    update_post_meta($post_id, '_a11yhubbr_content_media_theme', $data['media_theme']);
+    update_post_meta($post_id, '_a11yhubbr_content_media_channel_type', $data['media_channel_type']);
+    update_post_meta($post_id, '_a11yhubbr_content_media_format', $data['media_format']);
+    update_post_meta($post_id, '_a11yhubbr_content_media_platform', $data['media_platform']);
+    update_post_meta($post_id, '_a11yhubbr_content_media_frequency', $data['media_frequency']);
+    update_post_meta($post_id, '_a11yhubbr_content_site_business_model', $data['site_business_model']);
+    update_post_meta($post_id, '_a11yhubbr_content_site_stage', $data['site_stage']);
+    update_post_meta($post_id, '_a11yhubbr_content_site_access_model', $data['site_access_model']);
 
     return $post_id;
 }
@@ -996,33 +1346,12 @@ function a11yhubbr_create_pending_content_post($data) {
 function a11yhubbr_create_pending_event_post($data) {
     $title = $data['title'] !== '' ? $data['title'] : 'Evento sem titulo';
 
-    $lines = array();
-    $lines[] = $data['description'];
-    $lines[] = '';
-    $lines[] = 'Modalidade: ' . $data['modality'];
-    $lines[] = 'Tipo de evento: ' . $data['event_type'];
-    $lines[] = 'Localizacao: ' . $data['location'];
-    $lines[] = 'Organizador: ' . $data['organizer'];
-    if (!empty($data['link'])) {
-        $lines[] = 'Link: ' . $data['link'];
-    }
-    if (!empty($data['slots'])) {
-        $lines[] = '';
-        $lines[] = 'Datas e horarios:';
-        foreach ($data['slots'] as $index => $slot) {
-            $lines[] = sprintf('%d) Inicio: %s | Fim: %s', $index + 1, $slot['start'], $slot['end']);
-        }
-    }
-    if (!empty($data['tags'])) {
-        $lines[] = 'Tags: ' . implode(', ', $data['tags']);
-    }
-
     $postarr = array(
         'post_type'    => 'a11y_evento',
         'post_status'  => 'pending',
         'post_title'   => $title,
         'post_excerpt' => wp_trim_words(wp_strip_all_tags($data['description']), 28),
-        'post_content' => implode("\n", $lines),
+        'post_content' => (string) $data['description'],
     );
 
     $post_id = wp_insert_post($postarr, true);
@@ -1047,39 +1376,12 @@ function a11yhubbr_create_pending_event_post($data) {
 function a11yhubbr_create_pending_profile_post($data) {
     $title = $data['name'] !== '' ? $data['name'] : 'Perfil sem nome';
 
-    $lines = array();
-    $lines[] = $data['description'];
-    $lines[] = '';
-    $lines[] = 'Tipo de perfil: ' . $data['profile_type'];
-    $lines[] = 'Nome/Organizacao: ' . $data['name'];
-    $lines[] = 'Localizacao: ' . $data['location'];
-    $lines[] = 'Cargo/Especialidade: ' . $data['role'];
-    if (!empty($data['website'])) {
-        $lines[] = 'Website: ' . $data['website'];
-    }
-    if (!empty($data['social_links']) && is_array($data['social_links'])) {
-        $lines[] = 'Redes sociais:';
-        foreach ($data['social_links'] as $item) {
-            $network = sanitize_text_field($item['network'] ?? 'website');
-            $url = esc_url_raw($item['url'] ?? '');
-            if ($url !== '') {
-                $lines[] = '- ' . $network . ': ' . $url;
-            }
-        }
-    }
-    if (!empty($data['profile_image_name'])) {
-        $lines[] = 'Arquivo de foto: ' . $data['profile_image_name'];
-    }
-    if (!empty($data['tags'])) {
-        $lines[] = 'Tags: ' . implode(', ', $data['tags']);
-    }
-
     $postarr = array(
         'post_type'    => 'a11y_perfil',
         'post_status'  => 'pending',
         'post_title'   => $title,
         'post_excerpt' => wp_trim_words(wp_strip_all_tags($data['description']), 28),
-        'post_content' => implode("\n", $lines),
+        'post_content' => (string) $data['description'],
     );
 
     $post_id = wp_insert_post($postarr, true);
@@ -1126,6 +1428,22 @@ function a11yhubbr_build_email_message($type, $data) {
             'Autor: ' . $data['author'],
             'Organizacao: ' . $data['organization'],
             'Link: ' . $data['link'],
+            'Ano de publicacao/atualizacao: ' . ($data['year_publication'] !== '' ? $data['year_publication'] : '-'),
+            'Nivel de profundidade: ' . ($data['depth'] !== '' ? $data['depth'] : '-'),
+            'Autorias (artigos): ' . ($data['article_authors'] !== '' ? $data['article_authors'] : '-'),
+            'Tipo de artigo: ' . ($data['article_kind'] !== '' ? $data['article_kind'] : '-'),
+            'Modalidade (livros e materiais): ' . ($data['book_modality'] !== '' ? $data['book_modality'] : '-'),
+            'Preco (livros e materiais): ' . ($data['book_price'] !== '' ? $data['book_price'] : '-'),
+            'Tipo de ferramenta: ' . ($data['tool_type'] !== '' ? $data['tool_type'] : '-'),
+            'Modelo de ferramenta: ' . ($data['tool_model'] !== '' ? $data['tool_model'] : '-'),
+            'Tema principal (multimidia): ' . ($data['media_theme'] !== '' ? $data['media_theme'] : '-'),
+            'Midia: ' . ($data['media_channel_type'] !== '' ? $data['media_channel_type'] : '-'),
+            'Formato: ' . ($data['media_format'] !== '' ? $data['media_format'] : '-'),
+            'Plataforma: ' . ($data['media_platform'] !== '' ? $data['media_platform'] : '-'),
+            'Frequencia: ' . ($data['media_frequency'] !== '' ? $data['media_frequency'] : '-'),
+            'Modelo de negocio (site/sistema): ' . ($data['site_business_model'] !== '' ? $data['site_business_model'] : '-'),
+            'Estagio do produto: ' . ($data['site_stage'] !== '' ? $data['site_stage'] : '-'),
+            'Modelo de acesso: ' . ($data['site_access_model'] !== '' ? $data['site_access_model'] : '-'),
             'Tags: ' . implode(', ', $data['tags']),
             'Email de contato: ' . $data['email'],
         ));
@@ -1286,8 +1604,13 @@ function a11yhubbr_handle_form_submissions() {
     $created = false;
 
     if ($type === 'content') {
+        if (!a11yhubbr_validate_content_submission_data($data)) {
+            $result = new WP_Error('invalid_content_data', 'Dados de conteúdo inválidos');
+            $created = false;
+        } else {
         $result = a11yhubbr_create_pending_content_post($data);
         $created = !is_wp_error($result);
+        }
     } elseif ($type === 'event') {
         $result = a11yhubbr_create_pending_event_post($data);
         $created = !is_wp_error($result);
@@ -1422,25 +1745,25 @@ function a11yhubbr_seed_legal_pages_once() {
         array(
             'slug' => 'acessibilidade',
             'title' => 'Declaração de Acessibilidade',
-            'template' => 'page-acessibilidade.php',
+            'template' => 'pages/page-acessibilidade.php',
             'excerpt' => 'Compromisso de acessibilidade, status de conformidade WCAG, limitações conhecidas e canal de feedback.',
         ),
         array(
             'slug' => 'termos-de-uso',
             'title' => 'Termos de Uso',
-            'template' => 'page-termos-de-uso.php',
+            'template' => 'pages/page-termos-de-uso.php',
             'excerpt' => 'Regras de uso da plataforma, responsabilidades, moderação, propriedade intelectual e limitações.',
         ),
         array(
             'slug' => 'politica-de-privacidade',
             'title' => 'Política de Privacidade',
-            'template' => 'page-politica-de-privacidade.php',
+            'template' => 'pages/page-politica-de-privacidade.php',
             'excerpt' => 'Como coletamos, usamos e protegemos dados pessoais em conformidade com a LGPD.',
         ),
         array(
             'slug' => 'busca',
             'title' => 'Busca',
-            'template' => 'page-busca.php',
+            'template' => 'pages/page-busca.php',
             'excerpt' => 'Busque conteúdos, eventos e perfis em um único lugar.',
         ),
     );
@@ -1472,6 +1795,81 @@ function a11yhubbr_seed_legal_pages_once() {
 }
 add_action('admin_init', 'a11yhubbr_seed_legal_pages_once');
 
+function a11yhubbr_migrate_page_templates_to_pages_dir_once() {
+    if (get_option('a11yhubbr_templates_pages_dir_migrated_v1') === '1') {
+        return;
+    }
+
+    $template_map = array(
+        'page-acessibilidade.php' => 'pages/page-acessibilidade.php',
+        'page-busca.php' => 'pages/page-busca.php',
+        'page-contato.php' => 'pages/page-contato.php',
+        'page-conteudos.php' => 'pages/page-conteudos.php',
+        'page-diretrizes.php' => 'pages/page-diretrizes.php',
+        'page-eventos.php' => 'pages/page-eventos.php',
+        'page-politica-de-privacidade.php' => 'pages/page-politica-de-privacidade.php',
+        'page-rede.php' => 'pages/page-rede.php',
+        'page-sobre.php' => 'pages/page-sobre.php',
+        'page-submeter-conteudo.php' => 'pages/page-submeter-conteudo.php',
+        'page-submeter-eventos.php' => 'pages/page-submeter-eventos.php',
+        'page-submeter-perfil.php' => 'pages/page-submeter-perfil.php',
+        'page-submeter.php' => 'pages/page-submeter.php',
+        'page-termos-de-uso.php' => 'pages/page-termos-de-uso.php',
+    );
+
+    foreach ($template_map as $old => $new) {
+        $page_ids = get_posts(array(
+            'post_type' => 'page',
+            'post_status' => array('publish', 'draft', 'pending', 'private'),
+            'numberposts' => -1,
+            'fields' => 'ids',
+            'meta_key' => '_wp_page_template',
+            'meta_value' => $old,
+        ));
+
+        foreach ($page_ids as $page_id) {
+            update_post_meta((int) $page_id, '_wp_page_template', $new);
+        }
+    }
+
+    update_option('a11yhubbr_templates_pages_dir_migrated_v1', '1', false);
+}
+add_action('init', 'a11yhubbr_migrate_page_templates_to_pages_dir_once');
+
+function a11yhubbr_page_slug_template_fallback($template) {
+    if (!is_page()) {
+        return $template;
+    }
+
+    $page_id = get_queried_object_id();
+    if ($page_id <= 0) {
+        return $template;
+    }
+
+    $assigned = get_page_template_slug($page_id);
+    if (is_string($assigned) && $assigned !== '' && $assigned !== 'default') {
+        return $template;
+    }
+
+    $slug = get_query_var('pagename');
+    if (!is_string($slug) || $slug === '') {
+        $slug = get_post_field('post_name', $page_id);
+    }
+    $slug = sanitize_title((string) $slug);
+    if ($slug === '') {
+        return $template;
+    }
+
+    $candidate_rel = 'pages/page-' . $slug . '.php';
+    $candidate_abs = locate_template($candidate_rel);
+    if (is_string($candidate_abs) && $candidate_abs !== '' && file_exists($candidate_abs)) {
+        return $candidate_abs;
+    }
+
+    return $template;
+}
+add_filter('template_include', 'a11yhubbr_page_slug_template_fallback', 20);
+
 function a11yhubbr_virtual_busca_template_fallback() {
     if (!is_404()) {
         return;
@@ -1484,7 +1882,7 @@ function a11yhubbr_virtual_busca_template_fallback() {
         return;
     }
 
-    $template = locate_template('page-busca.php');
+    $template = locate_template('pages/page-busca.php');
     if (!is_string($template) || $template === '' || !file_exists($template)) {
         return;
     }
@@ -1499,9 +1897,3 @@ function a11yhubbr_virtual_busca_template_fallback() {
     exit;
 }
 add_action('template_redirect', 'a11yhubbr_virtual_busca_template_fallback', 1);
-
-
-
-
-
-

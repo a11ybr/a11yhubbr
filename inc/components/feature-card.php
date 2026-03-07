@@ -19,12 +19,13 @@ $icon = trim((string) $args['icon']);
 $tone = sanitize_key((string) $args['tone']);
 
 $palette = array(
-    'blue' => array('bg' => '#dce6ff', 'fg' => '#133a82'),
-    'green' => array('bg' => '#d8f2e5', 'fg' => '#1d7b56'),
-    'teal' => array('bg' => '#d8f3f0', 'fg' => '#0f6f77'),
-    'orange' => array('bg' => '#ffe8d5', 'fg' => '#b45309'),
-    'pink' => array('bg' => '#ffe0ef', 'fg' => '#b63773'),
-    'purple' => array('bg' => '#ebe3ff', 'fg' => '#5f46b2'),
+    'blue' => array('bg' => '#e6eaef', 'fg' => '#1f2631'),
+    'green' => array('bg' => '#e3e8ee', 'fg' => '#202833'),
+    'teal' => array('bg' => '#e8ebf0', 'fg' => '#252d38'),
+    'orange' => array('bg' => '#e5e9ee', 'fg' => '#1f2732'),
+    'pink' => array('bg' => '#eaedf1', 'fg' => '#222a35'),
+    'purple' => array('bg' => '#e4e8ed', 'fg' => '#1d2530'),
+    'neutral' => array('bg' => '#e6eaef', 'fg' => '#1f2631'),
 );
 
 if (!isset($palette[$tone])) {

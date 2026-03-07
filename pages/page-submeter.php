@@ -10,9 +10,8 @@ $help_cards = array(
   array('icon' => 'fa-regular fa-lightbulb', 'title' => 'Cadastrar iniciativas', 'text' => 'Conhece uma iniciativa de acessibilidade que ainda não está no diretório? Ajude a documentar e ampliar sua visibilidade.'),
   array('icon' => 'fa-regular fa-comment-dots', 'title' => 'Sugerir melhorias', 'text' => 'Encontrou informação desatualizada? Envie sugestões para mantermos o conteúdo útil e atualizado.'),
   array('icon' => 'fa-solid fa-share-nodes', 'title' => 'Divulgar a plataforma', 'text' => 'Siga e compartilhe a A11YBR nas suas redes para conectar mais pessoas e iniciativas de inclusão digital. Nossos perfis são @a11yhubbr.'),
-  array('icon' => 'fa-solid fa-bug', 'title' => 'Reportar problemas', 'text' => 'Encontrou um bug ou problema de acessibilidade na plataforma? Sua ajuda é fundamental para melhorarmos continuamente..'),
+  array('icon' => 'fa-solid fa-bug', 'title' => 'Reportar problemas', 'text' => 'Encontrou um bug ou problema de acessibilidade na plataforma? Sua ajuda é fundamental para melhorarmos continuamente.'),
 );
-
 
 get_header();
 ?>
@@ -33,22 +32,22 @@ get_header();
         <article class="a11yhubbr-submit-hub-card">
           <span class="a11yhubbr-submit-hub-icon" aria-hidden="true"><i class="fa-regular fa-file-lines"></i></span>
           <h2>Submeter conteúdo</h2>
-          <p>Envie artigos, ferramentas, eventos, livros ou outros recursos sobre acessibilidade digital.</p>
-          <a class="a11yhubbr-btn a11yhubbr-submit-hub-btn" href="<?php echo esc_url(home_url('/submeter/submeter-conteudo')); ?>">Criar conteúdo</a>
+          <p>Envie artigos, ferramentas, livros e materiais ou outros recursos sobre acessibilidade digital.</p>
+          <a class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-submit-hub-btn" href="<?php echo esc_url(home_url('/submeter/submeter-conteudo')); ?>">Criar conteúdo</a>
         </article>
 
         <article class="a11yhubbr-submit-hub-card">
           <span class="a11yhubbr-submit-hub-icon" aria-hidden="true"><i class="fa-regular fa-calendar"></i></span>
           <h2>Submeter evento</h2>
           <p>Divulgue workshops, conferências, meetups e outros eventos sobre acessibilidade.</p>
-          <a class="a11yhubbr-btn a11yhubbr-submit-hub-btn" href="<?php echo esc_url(home_url('/submeter/submeter-eventos')); ?>">Criar evento</a>
+          <a class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-submit-hub-btn" href="<?php echo esc_url(home_url('/submeter/submeter-eventos')); ?>">Criar evento</a>
         </article>
 
         <article class="a11yhubbr-submit-hub-card">
-          <span class="a11yhubbr-submit-hub-icon" aria-hidden="true"><i class="fa-solid fa-user-plus"></i></span>
+          <span class="a11yhubbr-submit-hub-icon" aria-hidden="true"><i class="fa-regular fa-id-card"></i></span>
           <h2>Submeter perfil</h2>
-          <p>Cadastre seu perfil ou organização para fazer parte da comunidade.</p>
-          <a class="a11yhubbr-btn a11yhubbr-submit-hub-btn" href="<?php echo esc_url(home_url('/submeter/submeter-perfil')); ?>">Criar perfil</a>
+          <p>Cadastre profissionais, empresas, ONGs e comunidades para fortalecer conexões na rede.</p>
+          <a class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-submit-hub-btn" href="<?php echo esc_url(home_url('/submeter/submeter-perfil')); ?>">Criar perfil</a>
         </article>
       </div>
     </div>
