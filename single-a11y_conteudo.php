@@ -186,7 +186,7 @@ get_header();
     $related_query = null;
     if (!empty($tag_ids)) {
         $related_query = new WP_Query(array(
-            'post_type' => 'post',
+            'post_type' => 'a11y_conteudo',
             'post_status' => 'publish',
             'posts_per_page' => 3,
             'post__not_in' => array($post_id),
@@ -202,7 +202,7 @@ get_header();
         }
 
         $related_query = new WP_Query(array_merge(array(
-            'post_type' => 'post',
+            'post_type' => 'a11y_conteudo',
             'post_status' => 'publish',
             'posts_per_page' => 3,
             'post__not_in' => array($post_id),

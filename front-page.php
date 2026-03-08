@@ -13,10 +13,10 @@ $count_profile = (int) ($counts && isset($counts->publish) ? $counts->publish : 
 $total_collaborations = $count_post + $count_event + $count_profile;
 ?>
 <main class="a11yhubbr-site-main">
-  <section class="a11yhubbr-home-v2-hero">
+  <header class="a11yhubbr-home-hero">
     <div class="a11yhubbr-container">
-      <div class="a11yhubbr-home-v2-hero-content">
-        <div class="a11yhubbr-home-v2-kicker-row">
+      <div class="a11yhubbr-home-hero-content">
+        <div class="a11yhubbr-home-kicker-row">
           <p class="budge is-gree" aria-label="<?php echo esc_attr(number_format_i18n($total_collaborations)); ?> colaborações publicadas">
             <?php echo esc_html(number_format_i18n($total_collaborations)); ?> colaborações
           </p>
@@ -29,12 +29,12 @@ $total_collaborations = $count_post + $count_event + $count_profile;
         </div>
       </div>
     </div>
-  </section>
+  </header>
 
-  <section class="a11yhubbr-home-v2-section a11yhubbr-home-v2-categories">
+  <section class="a11yhubbr-home-section a11yhubbr-home-categories">
     <div class="a11yhubbr-container">
-      <h2 class="a11yhubbr-home-v2-title">Categorias de conteúdo</h2>
-      <p class="a11yhubbr-home-v2-subtitle">Explore recursos organizados por tipo para facilitar sua busca por conhecimento em acessibilidade.</p>
+      <h2 class="a11yhubbr-home-title">Categorias de conteúdo</h2>
+      <p class="a11yhubbr-home-subtitle">Explore recursos organizados por tipo para facilitar sua busca por conhecimento em acessibilidade.</p>
 
       <?php
       $content_categories = array(
@@ -52,22 +52,22 @@ $total_collaborations = $count_post + $count_event + $count_profile;
       }
       ?>
 
-      <div class="a11yhubbr-home-v2-grid a11yhubbr-home-v2-grid-3">
+      <div class="a11yhubbr-home-grid a11yhubbr-home-grid-3">
         <?php foreach ($content_categories as $item): ?>
           <?php
           $count = isset($content_category_counts[$item['tipo']]) ? (int) $content_category_counts[$item['tipo']] : 0;
           $count_label = $count === 1 ? '1 item' : $count . ' itens';
           ?>
-          <a class="a11yhubbr-home-v2-card a11yhubbr-home-v2-card-link"
+          <a class="a11yhubbr-home-card a11yhubbr-home-card-link"
             href="<?php echo esc_url(add_query_arg('tipo', $item['tipo'], home_url('/conteudos'))); ?>"
             aria-label="Filtrar conteúdos por <?php echo esc_attr($item['title']); ?>">
-            <span class="a11yhubbr-home-v2-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
-            <span class="a11yhubbr-home-v2-card-copy">
-              <span class="a11yhubbr-home-v2-card-copy-top">
+            <span class="a11yhubbr-home-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
+            <span class="a11yhubbr-home-card-copy">
+              <span class="a11yhubbr-home-card-copy-top">
                 <h3><?php echo esc_html($item['title']); ?></h3>
                 <p><?php echo esc_html($item['desc']); ?></p>
               </span>
-              <span class="a11yhubbr-home-v2-card-count"><?php echo esc_html($count_label); ?></span>
+              <span class="a11yhubbr-home-card-count"><?php echo esc_html($count_label); ?></span>
             </span>
           </a>
         <?php endforeach; ?>
@@ -122,10 +122,10 @@ $total_collaborations = $count_post + $count_event + $count_profile;
     return wp_date('H:i', $timestamp);
   };
   ?>
-  <section class="a11yhubbr-home-v2-section a11yhubbr-home-v2-events">
+  <section class="a11yhubbr-home-section a11yhubbr-home-events">
     <div class="a11yhubbr-container">
-      <h2 class="a11yhubbr-home-v2-title">Eventos recentes</h2>
-      <p class="a11yhubbr-home-v2-subtitle">Acompanhe workshops, confer?ncias, meetups e webinars da comunidade.</p>
+      <h2 class="a11yhubbr-home-title">Eventos recentes</h2>
+      <p class="a11yhubbr-home-subtitle">Acompanhe workshops, conferências, meetups e webinars da comunidade.</p>
 
       <?php if ($home_events_query->have_posts()): ?>
         <div class="a11yhubbr-content-results-grid">
@@ -162,13 +162,13 @@ $total_collaborations = $count_post + $count_event + $count_profile;
           <?php endwhile; ?>
         </div>
 
-        <div class="a11yhubbr-home-v2-center">
+        <div class="a11yhubbr-home-center">
           <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url(home_url('/eventos')); ?>">Ver todos os eventos</a>
         </div>
       <?php else: ?>
         <?php get_template_part('inc/components/empty-state', null, array(
           'title' => 'Nenhum evento publicado ainda',
-          'message' => 'Quando novos eventos forem aprovados eles v?o aparecer aqui.',
+          'message' => 'Quando novos eventos forem aprovados eles vão aparecer aqui.',
           'cta_label' => 'Submeter evento',
           'cta_url' => function_exists('a11yhubbr_get_submit_event_url') ? a11yhubbr_get_submit_event_url() : home_url('/submeter/submeter-eventos'),
           'icon' => 'fa-regular fa-calendar',
@@ -177,10 +177,10 @@ $total_collaborations = $count_post + $count_event + $count_profile;
       <?php wp_reset_postdata(); ?>
     </div>
   </section>
-  <section class="a11yhubbr-home-v2-section a11yhubbr-home-v2-section-soft a11yhubbr-home-v2-community">
+  <section class="a11yhubbr-home-section a11yhubbr-home-section-soft a11yhubbr-home-community">
     <div class="a11yhubbr-container">
-      <h2 class="a11yhubbr-home-v2-title">Rede</h2>
-      <p class="a11yhubbr-home-v2-subtitle">Rede de profissionais e organizações que atuam com acessibilidade.</p>
+      <h2 class="a11yhubbr-home-title">Rede</h2>
+      <p class="a11yhubbr-home-subtitle">Rede de profissionais e organizações que atuam com acessibilidade.</p>
 
       <?php
       $community_categories = array(
@@ -221,28 +221,28 @@ $total_collaborations = $count_post + $count_event + $count_profile;
       }
       ?>
 
-      <div class="a11yhubbr-home-v2-grid a11yhubbr-home-v2-grid-3">
+      <div class="a11yhubbr-home-grid a11yhubbr-home-grid-3">
         <?php foreach ($community_categories as $item): ?>
           <?php
           $count = isset($community_counts[$item['tipo']]) ? (int) $community_counts[$item['tipo']] : 0;
           $count_label = $count === 1 ? '1 perfil' : $count . ' perfis';
           ?>
-          <a class="a11yhubbr-home-v2-card a11yhubbr-home-v2-card-link"
+          <a class="a11yhubbr-home-card a11yhubbr-home-card-link"
             href="<?php echo esc_url(add_query_arg('tipo', $item['tipo'], home_url('/rede'))); ?>"
             aria-label="Filtrar rede por <?php echo esc_attr($item['title']); ?>">
-            <span class="a11yhubbr-home-v2-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
-            <span class="a11yhubbr-home-v2-card-copy">
-              <span class="a11yhubbr-home-v2-card-copy-top">
+            <span class="a11yhubbr-home-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
+            <span class="a11yhubbr-home-card-copy">
+              <span class="a11yhubbr-home-card-copy-top">
                 <h3><?php echo esc_html($item['title']); ?></h3>
                 <p><?php echo esc_html($item['desc']); ?></p>
               </span>
-              <span class="a11yhubbr-home-v2-card-count"><?php echo esc_html($count_label); ?></span>
+              <span class="a11yhubbr-home-card-count"><?php echo esc_html($count_label); ?></span>
             </span>
           </a>
         <?php endforeach; ?>
       </div>
 
-      <div class="a11yhubbr-home-v2-center">
+      <div class="a11yhubbr-home-center">
         <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url(home_url('/rede')); ?>">Ver toda a rede</a>
       </div>
     </div>

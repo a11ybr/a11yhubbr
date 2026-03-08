@@ -2,8 +2,8 @@
   <section class="a11yhubbr-footer-newsletter-wrap" aria-labelledby="footer-newsletter-title">
     <div class="a11yhubbr-container">
       <div class="a11yhubbr-footer-newsletter">
-        <h2 id="footer-newsletter-title">Receba novos conteudos sobre acessibilidade</h2>
-        <p>Fique por dentro das ultimas novidades, recursos e discussoes sobre acessibilidade digital no Brasil.</p>
+        <h2 id="footer-newsletter-title">Receba novos conteúdos sobre acessibilidade</h2>
+        <p>Fique por dentro das últimas novidades, recursos e discussões sobre acessibilidade digital no Brasil.</p>
         <div class="a11yhubbr-footer-newsletter-form">
           <?php
           if (shortcode_exists('sibwp_form')) {
@@ -19,18 +19,18 @@
           <div class="a11yhubbr-footer-newsletter-benefits-grid">
             <div class="a11yhubbr-footer-newsletter-benefit-card">
               <span class="a11yhubbr-footer-newsletter-benefit-icon" aria-hidden="true"><i class="fa-regular fa-bookmark"></i></span>
-              <h4>Conteudos selecionados</h4>
+              <h4>Conteúdos<br />selecionados</h4>
               <p>Artigos, ferramentas e recursos cuidadosamente escolhidos.</p>
             </div>
             <div class="a11yhubbr-footer-newsletter-benefit-card">
               <span class="a11yhubbr-footer-newsletter-benefit-icon" aria-hidden="true"><i class="fa-regular fa-calendar"></i></span>
-              <h4>Calendario de eventos</h4>
-              <p>Fique por dentro de conferencias, workshops e webinars.</p>
+              <h4>Calendario<br />de eventos</h4>
+              <p>Fique por dentro de conferências, workshops, webinars, etc.</p>
             </div>
             <div class="a11yhubbr-footer-newsletter-benefit-card">
               <span class="a11yhubbr-footer-newsletter-benefit-icon" aria-hidden="true"><i class="fa-regular fa-circle-dot"></i></span>
-              <h4>Dicas praticas</h4>
-              <p>Sugestoes para melhorar a acessibilidade dos seus projetos.</p>
+              <h4>Dicas<br />praticas</h4>
+              <p>Sugestões para melhorar a acessibilidade dos seus projetos.</p>
             </div>
           </div>
         </section>

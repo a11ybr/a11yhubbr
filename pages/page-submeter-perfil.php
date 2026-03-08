@@ -17,7 +17,7 @@ get_header();
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(
-          array('label' => 'Página inicial', 'url' => home_url('/')),
+          array('label' => 'Pagina inicial', 'url' => home_url('/')),
           array('label' => 'Submeter', 'url' => home_url('/submeter')),
           array('label' => 'Submeter perfil'),
       ),
@@ -28,64 +28,97 @@ get_header();
   <section class="a11yhubbr-submit-section">
     <div class="a11yhubbr-container">
       <?php if ($submitted) : ?>
-        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">Perfil enviado para validação com sucesso.</div>
+        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">Perfil enviado para validacao com sucesso.</div>
       <?php endif; ?>
       <?php if ($has_error) : ?>
-        <div class="a11yhubbr-toast a11yhubbr-toast-error" role="alert">Não foi possível enviar agora. Tente novamente em instantes.</div>
+        <div class="a11yhubbr-toast a11yhubbr-toast-error" role="alert">Nao foi possivel enviar agora. Tente novamente em instantes.</div>
       <?php endif; ?>
 
       <div class="a11yhubbr-submit-grid">
         <div class="a11yhubbr-submit-main">
-          <form method="post" enctype="multipart/form-data" class="a11yhubbr-form-grid a11yhubbr-submit-form">
+          <form method="post" enctype="multipart/form-data" class="a11yhubbr-form-grid a11yhubbr-submit-form" id="profile-form">
+            <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatorios</p>
             <?php wp_nonce_field('a11yhubbr_profile', 'a11yhubbr_nonce'); ?>
             <input type="hidden" name="a11yhubbr_redirect" value="<?php echo esc_url(get_permalink()); ?>">
             <input type="hidden" name="a11yhubbr_ts" value="<?php echo esc_attr((string) time()); ?>">
-            <label class="a11yhubbr-honeypot" aria-hidden="true">Empresa
-              <input type="text" name="a11yhubbr_company" tabindex="-1" autocomplete="off">
+            <label class="a11yhubbr-honeypot" aria-hidden="true" for="profile-company">Empresa
+              <input id="profile-company" type="text" name="a11yhubbr_company" tabindex="-1" autocomplete="off">
             </label>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section">
-              <h2>Detalhes do perfil</h2>
-              <label>Tipo de perfil *
-                <select name="profile_type" required>
-                  <option value="">Selecione</option>
-                  <option>Profissional de IT</option>
-                  <option>Empresa ou ONG</option>
-                  <option>Intérprete de Libras</option>
-                  <option>Audiodescritor</option>
-                  <option>Tradutor de Braille</option>
-                  <option>Comunidade</option>
-                </select>
-              </label>
-              <label>Nome ou nome da organização *
-                <input type="text" name="name" required>
-              </label>
-              <label>Localização (cidade, estado) *
-                <input type="text" name="location" required>
-              </label>
-              <label>Bio profissional ou descrição institucional *
-                <textarea name="description" rows="5" required></textarea>
-              </label>
+            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-perfil-detalhes" data-collapsible-section>
+              <h2>Informacoes principais</h2>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-type">Tipo de perfil *</label>
+                <div class="a11yhubbr-field-control">
+                  <select id="profile-type" name="profile_type" required>
+                    <option value="">Selecione</option>
+                    <option>Profissional de IT</option>
+                    <option>Empresa ou ONG</option>
+                    <option>Interprete de Libras</option>
+                    <option>Audiodescritor</option>
+                    <option>Tradutor de Braille</option>
+                    <option>Comunidade</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-name">Nome ou nome da organizacao *</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-name" type="text" name="name" required>
+                </div>
+              </div>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-location">Localizacao (cidade, estado) *</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-location" type="text" name="location" required>
+                </div>
+              </div>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-description">Bio profissional ou descricao institucional *</label>
+                <div class="a11yhubbr-field-control">
+                  <textarea id="profile-description" name="description" rows="5" required></textarea>
+                </div>
+              </div>
             </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section">
-              <h2>Especializações ou áreas de atuação</h2>
-              <label>Cargo / Especialidade *
-                <input type="text" name="role" required>
-              </label>
-              <label>Website
-                <input type="url" name="website">
-              </label>
-              <label>Tags (separadas por vírgulas)
-                <input type="text" name="tags" placeholder="design inclusivo, libras, consultoria">
-              </label>
-              <p class="a11yhubbr-help">Use tags para destacar especialidades e temas de atuação.</p>
+            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-perfil-areas" data-collapsible-section>
+              <h2>Detalhes da submissao</h2>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-role">Cargo / especialidade *</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-role" type="text" name="role" required>
+                </div>
+              </div>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-website">Website</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-website" type="url" name="website">
+                </div>
+              </div>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-tags">Tags (separadas por virgulas)</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-tags" type="text" name="tags" placeholder="design inclusivo, libras, consultoria">
+                  <p class="a11yhubbr-help">Use tags para destacar especialidades e temas de atuacao.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-perfil-redes" data-collapsible-section>
+              <h2>Informacoes complementares</h2>
               <fieldset class="a11yhubbr-fieldset a11yhubbr-form-fieldset">
                 <legend>Links de redes sociais</legend>
-                <div id="profile-social-links" class="a11yhubbr-slots-list a11yhubbr-social-slots-list">
-                  <div class="a11yhubbr-slot a11yhubbr-social-slot">
-                    <label>Rede social
-                      <select name="social_network[]">
+                <div id="profile-social-links" class="a11yhubbr-slots-list">
+                  <div class="a11yhubbr-slot">
+                    <label for="social-network-1">Rede social
+                      <select id="social-network-1" name="social_network[]">
                         <option value="">Selecione</option>
                         <option value="linkedin">LinkedIn</option>
                         <option value="github">GitHub</option>
@@ -100,54 +133,71 @@ get_header();
                         <option value="website">Outro website</option>
                       </select>
                     </label>
-                    <label>URL
-                      <input type="url" name="social_url[]" placeholder="https://...">
+                    <label for="social-url-1">URL
+                      <input id="social-url-1" type="url" name="social_url[]" placeholder="https://...">
                     </label>
                     <button type="button" class="a11yhubbr-slot-remove a11yhubbr-social-slot-remove" aria-label="Remover link social" title="Remover link social" hidden>&#128465;</button>
                   </div>
                 </div>
                 <div class="a11yhubbr-slot-actions">
-                  <button type="button" class="a11yhubbr-link-btn" id="add-social-link">+ Adicionar rede social</button>
+                  <button type="button" class="a11yhubbr-link-btn a11yhubbr-btn" id="add-social-link">+ Adicionar item</button>
                 </div>
               </fieldset>
-              <label>Imagem do perfil
-                <input type="file" name="profile_image" accept="image/jpeg,image/png,image/webp">
-              </label>
+
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-image">Imagem do perfil</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-image" type="file" name="profile_image" accept="image/jpeg,image/png,image/webp">
+                </div>
+              </div>
             </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-form-section-contact">
+            <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-form-section-contact" id="sec-perfil-contato" data-collapsible-section>
               <h2>Email de contato</h2>
-              <label>Email *
-                <input type="email" name="email" required>
-              </label>
-              <p class="a11yhubbr-help">O email será privado e utilizado apenas para que a organização da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissão.</p>
+              <div class="a11yhubbr-field-inline">
+                <label for="profile-email">Email *</label>
+                <div class="a11yhubbr-field-control">
+                  <input id="profile-email" type="email" name="email" required>
+                  <p class="a11yhubbr-help">O email sera privado e utilizado apenas para que a organizacao da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissao.</p>
+                </div>
+              </div>
               <?php if (function_exists('a11yhubbr_render_human_check_field')) { a11yhubbr_render_human_check_field(); } ?>
             </section>
 
             <div class="a11yhubbr-form-actions">
-              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_profile_submit" value="1">Enviar perfil</button>
+              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_profile_submit" value="1">Enviar para revisao</button>
             </div>
           </form>
         </div>
 
-        <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
+        <aside class="a11yhubbr-submit-aside" aria-label="Informacoes complementares">
+          <section class="a11yhubbr-side-card a11yhubbr-submit-outline">
+            <h2>Navegacao do cadastro</h2>
+            <nav aria-label="Etapas da submissao de perfil">
+              <a href="#sec-perfil-detalhes">Informacoes principais</a>
+              <a href="#sec-perfil-areas">Detalhes da submissao</a>
+              <a href="#sec-perfil-redes">Informacoes complementares</a>
+              <a href="#sec-perfil-contato">Email de contato</a>
+            </nav>
+          </section>
+
           <section class="a11yhubbr-side-card">
             <h2>Diretrizes para perfil</h2>
             <ul>
-              <li>Informe atuação real em acessibilidade.</li>
-              <li>Use dados verificáveis e atualizados.</li>
-              <li>Inclua links profissionais válidos.</li>
-              <li>Descrição clara e objetiva do perfil.</li>
+              <li>Informe atuacao real em acessibilidade.</li>
+              <li>Use dados verificaveis e atualizados.</li>
+              <li>Inclua links profissionais validos.</li>
+              <li>Descricao clara e objetiva do perfil.</li>
             </ul>
           </section>
 
           <section class="a11yhubbr-side-card a11yhubbr-side-card-primary">
-            <h2>Processo de validação</h2>
+            <h2>Processo de validacao</h2>
             <ol>
               <li>Envio do perfil</li>
-              <li>Verificação das informações</li>
-              <li>Contato se necessário</li>
-              <li>Publicação no diretório</li>
+              <li>Verificacao das informacoes</li>
+              <li>Contato se necessario</li>
+              <li>Publicacao no diretorio</li>
             </ol>
           </section>
         </aside>

@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 ?>
-<section class="a11yhubbr-about-section ">
+<section class="a11yhubbr-about-section " id="como-funciona">
   <div class="a11yhubbr-container">
     <h2>Como funciona</h2>
     <div class="a11yhubbr-about-flow-grid">

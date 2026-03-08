@@ -168,6 +168,15 @@ $build_url = static function ($overrides = array ()) use ($base_url, $current_ar
   if (isset($args['tipo']) && $args['tipo'] === '') {
     unset($args['tipo']);
   }
+  if (isset($args['busca']) && $args['busca'] === '') {
+    unset($args['busca']);
+  }
+  if (isset($args['ordem']) && $args['ordem'] === 'nome_az') {
+    unset($args['ordem']);
+  }
+  if (isset($args['itens']) && (int) $args['itens'] === 8) {
+    unset($args['itens']);
+  }
   if (isset($args['pg']) && is_numeric($args['pg']) && (int) $args['pg'] <= 1) {
     unset($args['pg']);
   }
@@ -272,7 +281,7 @@ get_header();
           'total' => max(1, (int) $profiles_query->max_num_pages),
           'type' => 'array',
           'prev_text' => '&lsaquo; Anterior',
-          'next_text' => 'Préxima &rsaquo;',
+          'next_text' => 'Próxima &rsaquo;',
         ));
         ?>
 

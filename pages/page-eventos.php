@@ -13,9 +13,9 @@ $event_modalities = array(
     'aliases' => array('Presencial'),
   ),
   'hibrido' => array(
-    'label' => 'Hébrido',
-    'icon' => 'fa-solid fa-people-group',
-    'aliases' => array('Hébrido', 'Hibrido', 'Hébrido', 'Hébrido'),
+    'label' => 'Híbrido',
+    'icon' => 'fa-solid fa-code-merge',
+    'aliases' => array('Híbrido', 'Hibrido', 'Híbrido', 'Híbrido'),
   ),
   'online' => array(
     'label' => 'Online',
@@ -41,7 +41,7 @@ $slug_from_value = static function ($value) use ($event_modalities) {
 
 $meta_values_by_slug = array();
 foreach ($event_modalities as $slug => $item) {
-  $values = array($item['label']);
+  $values = array($item['label'], $slug);
   foreach ($item['aliases'] as $alias) {
     $values[] = $alias;
   }
@@ -151,6 +151,15 @@ $build_url = static function ($overrides = array ()) use ($base_url, $current_ar
 
   if (isset($args['tipo']) && $args['tipo'] === '') {
     unset($args['tipo']);
+  }
+  if (isset($args['busca']) && $args['busca'] === '') {
+    unset($args['busca']);
+  }
+  if (isset($args['ordem']) && $args['ordem'] === 'recentes') {
+    unset($args['ordem']);
+  }
+  if (isset($args['itens']) && (int) $args['itens'] === 8) {
+    unset($args['itens']);
   }
   if (isset($args['pg']) && is_numeric($args['pg']) && (int) $args['pg'] <= 1) {
     unset($args['pg']);
@@ -269,6 +278,11 @@ get_header();
             $modality = (string) get_post_meta(get_the_ID(), '_a11yhubbr_event_modality', true);
             if ($modality === '') {
               $modality = 'Evento';
+            } else {
+              $normalized_modality = $slug_from_value($modality);
+              if ($normalized_modality !== '' && isset($event_modalities[$normalized_modality])) {
+                $modality = (string) $event_modalities[$normalized_modality]['label'];
+              }
             }
             $excerpt = get_the_excerpt();
             if ($excerpt === '') {
@@ -309,7 +323,7 @@ get_header();
           'total' => max(1, (int) $events_query->max_num_pages),
           'type' => 'array',
           'prev_text' => '&lsaquo; Anterior',
-          'next_text' => 'Préxima &rsaquo;',
+          'next_text' => 'Próxima &rsaquo;',
         ));
         ?>
 
@@ -336,7 +350,6 @@ get_header();
   </section>
 </main>
 <?php get_footer(); ?>
-
 
 
 

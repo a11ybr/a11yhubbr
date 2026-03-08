@@ -35,7 +35,11 @@ $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $def
       <span class="screen-reader-text">Buscar</span>
       <input type="search" name="busca" value="<?php echo esc_attr($args['search_term']); ?>" placeholder="Buscar por palavra-chave">
       <?php if ($args['search_term'] !== '' && $args['clear_search_url'] !== ''): ?>
-        <a class="a11yhubbr-content-search-clear" href="<?php echo esc_url($args['clear_search_url']); ?>" aria-label="Limpar busca">&times;</a>
+        <button
+          type="button"
+          class="a11yhubbr-content-search-clear"
+          data-clear-url="<?php echo esc_url($args['clear_search_url']); ?>"
+          aria-label="Limpar busca">&times;</button>
       <?php endif; ?>
     </label>
 

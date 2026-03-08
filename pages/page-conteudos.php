@@ -47,7 +47,7 @@ if ($sort === 'antigos') {
 }
 
 $query_args = array(
-  'post_type' => 'post',
+  'post_type' => 'a11y_conteudo',
   'post_status' => 'publish',
   'paged' => $paged,
   'posts_per_page' => $per_page,
@@ -101,6 +101,15 @@ $build_url = static function ($overrides = array ()) use ($base_url, $current_ar
 
   if (isset($args['tipo']) && $args['tipo'] === '') {
     unset($args['tipo']);
+  }
+  if (isset($args['busca']) && $args['busca'] === '') {
+    unset($args['busca']);
+  }
+  if (isset($args['ordem']) && $args['ordem'] === 'recentes') {
+    unset($args['ordem']);
+  }
+  if (isset($args['itens']) && (int) $args['itens'] === 8) {
+    unset($args['itens']);
   }
   if (isset($args['pg']) && is_numeric($args['pg']) && (int) $args['pg'] <= 1) {
     unset($args['pg']);
@@ -235,7 +244,7 @@ get_header();
           'total' => max(1, (int) $content_query->max_num_pages),
           'type' => 'array',
           'prev_text' => '&lsaquo; Anterior',
-          'next_text' => 'Préxima &rsaquo;',
+          'next_text' => 'Próxima &rsaquo;',
         ));
         ?>
 
@@ -262,7 +271,6 @@ get_header();
   </section>
 </main>
 <?php get_footer(); ?>
-
 
 
 

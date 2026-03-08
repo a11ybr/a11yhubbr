@@ -36,9 +36,9 @@ if (!in_array($per_page, $allowed_per_page, true)) {
 
 $content_type_map = function_exists('a11yhubbr_get_content_type_map') ? a11yhubbr_get_content_type_map() : array();
 
-$post_types = array('post', 'a11y_evento', 'a11y_perfil');
+$post_types = array('a11y_conteudo', 'a11y_evento', 'a11y_perfil');
 if ($scope === 'conteudos') {
-    $post_types = array('post');
+    $post_types = array('a11y_conteudo');
 } elseif ($scope === 'eventos') {
     $post_types = array('a11y_evento');
 } elseif ($scope === 'rede') {
@@ -71,9 +71,9 @@ if ($query_text !== '') {
 }
 
 $count_by_scope = static function ($scope_key, $term) {
-    $types = array('post', 'a11y_evento', 'a11y_perfil');
+    $types = array('a11y_conteudo', 'a11y_evento', 'a11y_perfil');
     if ($scope_key === 'conteudos') {
-        $types = array('post');
+        $types = array('a11y_conteudo');
     } elseif ($scope_key === 'eventos') {
         $types = array('a11y_evento');
     } elseif ($scope_key === 'rede') {
@@ -215,7 +215,7 @@ get_header();
 
         <div class="a11yhubbr-content-results-grid">
           <?php while ($search_query->have_posts()): $search_query->the_post(); ?>
-            <?php if (get_post_type() === 'post'): ?>
+            <?php if (get_post_type() === 'a11y_conteudo'): ?>
               <?php
               $author_name = (string) get_post_meta(get_the_ID(), '_a11yhubbr_submitter_name', true);
               if ($author_name === '') {

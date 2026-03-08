@@ -8,15 +8,17 @@ get_header();
 <main class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-profile-page">
   <?php while (have_posts()): the_post(); ?>
     <?php
-    $profile_type = (string) get_post_meta(get_the_ID(), '_a11yhubbr_profile_type', true);
-    $role = (string) get_post_meta(get_the_ID(), '_a11yhubbr_profile_role', true);
-    $location = (string) get_post_meta(get_the_ID(), '_a11yhubbr_profile_location', true);
-    $website = (string) get_post_meta(get_the_ID(), '_a11yhubbr_profile_website', true);
-    $social_raw = (string) get_post_meta(get_the_ID(), '_a11yhubbr_profile_social_links', true);
-    $tags = get_the_terms(get_the_ID(), 'post_tag');
-    $permalink = get_permalink();
-    $tag_ids = wp_get_post_terms(get_the_ID(), 'post_tag', array('fields' => 'ids'));
-    $raw_content = (string) get_post_field('post_content', get_the_ID());
+    $post_id = get_the_ID();
+    $profile_type = (string) get_post_meta($post_id, '_a11yhubbr_profile_type', true);
+    $role = (string) get_post_meta($post_id, '_a11yhubbr_profile_role', true);
+    $location = (string) get_post_meta($post_id, '_a11yhubbr_profile_location', true);
+    $website = (string) get_post_meta($post_id, '_a11yhubbr_profile_website', true);
+    $social_raw = (string) get_post_meta($post_id, '_a11yhubbr_profile_social_links', true);
+    $tags = get_the_terms($post_id, 'post_tag');
+    $permalink = get_permalink($post_id);
+    $tag_ids = wp_get_post_terms($post_id, 'post_tag', array('fields' => 'ids'));
+
+    $raw_content = (string) get_post_field('post_content', $post_id);
     $legacy_markers = array(
         'Tipo de perfil:',
         'Nome/Organizacao:',
@@ -27,6 +29,7 @@ get_header();
         'Arquivo de foto:',
         'Tags:',
     );
+
     $filtered_lines = array();
     foreach (preg_split('/\R/u', $raw_content) as $line) {
         $trimmed = ltrim((string) $line);
@@ -48,37 +51,37 @@ get_header();
     }
     $content_to_render = apply_filters('the_content', $content_to_render);
 
-$social_links = array();
-if ($social_raw !== '') {
-    $decoded = json_decode($social_raw, true);
-    if (is_array($decoded)) {
-        foreach ($decoded as $item) {
-            $network = '';
-            if (is_array($item)) {
-                $url = esc_url_raw($item['url'] ?? '');
-                $network = sanitize_key((string) ($item['network'] ?? ''));
-            } else {
-                $url = esc_url_raw((string) $item);
-            }
-            if ($url !== '') {
-                $social_links[] = array(
-                    'url' => $url,
-                    'network' => $network,
-                );
+    $social_links = array();
+    if ($social_raw !== '') {
+        $decoded = json_decode($social_raw, true);
+        if (is_array($decoded)) {
+            foreach ($decoded as $item) {
+                $network = '';
+                if (is_array($item)) {
+                    $url = esc_url_raw($item['url'] ?? '');
+                    $network = sanitize_key((string) ($item['network'] ?? ''));
+                } else {
+                    $url = esc_url_raw((string) $item);
+                }
+                if ($url !== '') {
+                    $social_links[] = array(
+                        'url' => $url,
+                        'network' => $network,
+                    );
+                }
             }
         }
     }
-}
 
     a11yhubbr_render_page_header(array(
         'breadcrumbs' => array(
-            array('label' => 'PÃ¡gina inicial', 'url' => home_url('/')),
+            array('label' => 'Página inicial', 'url' => home_url('/')),
             array('label' => 'Rede', 'url' => home_url('/rede')),
             array('label' => get_the_title()),
         ),
         'icon' => 'fa-regular fa-id-card',
         'title' => get_the_title(),
-        'summary' => get_the_excerpt() !== '' ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content(null, false, get_the_ID())), 28),
+        'summary' => get_the_excerpt() !== '' ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content(null, false, $post_id)), 28),
         'use_page_context' => false,
         'context' => 'rede',
     ));
@@ -89,7 +92,7 @@ if ($social_raw !== '') {
         <article class="a11yhubbr-card a11yhubbr-rich-content">
           <div class="a11yhubbr-single-profile-head">
             <?php if (has_post_thumbnail()): ?>
-              <?php echo get_the_post_thumbnail(get_the_ID(), 'medium', array('class' => 'a11yhubbr-single-profile-image', 'loading' => 'lazy', 'decoding' => 'async')); ?>
+              <?php echo get_the_post_thumbnail($post_id, 'medium', array('class' => 'a11yhubbr-single-profile-image', 'loading' => 'lazy', 'decoding' => 'async')); ?>
             <?php endif; ?>
             <div>
               <?php if ($profile_type !== ''): ?><span class="a11yhubbr-content-item-badge a11yhubbr-content-item-badge--rede"><?php echo esc_html($profile_type); ?></span><?php endif; ?>
@@ -111,7 +114,7 @@ if ($social_raw !== '') {
 
           <?php if (!empty($social_links)): ?>
             <div class="a11yhubbr-community-social">
-            <?php foreach ($social_links as $social_item): ?>
+              <?php foreach ($social_links as $social_item): ?>
                 <?php
                 $social_url = (string) ($social_item['url'] ?? '');
                 $social_network = (string) ($social_item['network'] ?? '');
@@ -126,11 +129,11 @@ if ($social_raw !== '') {
 
         <aside class="a11yhubbr-single-aside-stack">
           <div class="a11yhubbr-side-card a11yhubbr-single-side">
-            <h2>InformaÃ§Ãµes do perfil</h2>
+            <h2>Informações do perfil</h2>
             <dl>
               <?php if ($profile_type !== ''): ?><div><dt>Tipo</dt><dd><?php echo esc_html($profile_type); ?></dd></div><?php endif; ?>
               <?php if ($role !== ''): ?><div><dt>Cargo / especialidade</dt><dd><?php echo esc_html($role); ?></dd></div><?php endif; ?>
-              <?php if ($location !== ''): ?><div><dt>LocalizaÃ§Ã£o</dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
+              <?php if ($location !== ''): ?><div><dt>Localização</dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
               <?php if ($website !== ''): ?><div><dt>Website</dt><dd><a href="<?php echo esc_url($website); ?>" target="_blank" rel="noopener noreferrer">Abrir website <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></dd></div><?php endif; ?>
             </dl>
           </div>
@@ -139,7 +142,7 @@ if ($social_raw !== '') {
             'share_url' => $permalink,
             'share_title' => get_the_title(),
             'contact_url' => home_url('/contato'),
-            'suggest_label' => 'Sugerir alteraÃ§Ã£o',
+            'suggest_label' => 'Sugerir alteração',
           )); ?>
         </aside>
       </div>
@@ -152,7 +155,7 @@ if ($social_raw !== '') {
             'post_type' => 'a11y_perfil',
             'post_status' => 'publish',
             'posts_per_page' => 3,
-            'post__not_in' => array(get_the_ID()),
+            'post__not_in' => array($post_id),
             'ignore_sticky_posts' => true,
             'tag__in' => array_map('intval', $tag_ids),
         ));
@@ -163,7 +166,7 @@ if ($social_raw !== '') {
             'post_type' => 'a11y_perfil',
             'post_status' => 'publish',
             'posts_per_page' => 3,
-            'post__not_in' => array(get_the_ID()),
+            'post__not_in' => array($post_id),
             'ignore_sticky_posts' => true,
             'orderby' => 'date',
             'order' => 'DESC',
@@ -195,4 +198,3 @@ if ($social_raw !== '') {
   <?php endwhile; ?>
 </main>
 <?php get_footer(); ?>
-

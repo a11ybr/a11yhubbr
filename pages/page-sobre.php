@@ -190,7 +190,7 @@ get_header();
 
   <section class="a11yhubbr-about-section">
     <div class="a11yhubbr-container">
-      <p class="a11yhubbr-home-v2-kicker">Equipe</p>
+      <p class="a11yhubbr-home-kicker">Equipe</p>
       <h2>Quem mantém a A11YBR</h2>
       <div class="a11yhubbr-about-team-grid">
         <?php if ($team_query->have_posts()): ?>
@@ -211,7 +211,7 @@ get_header();
         <?php else: ?>
           <?php get_template_part('inc/components/empty-state', null, array(
             'title' => 'Nenhum perfil da equipe encontrado',
-            'message' => 'Cadastre perfis e marque a categoria equipe para exibir nesta se??o.',
+            'message' => 'Cadastre perfis e marque a categoria equipe para exibir nesta seção.',
             'cta_label' => 'Submeter perfil',
             'cta_url' => function_exists('a11yhubbr_get_submit_profile_url') ? a11yhubbr_get_submit_profile_url() : home_url('/submeter/submeter-perfil'),
             'icon' => 'fa-solid fa-user-group',
@@ -234,7 +234,7 @@ get_header();
     </div>
   </section>
 
-  <section class="a11yhubbr-about-section ">
+  <section class="a11yhubbr-about-section " id="faq">
     <div class="a11yhubbr-container text-center">
       <div class="a11yhubbr-about-faq">
         <h2 id="faq">Perguntas frequentes</h2>

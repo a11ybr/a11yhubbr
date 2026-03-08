@@ -20,6 +20,8 @@ get_header();
     $modality = (string) get_post_meta($post_id, '_a11yhubbr_event_modality', true);
     $event_type = (string) get_post_meta($post_id, '_a11yhubbr_event_type', true);
     $location = (string) get_post_meta($post_id, '_a11yhubbr_event_location', true);
+    $postal_code = (string) get_post_meta($post_id, '_a11yhubbr_event_postal_code', true);
+    $online_location = (string) get_post_meta($post_id, '_a11yhubbr_event_online_location', true);
     $organizer = (string) get_post_meta($post_id, '_a11yhubbr_event_organizer', true);
     $event_link = trim((string) get_post_meta($post_id, '_a11yhubbr_event_link', true));
     $slots_raw = (string) get_post_meta($post_id, '_a11yhubbr_event_slots', true);
@@ -65,11 +67,43 @@ get_header();
     }
     $content_to_render = apply_filters('the_content', $content_to_render);
     $event_badge_parts = array();
+    $modality_map = array(
+        'presencial' => 'Presencial',
+        'online' => 'Online',
+        'hibrido' => 'Hibrido',
+    );
+    $modality_label = $modality_map[sanitize_title($modality)] ?? $modality;
+    $modality_slug = sanitize_title($modality);
+    $is_physical_event = in_array($modality_slug, array('presencial', 'hibrido'), true);
+    $is_online_event = in_array($modality_slug, array('online', 'hibrido'), true);
+    $platform_value = '';
+    if ($is_online_event) {
+        $platform_value = trim((string) $online_location);
+        if ($platform_value === '' && $modality_slug === 'online') {
+            $platform_value = trim((string) $location);
+        }
+    }
+    $map_query = '';
+    if ($postal_code !== '') {
+        $map_query = 'CEP ' . $postal_code;
+    } elseif ($is_physical_event && $location !== '') {
+        $map_query = $location;
+    }
+    $map_query = trim((string) $map_query);
+    $map_link = '';
+    $map_embed = '';
+    if ($map_query !== '' && $is_physical_event) {
+        $map_link = add_query_arg(array(
+            'api' => 1,
+            'query' => $map_query,
+        ), 'https://www.google.com/maps/search/');
+        $map_embed = 'https://www.google.com/maps?q=' . rawurlencode($map_query) . '&output=embed';
+    }
     if ($event_type !== '') {
         $event_badge_parts[] = $event_type;
     }
-    if ($modality !== '') {
-        $event_badge_parts[] = $modality;
+    if ($modality_label !== '') {
+        $event_badge_parts[] = $modality_label;
     }
     $event_badge_label = trim(implode(' ', $event_badge_parts));
     if ($event_badge_label === '') {
@@ -128,6 +162,34 @@ get_header();
 
           <div class="a11yhubbr-single-content-body"><?php echo wp_kses_post($content_to_render); ?></div>
 
+          <?php if ($platform_value !== ''): ?>
+            <section class="a11yhubbr-single-platform-box" aria-label="Plataforma do evento">
+              <h3>Plataforma do evento</h3>
+              <p><?php echo esc_html($platform_value); ?></p>
+            </section>
+          <?php endif; ?>
+
+          <?php if ($map_embed !== ''): ?>
+            <section class="a11yhubbr-single-map-box" aria-label="Mapa do local do evento">
+              <div class="a11yhubbr-single-map-head">
+                <h3>Mapa do local</h3>
+                <?php if ($map_link !== ''): ?>
+                  <a href="<?php echo esc_url($map_link); ?>" target="_blank" rel="noopener noreferrer">
+                    Abrir no Google Maps <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                  </a>
+                <?php endif; ?>
+              </div>
+              <p><?php echo esc_html($map_query); ?></p>
+              <div class="a11yhubbr-single-map-embed">
+                <iframe
+                  src="<?php echo esc_url($map_embed); ?>"
+                  title="<?php echo esc_attr('Mapa do local: ' . $map_query); ?>"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            </section>
+          <?php endif; ?>
+
           <?php if (!empty($tags) && !is_wp_error($tags)): ?>
             <h3>Tags</h3>
             <div class="a11yhubbr-single-tags">
@@ -163,7 +225,9 @@ get_header();
             <dl>
               <div><dt>Tipo</dt><dd><?php echo esc_html($event_type !== '' ? $event_type : 'Evento'); ?></dd></div>
               <div><dt>Data</dt><dd><time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time></dd></div>
-              <?php if ($location !== ''): ?><div><dt>Localização</dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
+              <?php if ($postal_code !== ''): ?><div><dt>CEP</dt><dd><?php echo esc_html($postal_code); ?></dd></div><?php endif; ?>
+              <?php if ($location !== ''): ?><div><dt><?php echo esc_html(sanitize_title($modality) === 'online' ? 'Plataforma' : 'Localizacao'); ?></dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
+              <?php if ($online_location !== '' && sanitize_title($modality) === 'hibrido'): ?><div><dt>Plataforma online</dt><dd><?php echo esc_html($online_location); ?></dd></div><?php endif; ?>
               <?php if ($organizer !== ''): ?><div><dt>Organizador</dt><dd><?php echo esc_html($organizer); ?></dd></div><?php endif; ?>
             </dl>
           </div>
@@ -192,7 +256,7 @@ get_header();
                   $related_badge_parts[] = $related_type;
               }
               if ($related_modality !== '') {
-                  $related_badge_parts[] = $related_modality;
+                  $related_badge_parts[] = $modality_map[sanitize_title($related_modality)] ?? $related_modality;
               }
               $related_badge_label = trim(implode(' ', $related_badge_parts));
               if ($related_badge_label === '') {
