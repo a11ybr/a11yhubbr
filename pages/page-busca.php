@@ -101,7 +101,7 @@ $count_by_scope = static function ($scope_key, $term) {
 };
 
 $scope_cards = array(
-    'conteudos' => array('label' => 'Conteudos', 'icon' => 'fa-regular fa-file-lines'),
+    'conteudos' => array('label' => 'Conteúdos', 'icon' => 'fa-regular fa-file-lines'),
     'eventos' => array('label' => 'Eventos', 'icon' => 'fa-regular fa-calendar'),
     'rede' => array('label' => 'Rede', 'icon' => 'fa-solid fa-circle-nodes'),
 );
@@ -149,12 +149,12 @@ get_header();
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
-      array('label' => 'Pagina inicial', 'url' => home_url('/')),
+      array('label' => 'Página inicial', 'url' => home_url('/')),
       array('label' => 'Busca'),
     ),
     'icon' => 'fa-solid fa-magnifying-glass',
     'title' => 'Buscar no site',
-    'summary' => 'Encontre conteudos, eventos e perfis em um unico fluxo de pesquisa.',
+    'summary' => 'Encontre conteúdos, eventos e perfis em um único fluxo de pesquisa.',
     'use_page_context' => false,
   ));
   ?>
@@ -191,8 +191,8 @@ get_header();
         'sort_options' => array(
           'recentes' => 'Mais recentes',
           'antigos' => 'Mais antigos',
-          'titulo_az' => 'Titulo A-Z',
-          'titulo_za' => 'Titulo Z-A',
+          'titulo_az' => 'Título A-Z',
+          'titulo_za' => 'Título Z-A',
         ),
         'current_sort' => $order,
         'per_page_name' => 'itens',
@@ -207,7 +207,7 @@ get_header();
       <?php if ($query_text === ''): ?>
         <?php get_template_part('inc/components/empty-state', null, array(
           'title' => 'Comece sua pesquisa',
-          'message' => 'Digite um termo para buscar conteudos, eventos e perfis.',
+          'message' => 'Digite um termo para buscar conteúdos, eventos e perfis.',
           'icon' => 'fa-solid fa-magnifying-glass',
         )); ?>
       <?php elseif ($search_query && $search_query->have_posts()): ?>
@@ -222,7 +222,7 @@ get_header();
                   $author_name = get_the_author();
               }
               $terms = wp_get_post_terms(get_the_ID(), 'category');
-              $label = 'Conteudo';
+              $label = 'Conteúdo';
               $badge_icon = 'fa-regular fa-file-lines';
               if (!empty($terms) && !is_wp_error($terms)) {
                 $label = (string) $terms[0]->name;
@@ -251,7 +251,7 @@ get_header();
                 'tags' => $tag_names,
                 'action_url' => get_permalink(),
                 'action_label' => 'Acessar',
-                'badge_class' => 'a11yhubbr-content-item-badge--conteudos',
+                'badge_class' => 'a11yhubbr-content-item-badge--conteúdos',
               )); ?>
             <?php elseif (get_post_type() === 'a11y_evento'): ?>
               <?php
@@ -303,11 +303,11 @@ get_header();
           'total' => max(1, (int) $search_query->max_num_pages),
           'type' => 'array',
           'prev_text' => '&lsaquo; Anterior',
-          'next_text' => 'Proxima &rsaquo;',
+          'next_text' => 'Próxima &rsaquo;',
         ));
         ?>
         <?php if (!empty($pagination)): ?>
-          <nav class="a11yhubbr-content-pagination" aria-label="Paginacao da busca">
+          <nav class="a11yhubbr-content-pagination" aria-label="Paginação da busca">
             <?php foreach ($pagination as $page_link): ?>
               <?php echo wp_kses_post($page_link); ?>
             <?php endforeach; ?>

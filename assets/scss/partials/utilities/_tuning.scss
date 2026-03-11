@@ -144,7 +144,7 @@
 .a11yhubbr-single-slot-list li {
   background: var(--a11y-single-soft-bg, #f5f8ff);
   border: 1px solid var(--a11y-single-soft-border, #d8dfec);
-  border-radius: 10px;
+  border-radius: var(--a11y-radius);
   padding: .6rem .7rem;
   display: grid;
   gap: .2rem;
@@ -206,7 +206,7 @@
 
 .a11yhubbr-single-map-embed {
   border: 1px solid var(--a11y-single-soft-border, #d8dfec);
-  border-radius: 10px;
+  border-radius: var(--a11y-radius);
   overflow: hidden;
   background: #fff;
 }
@@ -283,7 +283,7 @@
   min-height: 2.3rem;
   padding: .45rem;
   font-size: .95rem;
-  border-radius: 10px;
+  border-radius: var(--a11y-radius);
 }
 
 .a11yhubbr-share-icon-btn.is-whatsapp {
@@ -330,7 +330,7 @@
 
 .a11yhubbr-share-icon-btn:hover,
 .a11yhubbr-share-icon-btn:focus-visible {
-  filter: brightness(.97);
+  opacity: .92;
   transform: translateY(-1px);
 }
 
@@ -363,7 +363,7 @@
 .a11yhubbr-submit-cta-box {
   background: #eef3ff;
   border: 1px solid #d6deeb;
-  border-radius: 12px;
+  border-radius: var(--a11y-radius);
   padding: 1.6rem 1.4rem;
   text-align: center;
 }
@@ -400,7 +400,7 @@
 
 .a11yhubbr-about-faq-group details {
   border: 1px solid #d8dfec;
-  border-radius: 10px;
+  border-radius: var(--a11y-radius);
   background: #fff;
   padding: .8rem .95rem;
 }
@@ -484,7 +484,7 @@
   display: none;
   width: 2.45rem;
   height: 2.45rem;
-  border-radius: 8px;
+  border-radius: var(--a11y-radius);
   border: 1px solid #c8d4e8;
   background: #fff;
   color: #1a2f5f;
@@ -514,7 +514,7 @@
 .a11yhubbr-header-search-btn {
   width: 2.45rem;
   height: 2.45rem;
-  border-radius: 8px;
+  border-radius: var(--a11y-radius);
   border: 1px solid #c8d4e8;
   background: #fff;
   color: #1a2f5f;
@@ -533,7 +533,7 @@
 .a11yhubbr-header-search-clear {
   width: 2.45rem;
   height: 2.45rem;
-  border-radius: 8px;
+  border-radius: var(--a11y-radius);
   border: 1px solid #c8d4e8;
   background: #fff;
   color: #1a2f5f;
@@ -553,7 +553,7 @@
 .a11yhubbr-header-submit-btn {
   min-width: auto;
   padding: .62rem .92rem;
-  border-radius: 10px;
+  border-radius: var(--a11y-radius);
   box-shadow: none;
   --a11y-btn-bg: #2f343d;
   --a11y-btn-border: #2f343d;
@@ -748,5 +748,3 @@
     flex-basis: 100%;
   }
 }
-
-

@@ -24,8 +24,8 @@ $total_collaborations = $count_post + $count_event + $count_profile;
         <h1><mark class="a11yhubbr-hero-mark">Acessibilidade</mark> digital em português, <mark class="a11yhubbr-hero-mark">pela comunidade</mark></h1>
         <p>Um diretório colaborativo que documenta, organiza e amplifica o trabalho de quem constrói um Brasil digital mais inclusivo.</p>
         <div class="a11yhubbr-actions">
-          <a class="a11yhubbr-btn a11yhubbr-btn-secondary a11yhubbr-btn-light" href="<?php echo esc_url(home_url('/conteudos')); ?>"><i class="fa-regular fa-file-lines"></i>Explorar conteúdos</a>
-          <a class="a11yhubbr-btn a11yhubbr-btn-alternative a11yhubbr-header-submit-btn" href="<?php echo esc_url(function_exists('a11yhubbr_get_submit_content_url') ? a11yhubbr_get_submit_content_url() : home_url('/submeter/submeter-conteudo')); ?>"><i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>Submeter conteúdo</a>
+          <a class="a11yhubbr-btn a11yhubbr-btn-secondary a11yhubbr-btn-light" href="<?php echo esc_url(home_url('/conteudos')); ?>"><?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('file-lines') : ''; ?>Explorar conteúdos</a>
+          <a class="a11yhubbr-btn a11yhubbr-btn-alternative a11yhubbr-header-submit-btn" href="<?php echo esc_url(function_exists('a11yhubbr_get_submit_content_url') ? a11yhubbr_get_submit_content_url() : home_url('/submeter/submeter-conteudo')); ?>"><?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('submit') : ''; ?>Submeter conteúdo</a>
         </div>
       </div>
     </div>
@@ -38,11 +38,11 @@ $total_collaborations = $count_post + $count_event + $count_profile;
 
       <?php
       $content_categories = array(
-        array('title' => 'Artigos', 'desc' => 'conteúdos escritos com anélise, opiniéo ou estudo de caso', 'icon' => 'fa-regular fa-file-lines', 'tipo' => 'artigos'),
-        array('title' => 'Livros e materiais', 'desc' => 'livros, guias e materiais de referéncia', 'icon' => 'fa-solid fa-book-open', 'tipo' => 'cursos-materiais'),
-        array('title' => 'Ferramentas', 'desc' => 'recursos técnicos para auditoria e testes de acessibilidade', 'icon' => 'fa-solid fa-wrench', 'tipo' => 'ferramentas'),
-        array('title' => 'Multimédia', 'desc' => 'podcasts e canais de védeo', 'icon' => 'fa-solid fa-headphones', 'tipo' => 'multimidia'),
-        array('title' => 'Sites e sistemas', 'desc' => 'produtos digitais com foco em acessibilidade', 'icon' => 'fa-solid fa-desktop', 'tipo' => 'sites-sistemas'),
+        array('title' => 'Artigos', 'desc' => 'conteúdos escritos com análise, opinião ou estudo de caso', 'icon_key' => 'file-lines', 'tipo' => 'artigos'),
+        array('title' => 'Livros e materiais', 'desc' => 'livros, guias e materiais de referência', 'icon_key' => 'book-open', 'tipo' => 'cursos-materiais'),
+        array('title' => 'Ferramentas', 'desc' => 'recursos técnicos para auditoria e testes de acessibilidade', 'icon_key' => 'wrench', 'tipo' => 'ferramentas'),
+        array('title' => 'Multimídia', 'desc' => 'podcasts e canais de vídeo', 'icon_key' => 'headphones', 'tipo' => 'multimidia'),
+        array('title' => 'Sites e sistemas', 'desc' => 'produtos digitais com foco em acessibilidade', 'icon_key' => 'desktop', 'tipo' => 'sites-sistemas'),
       );
 
       $content_category_counts = array();
@@ -61,7 +61,7 @@ $total_collaborations = $count_post + $count_event + $count_profile;
           <a class="a11yhubbr-home-card a11yhubbr-home-card-link"
             href="<?php echo esc_url(add_query_arg('tipo', $item['tipo'], home_url('/conteudos'))); ?>"
             aria-label="Filtrar conteúdos por <?php echo esc_attr($item['title']); ?>">
-            <span class="a11yhubbr-home-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
+            <span class="a11yhubbr-home-icon" aria-hidden="true"><?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon((string) $item['icon_key']) : ''; ?></span>
             <span class="a11yhubbr-home-card-copy">
               <span class="a11yhubbr-home-card-copy-top">
                 <h3><?php echo esc_html($item['title']); ?></h3>
@@ -171,7 +171,7 @@ $total_collaborations = $count_post + $count_event + $count_profile;
           'message' => 'Quando novos eventos forem aprovados eles vão aparecer aqui.',
           'cta_label' => 'Submeter evento',
           'cta_url' => function_exists('a11yhubbr_get_submit_event_url') ? a11yhubbr_get_submit_event_url() : home_url('/submeter/submeter-eventos'),
-          'icon' => 'fa-regular fa-calendar',
+          'icon_key' => 'calendar',
         )); ?>
       <?php endif; ?>
       <?php wp_reset_postdata(); ?>
@@ -184,12 +184,12 @@ $total_collaborations = $count_post + $count_event + $count_profile;
 
       <?php
       $community_categories = array(
-        array('title' => 'Comunidades', 'desc' => 'espaços de networking e troca sobre acessibilidade', 'icon' => 'fa-solid fa-users', 'tipo' => 'Comunidades'),
-        array('title' => 'Profissionais de tecnologia', 'desc' => 'designers, desenvolvedores, QA, product managers', 'icon' => 'fa-solid fa-briefcase', 'tipo' => 'Profissionais de tecnologia'),
-        array('title' => 'Empresas e ONGs', 'desc' => 'organizações comprometidas com acessibilidade', 'icon' => 'fa-regular fa-building', 'tipo' => 'Empresas e ONGs'),
-        array('title' => 'Intérpretes de Libras', 'desc' => 'profissionais de comunicação em língua de sinais', 'icon' => 'fa-regular fa-hand', 'tipo' => 'Interpretes de Libras'),
-        array('title' => 'Audiodescritores', 'desc' => 'especialistas em descrição de conteúdo visual', 'icon' => 'fa-regular fa-eye', 'tipo' => 'Audiodescritores'),
-        array('title' => 'Tradutores de Braille', 'desc' => 'profissionais especializados em escrita tátil', 'icon' => 'fa-solid fa-braille', 'tipo' => 'Tradutores de Braille'),
+        array('title' => 'Comunidades', 'desc' => 'espaços de networking e troca sobre acessibilidade', 'icon_key' => 'users', 'tipo' => 'Comunidades'),
+        array('title' => 'Profissionais de tecnologia', 'desc' => 'designers, desenvolvedores, QA, product managers', 'icon_key' => 'briefcase', 'tipo' => 'Profissionais de tecnologia'),
+        array('title' => 'Empresas e ONGs', 'desc' => 'organizações comprometidas com acessibilidade', 'icon_key' => 'building', 'tipo' => 'Empresas e ONGs'),
+        array('title' => 'Intérpretes de Libras', 'desc' => 'profissionais de comunicação em língua de sinais', 'icon_key' => 'hand', 'tipo' => 'Interpretes de Libras'),
+        array('title' => 'Audiodescritores', 'desc' => 'especialistas em descrição de conteúdo visual', 'icon_key' => 'eye', 'tipo' => 'Audiodescritores'),
+        array('title' => 'Tradutores de Braille', 'desc' => 'profissionais especializados em escrita tátil', 'icon_key' => 'braille', 'tipo' => 'Tradutores de Braille'),
       );
 
       $community_aliases = array(
@@ -230,7 +230,7 @@ $total_collaborations = $count_post + $count_event + $count_profile;
           <a class="a11yhubbr-home-card a11yhubbr-home-card-link"
             href="<?php echo esc_url(add_query_arg('tipo', $item['tipo'], home_url('/rede'))); ?>"
             aria-label="Filtrar rede por <?php echo esc_attr($item['title']); ?>">
-            <span class="a11yhubbr-home-icon" aria-hidden="true"><i class="<?php echo esc_attr($item['icon']); ?>"></i></span>
+            <span class="a11yhubbr-home-icon" aria-hidden="true"><?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon((string) $item['icon_key']) : ''; ?></span>
             <span class="a11yhubbr-home-card-copy">
               <span class="a11yhubbr-home-card-copy-top">
                 <h3><?php echo esc_html($item['title']); ?></h3>

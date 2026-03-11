@@ -1,15 +1,14 @@
 .a11yhubbr-content-results-grid {
-  columns: 1;
-  column-gap: .9rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .9rem;
 }
 
 .a11yhubbr-content-results-grid>* {
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
-  display: inline-block;
-  width: 100%;
-  margin: 0 0 .9rem;
+  min-width: 0;
+  margin: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 420px;
 }
 
 .a11yhubbr-home-events .a11yhubbr-event-card .a11yhubbr-content-item-badge {
@@ -21,7 +20,7 @@
 
 .a11yhubbr-card-base {
   border: 1px solid #d6deeb;
-  border-radius: 12px;
+  border-radius: var(--a11y-radius);
   background: #fff;
   align-content: start;
   padding: 1rem;
@@ -84,7 +83,7 @@
 .a11yhubbr-content-item-badge {
   background: #e8edf9;
   color: #1b3775;
-  border-radius: 6px;
+  border-radius: var(--a11y-radius);
   padding: .28rem .58rem;
   font-weight: var(--a11y-weight-semibold);
   font-size: .86rem;
@@ -229,6 +228,7 @@
   font-size: 1rem;
 }
 
+.a11yhubbr-event-card-location .a11yhubbr-icon,
 .a11yhubbr-event-card-location i {
   margin-right: .3rem;
 }
@@ -342,17 +342,16 @@
 }
 
 .a11yhubbr-community-profiles-grid {
-  columns: 1;
-  column-gap: .95rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .95rem;
 }
 
 .a11yhubbr-community-profiles-grid>* {
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;
-  display: inline-block;
-  width: 100%;
-  margin: 0 0 .95rem;
+  min-width: 0;
+  margin: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 360px;
 }
 
 .a11yhubbr-community-profile-card {
@@ -567,7 +566,7 @@
 
 .a11yhubbr-content-pagination .page-numbers {
   border: 1px solid #d6deeb;
-  border-radius: 8px;
+  border-radius: var(--a11y-radius);
   min-width: 2.2rem;
   min-height: 2.2rem;
   padding: .35rem .7rem;
@@ -597,15 +596,15 @@
   }
 
   .a11yhubbr-content-results-grid {
-    columns: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .a11yhubbr-community-profiles-grid {
-    columns: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .a11yhubbr-about-team-grid {
-    columns: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -623,7 +622,7 @@
   }
 
   .a11yhubbr-content-results-grid {
-    columns: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -645,11 +644,11 @@
   }
 
   .a11yhubbr-community-profiles-grid {
-    columns: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .a11yhubbr-about-team-grid {
-    columns: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

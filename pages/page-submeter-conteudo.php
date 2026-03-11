@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Submeter Conteudo
+Template Name: Submeter Conteúdo
 */
 if (!defined('ABSPATH')) {
     exit;
@@ -23,9 +23,9 @@ get_header();
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(
-          array('label' => 'Pagina inicial', 'url' => home_url('/')),
+          array('label' => 'Página inicial', 'url' => home_url('/')),
           array('label' => 'Submeter', 'url' => home_url('/submeter')),
-          array('label' => 'Submeter conteudo'),
+          array('label' => 'Submeter conteúdo'),
       ),
       'icon' => 'fa-regular fa-file-lines',
   ));
@@ -34,16 +34,16 @@ get_header();
   <section class="a11yhubbr-submit-section">
     <div class="a11yhubbr-container">
       <?php if ($submitted) : ?>
-        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">Conteudo enviado para revisao com sucesso.</div>
+        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">Conteúdo enviado para revisão com sucesso.</div>
       <?php endif; ?>
       <?php if ($has_error) : ?>
-        <div class="a11yhubbr-toast a11yhubbr-toast-error" role="alert">Nao foi possivel enviar agora. Tente novamente em instantes.</div>
+        <div class="a11yhubbr-toast a11yhubbr-toast-error" role="alert">Não foi possível enviar agora. Tente novamente em instantes.</div>
       <?php endif; ?>
 
       <div class="a11yhubbr-submit-grid">
         <div class="a11yhubbr-submit-main">
           <form method="post" class="a11yhubbr-form-grid a11yhubbr-submit-form" id="content-form">
-            <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatorios</p>
+            <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
             <?php wp_nonce_field('a11yhubbr_content', 'a11yhubbr_nonce'); ?>
             <input type="hidden" name="a11yhubbr_redirect" value="<?php echo esc_url(get_permalink()); ?>">
             <input type="hidden" name="a11yhubbr_ts" value="<?php echo esc_attr((string) time()); ?>">
@@ -52,9 +52,9 @@ get_header();
             </label>
 
             <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-conteudo-principal" data-collapsible-section>
-              <h2>Informacoes principais</h2>
+              <h2>Informações principais</h2>
               <div class="a11yhubbr-field-inline">
-                <label for="content-type-select">Tipo de conteudo *</label>
+                <label for="content-type-select">Tipo de conteúdo *</label>
                 <div class="a11yhubbr-field-control">
                   <select name="type" id="content-type-select" required>
                     <option value="">Selecione</option>
@@ -65,13 +65,13 @@ get_header();
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-title">Titulo do conteudo *</label>
+                <label for="content-title">Título do conteúdo *</label>
                 <div class="a11yhubbr-field-control">
                   <input id="content-title" type="text" name="title" required>
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-description">Descricao *</label>
+                <label for="content-description">Descrição *</label>
                 <div class="a11yhubbr-field-control">
                   <textarea id="content-description" name="description" rows="5" required></textarea>
                 </div>
@@ -79,36 +79,30 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-conteudo-detalhes" data-collapsible-section>
-              <h2>Detalhes da submissao</h2>
+              <h2>Detalhes da submissão</h2>
               <div class="a11yhubbr-field-inline">
-                <label for="content-author">Autor *</label>
-                <div class="a11yhubbr-field-control">
-                  <input id="content-author" type="text" name="author" required>
-                </div>
-              </div>
-              <div class="a11yhubbr-field-inline">
-                <label for="content-organization">Organizacao</label>
+                <label for="content-organization">Organização</label>
                 <div class="a11yhubbr-field-control">
                   <input id="content-organization" type="text" name="organization">
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-link">Link do conteudo *</label>
+                <label for="content-link">Link do conteúdo *</label>
                 <div class="a11yhubbr-field-control">
                   <input id="content-link" type="url" name="link" required>
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-tags">Tags (separadas por virgulas)</label>
+                <label for="content-tags">Tags (separadas por vírgulas)</label>
                 <div class="a11yhubbr-field-control">
                   <input id="content-tags" type="text" name="tags" placeholder="acessibilidade, wcag, ux">
-                  <p class="a11yhubbr-help">Use palavras-chave curtas para facilitar a busca e organizacao.</p>
+                  <p class="a11yhubbr-help">Use palavras-chave curtas para facilitar a busca e organização.</p>
                 </div>
               </div>
 
               <div class="a11yhubbr-content-conditional" data-content-types="artigos,multimidia,sites-sistemas,cursos-materiais" hidden>
                 <div class="a11yhubbr-field-inline">
-                  <label for="content-year-publication">Ano de publicacao/atualizacao</label>
+                  <label for="content-year-publication">Ano de publicação/atualização</label>
                   <div class="a11yhubbr-field-control">
                     <input id="content-year-publication" type="number" name="year_publication" min="1900" max="2100" step="1">
                   </div>
@@ -117,13 +111,13 @@ get_header();
 
               <div class="a11yhubbr-content-conditional" data-content-types="artigos,cursos-materiais,ferramentas,multimidia,sites-sistemas" hidden>
                 <div class="a11yhubbr-field-inline">
-                  <label for="content-depth">Nivel de profundidade</label>
+                  <label for="content-depth">Nível de profundidade</label>
                   <div class="a11yhubbr-field-control">
                     <select id="content-depth" name="depth">
                       <option value="">Selecione</option>
-                      <option value="introdutorio">Introdutorio</option>
-                      <option value="intermediario">Intermediario</option>
-                      <option value="avancado">Avancado</option>
+                      <option value="introdutorio">Introdutório</option>
+                      <option value="intermediario">Intermediário</option>
+                      <option value="avancado">Avançado</option>
                     </select>
                   </div>
                 </div>
@@ -135,7 +129,7 @@ get_header();
               <div class="a11yhubbr-field-inline">
                 <label for="content-article-authors">Nomes das pessoas autoras</label>
                 <div class="a11yhubbr-field-control">
-                  <input id="content-article-authors" type="text" name="article_authors" placeholder="Ex.: Maria Silva, Joao Souza">
+                  <input id="content-article-authors" type="text" name="article_authors" placeholder="Ex.: Maria Silva, João Souza">
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
@@ -143,11 +137,11 @@ get_header();
                 <div class="a11yhubbr-field-control">
                   <select id="content-article-kind" name="article_kind">
                     <option value="">Selecione</option>
-                    <option value="academico">Academico</option>
+                    <option value="academico">Acadêmico</option>
                     <option value="ativismo">Ativismo</option>
                     <option value="estudo-caso">Estudo de caso</option>
                     <option value="opinativo">Opinativo</option>
-                    <option value="tecnico">Tecnico</option>
+                    <option value="tecnico">Técnico</option>
                     <option value="outro">Outro</option>
                   </select>
                 </div>
@@ -163,13 +157,13 @@ get_header();
                     <option value="">Selecione</option>
                     <option value="online">Online</option>
                     <option value="presencial">Presencial</option>
-                    <option value="hibrido">Hibrido</option>
-                    <option value="nao-se-aplica">Nao se aplica</option>
+                    <option value="hibrido">Híbrido</option>
+                    <option value="nao-se-aplica">Não se aplica</option>
                   </select>
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-book-price">Preco</label>
+                <label for="content-book-price">Preço</label>
                 <div class="a11yhubbr-field-control">
                   <select id="content-book-price" name="book_price">
                     <option value="">Selecione</option>
@@ -187,7 +181,7 @@ get_header();
                 <div class="a11yhubbr-field-control">
                   <select id="content-tool-type" name="tool_type">
                     <option value="">Selecione</option>
-                    <option value="auditoria-automatica">Auditoria automatica</option>
+                    <option value="auditoria-automatica">Auditoria automática</option>
                     <option value="testes-manuais">Testes manuais</option>
                     <option value="contraste">Contraste</option>
                     <option value="design-system">Design System</option>
@@ -210,7 +204,7 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-multimidia" data-content-types="multimidia" data-collapsible-section hidden>
-              <h2>Campos contextuais: Multimidia</h2>
+              <h2>Campos contextuais: Multimídia</h2>
               <div class="a11yhubbr-field-inline">
                 <label for="content-media-theme">Tema principal</label>
                 <div class="a11yhubbr-field-control">
@@ -218,12 +212,12 @@ get_header();
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-media-channel-type">Midia</label>
+                <label for="content-media-channel-type">Mídia</label>
                 <div class="a11yhubbr-field-control">
                   <select id="content-media-channel-type" name="media_channel_type">
                     <option value="">Selecione</option>
-                    <option value="audio">Audio</option>
-                    <option value="video">Video</option>
+                    <option value="audio">Áudio</option>
+                    <option value="video">Vídeo</option>
                   </select>
                 </div>
               </div>
@@ -235,7 +229,7 @@ get_header();
                     <option value="entrevista">Entrevista</option>
                     <option value="mesa-redonda">Mesa-redonda</option>
                     <option value="solo">Solo</option>
-                    <option value="tecnico">Tecnico</option>
+                    <option value="tecnico">Técnico</option>
                     <option value="storytelling">Storytelling</option>
                     <option value="outro">Outro</option>
                   </select>
@@ -257,7 +251,7 @@ get_header();
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-media-frequency">Frequencia</label>
+                <label for="content-media-frequency">Frequência</label>
                 <div class="a11yhubbr-field-control">
                   <select id="content-media-frequency" name="media_frequency">
                     <option value="">Selecione</option>
@@ -273,7 +267,7 @@ get_header();
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-sites" data-content-types="sites-sistemas" data-collapsible-section hidden>
               <h2>Campos contextuais: Sites e Sistemas</h2>
               <div class="a11yhubbr-field-inline">
-                <label for="content-site-business-model">Modelo de negocio</label>
+                <label for="content-site-business-model">Modelo de negócio</label>
                 <div class="a11yhubbr-field-control">
                   <select id="content-site-business-model" name="site_business_model">
                     <option value="">Selecione</option>
@@ -285,13 +279,13 @@ get_header();
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-site-stage">Estagio do produto</label>
+                <label for="content-site-stage">Estágio do produto</label>
                 <div class="a11yhubbr-field-control">
                   <select id="content-site-stage" name="site_stage">
                     <option value="">Selecione</option>
                     <option value="mvp">MVP</option>
                     <option value="em-crescimento">Em crescimento</option>
-                    <option value="estavel">Estavel</option>
+                    <option value="estavel">Estável</option>
                     <option value="legado">Legado</option>
                   </select>
                 </div>
@@ -309,55 +303,63 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-form-section-contact" id="sec-conteudo-contato" data-collapsible-section>
-              <h2>Email de contato</h2>
-              <div class="a11yhubbr-field-inline">
-                <label for="content-email">Email *</label>
-                <div class="a11yhubbr-field-control">
-                  <input id="content-email" type="email" name="email" required>
-                  <p class="a11yhubbr-help">O email sera privado e utilizado apenas para que a organizacao da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissao.</p>
+              <h2>Autor da submissão</h2>
+              <div class="a11yhubbr-contact-grid">
+                <div class="a11yhubbr-field-inline">
+                  <label for="content-author">Nome *</label>
+                  <div class="a11yhubbr-field-control">
+                    <input id="content-author" type="text" name="author" required>
+                  </div>
+                </div>
+                <div class="a11yhubbr-field-inline">
+                  <label for="content-email">Email *</label>
+                  <div class="a11yhubbr-field-control">
+                    <input id="content-email" type="email" name="email" required>
+                  </div>
                 </div>
               </div>
+              <p class="a11yhubbr-help">O email será privado e utilizado apenas para que a organização da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissão.</p>
               <?php if (function_exists('a11yhubbr_render_human_check_field')) { a11yhubbr_render_human_check_field(); } ?>
             </section>
 
             <div class="a11yhubbr-form-actions">
-              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_content_submit" value="1">Enviar para revisao</button>
+              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_content_submit" value="1">Enviar para revisão</button>
             </div>
           </form>
         </div>
 
-        <aside class="a11yhubbr-submit-aside" aria-label="Informacoes complementares">
+        <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
           <section class="a11yhubbr-side-card a11yhubbr-submit-outline">
-            <h2>Navegacao do cadastro</h2>
-            <nav aria-label="Etapas da submissao de conteudo">
-              <a href="#sec-conteudo-principal">Informacoes principais</a>
-              <a href="#sec-conteudo-detalhes">Detalhes da submissao</a>
+            <h2>Navegação do cadastro</h2>
+            <nav aria-label="Etapas da submissão de conteúdo">
+              <a href="#sec-conteudo-principal">Informações principais</a>
+              <a href="#sec-conteudo-detalhes">Detalhes da submissão</a>
               <a href="#sec-conteudo-artigos">Contexto: Artigos</a>
               <a href="#sec-conteudo-livros">Contexto: Livros e Materiais</a>
               <a href="#sec-conteudo-ferramentas">Contexto: Ferramentas</a>
-              <a href="#sec-conteudo-multimidia">Contexto: Multimidia</a>
+              <a href="#sec-conteudo-multimidia">Contexto: Multimídia</a>
               <a href="#sec-conteudo-sites">Contexto: Sites e Sistemas</a>
-              <a href="#sec-conteudo-contato">Email de contato</a>
+              <a href="#sec-conteudo-contato">Autor da submissão</a>
             </nav>
           </section>
 
           <section class="a11yhubbr-side-card">
-            <h2>Diretrizes para conteudo</h2>
+            <h2>Diretrizes para conteúdo</h2>
             <ul>
-              <li>Foque em acessibilidade digital e inclusao.</li>
-              <li>Use titulo e descricao claros e objetivos.</li>
-              <li>Inclua link valido para referencia.</li>
-              <li>Priorize informacoes uteis para a comunidade.</li>
+              <li>Foque em acessibilidade digital e inclusão.</li>
+              <li>Use título e descrição claros e objetivos.</li>
+              <li>Inclua link válido para referência.</li>
+              <li>Priorize informações úteis para a comunidade.</li>
             </ul>
           </section>
 
           <section class="a11yhubbr-side-card a11yhubbr-side-card-primary">
-            <h2>Processo de revisao</h2>
+            <h2>Processo de revisão</h2>
             <ol>
-              <li>Recebimento da submissao</li>
-              <li>Analise editorial</li>
-              <li>Contato, se necessario</li>
-              <li>Publicacao apos aprovacao</li>
+              <li>Recebimento da submissão</li>
+              <li>Análise editorial</li>
+              <li>Contato, se necessário</li>
+              <li>Publicação após aprovação</li>
             </ol>
           </section>
         </aside>

@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 
 $bootstrap_files = array(
     '/inc/core/setup.php',
+    '/inc/core/icons.php',
     '/inc/core/routing.php',
     '/inc/core/content.php',
     '/inc/core/migrations.php',

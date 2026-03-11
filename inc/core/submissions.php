@@ -234,6 +234,7 @@ function a11yhubbr_sanitize_submission_data($type) {
             'organizer' => sanitize_text_field($raw['organizer'] ?? ''),
             'link' => esc_url_raw($raw['link'] ?? ''),
             'tags' => a11yhubbr_parse_tags_from_input($raw['tags'] ?? ''),
+            'author' => sanitize_text_field($raw['author'] ?? ''),
             'email' => sanitize_email($raw['email'] ?? ''),
             'slots' => $slots,
         );
@@ -247,6 +248,7 @@ function a11yhubbr_sanitize_submission_data($type) {
         'role' => sanitize_text_field($raw['role'] ?? ''),
         'website' => esc_url_raw($raw['website'] ?? ''),
         'tags' => a11yhubbr_parse_tags_from_input($raw['tags'] ?? ''),
+        'author' => sanitize_text_field($raw['author'] ?? ''),
         'social_links' => (static function () use ($raw) {
             $networks = isset($raw['social_network']) && is_array($raw['social_network']) ? $raw['social_network'] : array();
             $urls = isset($raw['social_url']) && is_array($raw['social_url']) ? $raw['social_url'] : array();
@@ -328,6 +330,7 @@ function a11yhubbr_validate_event_submission_data($data) {
         empty($data['description']) ||
         empty($data['organizer']) ||
         empty($data['link']) ||
+        empty($data['author']) ||
         empty($data['email'])
     ) {
         return false;
@@ -357,6 +360,35 @@ function a11yhubbr_validate_event_submission_data($data) {
         if (empty($data['event_cep']) || empty($data['event_online_location'])) {
             return false;
         }
+    }
+
+    return true;
+}
+
+
+function a11yhubbr_validate_profile_submission_data($data) {
+    if (!is_array($data)) {
+        return false;
+    }
+
+    if (
+        empty($data['profile_type']) ||
+        empty($data['name']) ||
+        empty($data['location']) ||
+        empty($data['description']) ||
+        empty($data['role']) ||
+        empty($data['author']) ||
+        empty($data['email'])
+    ) {
+        return false;
+    }
+
+    if (!is_email($data['email'])) {
+        return false;
+    }
+
+    if ($data['website'] !== '' && !filter_var($data['website'], FILTER_VALIDATE_URL)) {
+        return false;
     }
 
     return true;
@@ -443,6 +475,7 @@ function a11yhubbr_create_pending_event_post($data) {
     update_post_meta($post_id, '_a11yhubbr_event_online_location', $data['event_online_location']);
     update_post_meta($post_id, '_a11yhubbr_event_organizer', $data['organizer']);
     update_post_meta($post_id, '_a11yhubbr_event_link', $data['link']);
+    update_post_meta($post_id, '_a11yhubbr_submitter_name', $data['author']);
     update_post_meta($post_id, '_a11yhubbr_contact_email', $data['email']);
     update_post_meta($post_id, '_a11yhubbr_event_slots', wp_json_encode($data['slots']));
     if (!empty($data['tags'])) {
@@ -475,6 +508,7 @@ function a11yhubbr_create_pending_profile_post($data) {
     update_post_meta($post_id, '_a11yhubbr_profile_website', $data['website']);
     update_post_meta($post_id, '_a11yhubbr_profile_social_links', wp_json_encode($data['social_links']));
     update_post_meta($post_id, '_a11yhubbr_profile_image_name', $data['profile_image_name']);
+    update_post_meta($post_id, '_a11yhubbr_submitter_name', $data['author']);
     update_post_meta($post_id, '_a11yhubbr_contact_email', $data['email']);
     if (!empty($data['tags'])) {
         wp_set_post_terms($post_id, $data['tags'], 'post_tag', false);
@@ -506,24 +540,24 @@ function a11yhubbr_build_email_message($type, $data) {
             'Tipo: ' . $type_label . ' (' . $type_slug . ')',
             'Titulo: ' . $data['title'],
             'Descricao: ' . $data['description'],
-            'Autor: ' . $data['author'],
-            'Organizacao: ' . $data['organization'],
+            'Autor da submissão: ' . $data['author'],
+            'Organização: ' . $data['organization'],
             'Link: ' . $data['link'],
-            'Ano de publicacao/atualizacao: ' . ($data['year_publication'] !== '' ? $data['year_publication'] : '-'),
-            'Nivel de profundidade: ' . ($data['depth'] !== '' ? $data['depth'] : '-'),
+            'Ano de publicação/atualização: ' . ($data['year_publication'] !== '' ? $data['year_publication'] : '-'),
+            'Nível de profundidade: ' . ($data['depth'] !== '' ? $data['depth'] : '-'),
             'Autorias (artigos): ' . ($data['article_authors'] !== '' ? $data['article_authors'] : '-'),
             'Tipo de artigo: ' . ($data['article_kind'] !== '' ? $data['article_kind'] : '-'),
             'Modalidade (livros e materiais): ' . ($data['book_modality'] !== '' ? $data['book_modality'] : '-'),
-            'Preco (livros e materiais): ' . ($data['book_price'] !== '' ? $data['book_price'] : '-'),
+            'Preço (livros e materiais): ' . ($data['book_price'] !== '' ? $data['book_price'] : '-'),
             'Tipo de ferramenta: ' . ($data['tool_type'] !== '' ? $data['tool_type'] : '-'),
             'Modelo de ferramenta: ' . ($data['tool_model'] !== '' ? $data['tool_model'] : '-'),
-            'Tema principal (multimidia): ' . ($data['media_theme'] !== '' ? $data['media_theme'] : '-'),
-            'Midia: ' . ($data['media_channel_type'] !== '' ? $data['media_channel_type'] : '-'),
+            'Tema principal (multimídia): ' . ($data['media_theme'] !== '' ? $data['media_theme'] : '-'),
+            'Mídia: ' . ($data['media_channel_type'] !== '' ? $data['media_channel_type'] : '-'),
             'Formato: ' . ($data['media_format'] !== '' ? $data['media_format'] : '-'),
             'Plataforma: ' . ($data['media_platform'] !== '' ? $data['media_platform'] : '-'),
-            'Frequencia: ' . ($data['media_frequency'] !== '' ? $data['media_frequency'] : '-'),
-            'Modelo de negocio (site/sistema): ' . ($data['site_business_model'] !== '' ? $data['site_business_model'] : '-'),
-            'Estagio do produto: ' . ($data['site_stage'] !== '' ? $data['site_stage'] : '-'),
+            'Frequência: ' . ($data['media_frequency'] !== '' ? $data['media_frequency'] : '-'),
+            'Modelo de negócio (site/sistema): ' . ($data['site_business_model'] !== '' ? $data['site_business_model'] : '-'),
+            'Estágio do produto: ' . ($data['site_stage'] !== '' ? $data['site_stage'] : '-'),
             'Modelo de acesso: ' . ($data['site_access_model'] !== '' ? $data['site_access_model'] : '-'),
             'Tags: ' . implode(', ', $data['tags']),
             'Email de contato: ' . $data['email'],
@@ -541,21 +575,22 @@ function a11yhubbr_build_email_message($type, $data) {
             '------------------------',
             'Modalidade: ' . ($modality_label[$data['modality']] ?? $data['modality']),
             'Tipo de evento: ' . $data['event_type'],
-            'Titulo: ' . $data['title'],
-            'Localizacao: ' . $data['location'],
+            'Título: ' . $data['title'],
+            'Localização: ' . $data['location'],
             'CEP: ' . ($data['event_cep'] !== '' ? $data['event_cep'] : '-'),
             'Local online/plataforma: ' . ($data['event_online_location'] !== '' ? $data['event_online_location'] : '-'),
-            'Descricao: ' . $data['description'],
+            'Descrição: ' . $data['description'],
             'Organizador: ' . $data['organizer'],
             'Link: ' . $data['link'],
             'Tags: ' . implode(', ', $data['tags']),
+            'Autor da submissão: ' . $data['author'],
             'Email de contato: ' . $data['email'],
             '',
-            'Datas e horarios:',
+            'Datas e horários:',
         );
 
         foreach ($data['slots'] as $index => $slot) {
-            $lines[] = sprintf('%d) Inicio: %s | Fim: %s', $index + 1, $slot['start'], $slot['end']);
+            $lines[] = sprintf('%d) Início: %s | Fim: %s', $index + 1, $slot['start'], $slot['end']);
         }
 
         return implode("\n", $lines);
@@ -565,9 +600,9 @@ function a11yhubbr_build_email_message($type, $data) {
         'Nova submissao de perfil',
         '------------------------',
         'Tipo de perfil: ' . $data['profile_type'],
-        'Nome/Organizacao: ' . $data['name'],
-        'Localizacao: ' . $data['location'],
-        'Descricao: ' . $data['description'],
+        'Nome/Organização: ' . $data['name'],
+        'Localização: ' . $data['location'],
+        'Descrição: ' . $data['description'],
         'Cargo/Especialidade: ' . $data['role'],
         'Website: ' . $data['website'],
         'Tags: ' . implode(', ', $data['tags']),
@@ -577,6 +612,7 @@ function a11yhubbr_build_email_message($type, $data) {
             }, $data['social_links']))
             : ''),
         'Arquivo de foto: ' . $data['profile_image_name'],
+        'Autor da submissão: ' . $data['author'],
         'Email de contato: ' . $data['email'],
     ));
 }
@@ -715,8 +751,13 @@ function a11yhubbr_handle_form_submissions() {
             $created = !is_wp_error($result);
         }
     } else {
-        $result = a11yhubbr_create_pending_profile_post($data);
-        $created = !is_wp_error($result);
+        if (!a11yhubbr_validate_profile_submission_data($data)) {
+            $result = new WP_Error('invalid_profile_data', 'Dados de perfil inválidos');
+            $created = false;
+        } else {
+            $result = a11yhubbr_create_pending_profile_post($data);
+            $created = !is_wp_error($result);
+        }
     }
 
     if ($created) {

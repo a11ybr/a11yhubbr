@@ -5,18 +5,25 @@ if (!defined('ABSPATH')) {
 
 $defaults = array(
     'title' => 'Nada por aqui ainda',
-    'message' => 'Ainda não há itens para exibir nesta seção.',
+    'message' => 'Ainda nÃ£o hÃ¡ itens para exibir nesta seÃ§Ã£o.',
     'cta_label' => '',
     'cta_url' => '',
     'cta_class' => 'a11yhubbr-btn-alternative',
     'icon' => 'fa-regular fa-folder-open',
+    'icon_key' => '',
 );
 
 $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $defaults;
 ?>
 <article class="a11yhubbr-empty-state a11yhubbr-card-base">
   <h3>
-    <i class="<?php echo esc_attr((string) $args['icon']); ?>" aria-hidden="true"></i>
+    <?php
+    if (!empty($args['icon_key']) && function_exists('a11yhubbr_render_icon')) {
+        echo a11yhubbr_render_icon((string) $args['icon_key']);
+    } elseif (!empty($args['icon'])) {
+        echo '<i class="' . esc_attr((string) $args['icon']) . '" aria-hidden="true"></i>';
+    }
+    ?>
     <?php echo esc_html((string) $args['title']); ?>
   </h3>
   <p><?php echo esc_html((string) $args['message']); ?></p>

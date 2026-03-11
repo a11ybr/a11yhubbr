@@ -17,18 +17,18 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
 <?php wp_body_open(); ?>
 <div class="a11yhubbr-site-header">
   <div class="a11yhubbr-container a11yhubbr-header-inner">
-    <a class="a11yhubbr-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="A11YBR - Pagina inicial">
+    <a class="a11yhubbr-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="A11YBR - Página inicial">
       <span class="a11yhubbr-logo" aria-hidden="true">
         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/logo-a11ybr.svg'); ?>" alt="" loading="eager" decoding="async">
       </span>
     </a>
 
     <button type="button" class="a11yhubbr-menu-toggle" aria-expanded="false" aria-controls="a11yhubbr-header-panel" aria-label="Abrir menu principal">
-      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      <?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('menu') : ''; ?>
     </button>
 
     <div class="a11yhubbr-header-panel" id="a11yhubbr-header-panel">
-      <nav aria-label="Navegacao principal" class="a11yhubbr-nav">
+      <nav aria-label="Navegação principal" class="a11yhubbr-nav">
         <?php
         wp_nav_menu(array(
           'theme_location' => 'primary',
@@ -39,7 +39,7 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
         ?>
         <?php if (!has_nav_menu('primary')) : ?>
           <ul class="a11yhubbr-menu">
-            <li><a href="<?php echo esc_url(home_url('/conteudos')); ?>">Conteudos</a></li>
+            <li><a href="<?php echo esc_url(home_url('/conteudos')); ?>">Conteúdos</a></li>
             <li><a href="<?php echo esc_url(home_url('/rede')); ?>">Rede</a></li>
             <li><a href="<?php echo esc_url(home_url('/eventos')); ?>">Eventos</a></li>
             <li><a href="<?php echo esc_url(home_url('/sobre')); ?>">Sobre</a></li>
@@ -49,15 +49,15 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
 
       <div class="a11yhubbr-header-actions">
         <a class="a11yhubbr-header-search-btn" href="<?php echo $search_base_url; ?>" aria-label="Buscar no site">
-          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('search') : ''; ?>
         </a>
         <?php if ($search_term_header !== ''): ?>
           <button type="button" class="a11yhubbr-header-search-clear" data-clear-url="<?php echo $search_base_url; ?>" aria-label="Limpar busca do site">
-            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            <?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('close') : ''; ?>
           </button>
         <?php endif; ?>
         <a class="a11yhubbr-btn a11yhubbr-btn-alternative a11yhubbr-header-submit-btn" href="<?php echo esc_url(home_url('/submeter')); ?>">
-          <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+          <?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('submit') : ''; ?>
           Submeter
         </a>
       </div>
