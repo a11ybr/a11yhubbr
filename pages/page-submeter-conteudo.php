@@ -10,6 +10,10 @@ $status = isset($_GET['a11yhubbr_status']) ? sanitize_key(wp_unslash($_GET['a11y
 $form = isset($_GET['a11yhubbr_form']) ? sanitize_key(wp_unslash($_GET['a11yhubbr_form'])) : '';
 $submitted = ($status === 'success' && $form === 'content');
 $has_error = ($status === 'error' && $form === 'content');
+$is_logged_in = is_user_logged_in();
+$login_url = function_exists('a11yhubbr_get_submission_login_url') ? a11yhubbr_get_submission_login_url(get_permalink()) : wp_login_url(get_permalink());
+$registration_url = function_exists('a11yhubbr_get_submission_registration_url') ? a11yhubbr_get_submission_registration_url(get_permalink()) : '';
+$current_user = $is_logged_in ? wp_get_current_user() : null;
 $content_types = function_exists('a11yhubbr_get_content_type_map') ? a11yhubbr_get_content_type_map() : array();
 $content_types = array_diff_key($content_types, array(
   'eventos' => true,
@@ -19,7 +23,7 @@ $content_types = array_diff_key($content_types, array(
 
 get_header();
 ?>
-<main class="a11yhubbr-submit-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-submit-page">
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(
@@ -42,6 +46,18 @@ get_header();
 
       <div class="a11yhubbr-submit-grid">
         <div class="a11yhubbr-submit-main">
+          <?php if (!$is_logged_in) : ?>
+            <section class="a11yhubbr-card a11yhubbr-form-section">
+              <h2>Entre para submeter conteúdo</h2>
+              <p>Agora a submissão de conteúdo exige uma conta no WordPress. Entre para continuar e vincular a submissão ao seu usuário.</p>
+              <div class="a11yhubbr-form-actions">
+                <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($login_url); ?>">Entrar</a>
+                <?php if ($registration_url !== '') : ?>
+                  <a class="a11yhubbr-btn" href="<?php echo esc_url($registration_url); ?>">Criar conta</a>
+                <?php endif; ?>
+              </div>
+            </section>
+          <?php else : ?>
           <form method="post" class="a11yhubbr-form-grid a11yhubbr-submit-form" id="content-form">
             <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
             <?php wp_nonce_field('a11yhubbr_content', 'a11yhubbr_nonce'); ?>
@@ -54,9 +70,9 @@ get_header();
             <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-conteudo-principal" data-collapsible-section>
               <h2>Informações principais</h2>
               <div class="a11yhubbr-field-inline">
-                <label for="content-type-select">Tipo de conteúdo *</label>
+                <label for="content-type-select">Tipo de conteúdo <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <select name="type" id="content-type-select" required>
+                  <select name="type" id="content-type-select" required aria-required="true">
                     <option value="">Selecione</option>
                     <?php foreach ($content_types as $slug => $type) : ?>
                       <option value="<?php echo esc_attr($slug); ?>"><?php echo esc_html($type['label']); ?></option>
@@ -65,31 +81,27 @@ get_header();
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-title">Título do conteúdo *</label>
+                <label for="content-title">Título do conteúdo <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="content-title" type="text" name="title" required>
+                  <input id="content-title" type="text" name="title" required aria-required="true">
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-description">Descrição *</label>
+                <label for="content-description">Descrição <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <textarea id="content-description" name="description" rows="5" required></textarea>
+                  <textarea id="content-description" name="description" rows="5" required aria-required="true"></textarea>
                 </div>
               </div>
-            </section>
-
-            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-conteudo-detalhes" data-collapsible-section>
-              <h2>Detalhes da submissão</h2>
               <div class="a11yhubbr-field-inline">
-                <label for="content-organization">Organização</label>
+                <label for="content-organization">Organização do conteúdo</label>
                 <div class="a11yhubbr-field-control">
                   <input id="content-organization" type="text" name="organization">
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
-                <label for="content-link">Link do conteúdo *</label>
+                <label for="content-link">Link do conteúdo <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="content-link" type="url" name="link" required>
+                  <input id="content-link" type="url" name="link" required aria-required="true">
                 </div>
               </div>
               <div class="a11yhubbr-field-inline">
@@ -125,7 +137,7 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-artigos" data-content-types="artigos" data-collapsible-section hidden>
-              <h2>Campos contextuais: Artigos</h2>
+              <h2>Informações adiconais do artigo</h2>
               <div class="a11yhubbr-field-inline">
                 <label for="content-article-authors">Nomes das pessoas autoras</label>
                 <div class="a11yhubbr-field-control">
@@ -149,7 +161,7 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-livros" data-content-types="cursos-materiais" data-collapsible-section hidden>
-              <h2>Campos contextuais: Livros e Materiais</h2>
+        <h2>Informações adiconais do livro ou material</h2>
               <div class="a11yhubbr-field-inline">
                 <label for="content-book-modality">Modalidade</label>
                 <div class="a11yhubbr-field-control">
@@ -175,7 +187,7 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-ferramentas" data-content-types="ferramentas" data-collapsible-section hidden>
-              <h2>Campos contextuais: Ferramentas</h2>
+        <h2>Informações adiconais da ferramenta</h2>
               <div class="a11yhubbr-field-inline">
                 <label for="content-tool-type">Tipo</label>
                 <div class="a11yhubbr-field-control">
@@ -204,7 +216,7 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-multimidia" data-content-types="multimidia" data-collapsible-section hidden>
-              <h2>Campos contextuais: Multimídia</h2>
+              <h2>Informações adiconais da multimídia</h2>
               <div class="a11yhubbr-field-inline">
                 <label for="content-media-theme">Tema principal</label>
                 <div class="a11yhubbr-field-control">
@@ -265,7 +277,7 @@ get_header();
             </section>
 
             <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-content-conditional" id="sec-conteudo-sites" data-content-types="sites-sistemas" data-collapsible-section hidden>
-              <h2>Campos contextuais: Sites e Sistemas</h2>
+              <h2>Informações adiconais do site ou sistema</h2>
               <div class="a11yhubbr-field-inline">
                 <label for="content-site-business-model">Modelo de negócio</label>
                 <div class="a11yhubbr-field-control">
@@ -296,29 +308,20 @@ get_header();
                   <select id="content-site-access-model" name="site_access_model">
                     <option value="">Selecione</option>
                     <option value="aberto">Aberto</option>
-                    <option value="login-obrigatorio">Login obrigatorio</option>
+                    <option value="login-obrigatorio">Login obrigatório</option>
                   </select>
                 </div>
               </div>
             </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-form-section-contact" id="sec-conteudo-contato" data-collapsible-section>
-              <h2>Autor da submissão</h2>
-              <div class="a11yhubbr-contact-grid">
-                <div class="a11yhubbr-field-inline">
-                  <label for="content-author">Nome *</label>
-                  <div class="a11yhubbr-field-control">
-                    <input id="content-author" type="text" name="author" required>
-                  </div>
-                </div>
-                <div class="a11yhubbr-field-inline">
-                  <label for="content-email">Email *</label>
-                  <div class="a11yhubbr-field-control">
-                    <input id="content-email" type="email" name="email" required>
-                  </div>
-                </div>
-              </div>
-              <p class="a11yhubbr-help">O email será privado e utilizado apenas para que a organização da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissão.</p>
+            <section class="a11yhubbr-card a11yhubbr-submit-account" aria-label="Conta responsável pela submissão">
+              <h2>Conta responsável pela submissão</h2>
+              <p class="a11yhubbr-submit-account-summary">
+                <strong>Nome:</strong> <?php echo esc_html($current_user ? $current_user->display_name : ''); ?>
+                <br>
+                <strong>Email:</strong> <?php echo esc_html($current_user ? $current_user->user_email : ''); ?>
+              </p>
+              <p class="a11yhubbr-help">A submissão será vinculada à conta logada e esses dados serão usados pela equipe da <strong>A11YBR</strong> em caso de contato.</p>
               <?php if (function_exists('a11yhubbr_render_human_check_field')) { a11yhubbr_render_human_check_field(); } ?>
             </section>
 
@@ -326,6 +329,7 @@ get_header();
               <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_content_submit" value="1">Enviar para revisão</button>
             </div>
           </form>
+          <?php endif; ?>
         </div>
 
         <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
@@ -333,13 +337,11 @@ get_header();
             <h2>Navegação do cadastro</h2>
             <nav aria-label="Etapas da submissão de conteúdo">
               <a href="#sec-conteudo-principal">Informações principais</a>
-              <a href="#sec-conteudo-detalhes">Detalhes da submissão</a>
-              <a href="#sec-conteudo-artigos">Contexto: Artigos</a>
-              <a href="#sec-conteudo-livros">Contexto: Livros e Materiais</a>
-              <a href="#sec-conteudo-ferramentas">Contexto: Ferramentas</a>
-              <a href="#sec-conteudo-multimidia">Contexto: Multimídia</a>
-              <a href="#sec-conteudo-sites">Contexto: Sites e Sistemas</a>
-              <a href="#sec-conteudo-contato">Autor da submissão</a>
+              <a href="#sec-conteudo-artigos">Informações adiconais do artigo</a>
+              <a href="#sec-conteudo-livros">Informações adiconais do livros ou materiais</a>
+              <a href="#sec-conteudo-ferramentas">Informações adiconais da ferramenta</a>
+              <a href="#sec-conteudo-multimidia">Informações adiconais da multimídia</a>
+              <a href="#sec-conteudo-sites">Informações adiconais do site ou sistema</a>
             </nav>
           </section>
 

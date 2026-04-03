@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-profile-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-profile-page">
   <?php while (have_posts()): the_post(); ?>
     <?php
     $post_id = get_the_ID();
@@ -75,13 +75,13 @@ get_header();
 
     a11yhubbr_render_page_header(array(
         'breadcrumbs' => array(
-            array('label' => 'Página inicial', 'url' => home_url('/')),
+            array('label' => 'Pagina inicial', 'url' => home_url('/')),
             array('label' => 'Rede', 'url' => home_url('/rede')),
             array('label' => get_the_title()),
         ),
         'icon' => 'fa-regular fa-id-card',
         'title' => get_the_title(),
-        'summary' => get_the_excerpt() !== '' ? get_the_excerpt() : wp_trim_words(wp_strip_all_tags(get_the_content(null, false, $post_id)), 28),
+        'summary' => '',
         'use_page_context' => false,
         'context' => 'rede',
     ));
@@ -112,37 +112,40 @@ get_header();
             </div>
           <?php endif; ?>
 
-          <?php if (!empty($social_links)): ?>
-            <div class="a11yhubbr-community-social">
-              <?php foreach ($social_links as $social_item): ?>
-                <?php
-                $social_url = (string) ($social_item['url'] ?? '');
-                $social_network = (string) ($social_item['network'] ?? '');
-                ?>
-                <a class="a11yhubbr-social-link is-<?php echo esc_attr(function_exists('a11yhubbr_get_social_network_key') ? a11yhubbr_get_social_network_key($social_url, $social_network) : 'website'); ?>" href="<?php echo esc_url($social_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="Abrir rede social">
-                  <i class="<?php echo esc_attr(function_exists('a11yhubbr_get_social_icon_class') ? a11yhubbr_get_social_icon_class($social_url, $social_network) : 'fa-solid fa-globe'); ?>" aria-hidden="true"></i>
-                </a>
-              <?php endforeach; ?>
-            </div>
-          <?php endif; ?>
-        </article>
-
-        <aside class="a11yhubbr-single-aside-stack">
-          <div class="a11yhubbr-side-card a11yhubbr-single-side">
-            <h2>Informações do perfil</h2>
-            <dl>
-              <?php if ($profile_type !== ''): ?><div><dt>Tipo</dt><dd><?php echo esc_html($profile_type); ?></dd></div><?php endif; ?>
-              <?php if ($role !== ''): ?><div><dt>Cargo / especialidade</dt><dd><?php echo esc_html($role); ?></dd></div><?php endif; ?>
-              <?php if ($location !== ''): ?><div><dt>Localização</dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
-              <?php if ($website !== ''): ?><div><dt>Website</dt><dd><a href="<?php echo esc_url($website); ?>" target="_blank" rel="noopener noreferrer">Abrir website <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></dd></div><?php endif; ?>
-            </dl>
-          </div>
-
           <?php get_template_part('inc/components/single-side-engagement', null, array(
             'share_url' => $permalink,
             'share_title' => get_the_title(),
+            'layout' => 'inline',
+            'show_suggest' => false,
+          )); ?>
+        </article>
+
+        <aside class="a11yhubbr-single-aside-stack">
+          <?php if ($website !== ''): ?>
+            <div class="a11yhubbr-side-card a11yhubbr-single-primary-action">
+              <h2>Abrir website</h2>
+              <p>Acesse o canal principal desta iniciativa em uma nova aba.</p>
+              <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($website); ?>" target="_blank" rel="noopener noreferrer">Abrir website <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+              <?php if (!empty($social_links)): ?>
+                <div class="a11yhubbr-single-profile-links" aria-label="Redes do perfil">
+                  <?php foreach ($social_links as $social_item): ?>
+                    <?php
+                    $social_url = (string) ($social_item['url'] ?? '');
+                    $social_network = (string) ($social_item['network'] ?? '');
+                    ?>
+                    <a class="a11yhubbr-single-profile-link is-<?php echo esc_attr(function_exists('a11yhubbr_get_social_network_key') ? a11yhubbr_get_social_network_key($social_url, $social_network) : 'website'); ?>" href="<?php echo esc_url($social_url); ?>" target="_blank" rel="noopener noreferrer" aria-label="Abrir rede social" title="Abrir rede social">
+                      <i class="<?php echo esc_attr(function_exists('a11yhubbr_get_social_icon_class') ? a11yhubbr_get_social_icon_class($social_url, $social_network) : 'fa-solid fa-globe'); ?>" aria-hidden="true"></i>
+                    </a>
+                  <?php endforeach; ?>
+                </div>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
+          <?php get_template_part('inc/components/single-side-engagement', null, array(
             'contact_url' => home_url('/contato'),
-            'suggest_label' => 'Sugerir alteração',
+            'suggest_url' => add_query_arg('source_post', $post_id, function_exists('a11yhubbr_get_submit_profile_url') ? a11yhubbr_get_submit_profile_url() : home_url('/submeter/submeter-perfil')),
+            'suggest_label' => 'Sugerir alteracao',
+            'show_share' => false,
           )); ?>
         </aside>
       </div>
@@ -198,3 +201,4 @@ get_header();
   <?php endwhile; ?>
 </main>
 <?php get_footer(); ?>
+

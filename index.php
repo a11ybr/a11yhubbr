@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<main class="a11yhubbr-site-main">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main">
   <section class="a11yhubbr-section">
     <div class="a11yhubbr-container a11yhubbr-content-single">
       <?php if (have_posts()) : while (have_posts()) : the_post(); ?>

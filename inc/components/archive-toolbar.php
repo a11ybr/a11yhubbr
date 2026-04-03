@@ -31,53 +31,57 @@ $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $def
       <input type="hidden" name="tipo" value="<?php echo esc_attr($args['selected_type']); ?>">
     <?php endif; ?>
 
-    <label class="a11yhubbr-content-search">
-      <span class="screen-reader-text">Buscar</span>
-      <input type="search" name="busca" value="<?php echo esc_attr($args['search_term']); ?>" placeholder="Buscar por palavra-chave">
-      <?php if ($args['search_term'] !== '' && $args['clear_search_url'] !== ''): ?>
-        <button
-          type="button"
-          class="a11yhubbr-content-search-clear"
-          data-clear-url="<?php echo esc_url($args['clear_search_url']); ?>"
-          aria-label="Limpar busca">&times;</button>
-      <?php endif; ?>
-    </label>
-
-    <div class="a11yhubbr-content-control-group" title="Ordenar por">
-      <label class="a11yhubbr-content-select-wrap">
-        <span class="screen-reader-text">Ordenar por</span>
-        <i class="fa-solid fa-arrow-down-up-across-line a11yhubbr-content-select-icon" aria-hidden="true"></i>
-        <i class="fa-solid fa-chevron-down a11yhubbr-content-select-chevron" aria-hidden="true"></i>
-        <select name="<?php echo esc_attr($args['sort_name']); ?>" onchange="this.form.submit()">
-          <?php foreach ($args['sort_options'] as $value => $label): ?>
-            <option value="<?php echo esc_attr((string) $value); ?>" <?php selected($args['current_sort'], (string) $value); ?>><?php echo esc_html((string) $label); ?></option>
-          <?php endforeach; ?>
-        </select>
+    <div class="a11yhubbr-content-controls-search">
+      <label class="a11yhubbr-content-search">
+        <span class="screen-reader-text">Buscar</span>
+        <input type="search" name="busca" value="<?php echo esc_attr($args['search_term']); ?>" placeholder="Buscar por palavra-chave">
+        <?php if ($args['search_term'] !== '' && $args['clear_search_url'] !== ''): ?>
+          <button
+            type="button"
+            class="a11yhubbr-content-search-clear"
+            data-clear-url="<?php echo esc_url($args['clear_search_url']); ?>"
+            aria-label="Limpar busca">&times;</button>
+        <?php endif; ?>
       </label>
     </div>
 
-    <div class="a11yhubbr-content-control-group">
-      <label class="a11yhubbr-content-select-wrap" title="Exibir">
-        <span class="screen-reader-text">Exibir itens</span>
-        <i class="fa-solid fa-table-cells a11yhubbr-content-select-icon" aria-hidden="true"></i>
-        <i class="fa-solid fa-chevron-down a11yhubbr-content-select-chevron" aria-hidden="true"></i>
-        <select name="<?php echo esc_attr($args['per_page_name']); ?>" onchange="this.form.submit()">
-          <?php foreach ($args['per_page_options'] as $amount): ?>
-            <option value="<?php echo esc_attr((string) $amount); ?>" <?php selected((int) $args['current_per_page'], (int) $amount); ?>>
-              <?php echo esc_html((string) $amount . ' ' . (string) $args['per_page_label_suffix']); ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </label>
-    </div>
-
-    <?php if (!empty($args['show_reset']) && !empty($args['reset_url'])): ?>
-      <div class="a11yhubbr-content-control-group a11yhubbr-content-control-group-reset">
-        <a class="a11yhubbr-btn a11yhubbr-btn-tertiary a11yhubbr-content-reset-action" href="<?php echo esc_url((string) $args['reset_url']); ?>">
-          <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i>
-          <?php echo esc_html((string) $args['reset_label']); ?>
-        </a>
+    <div class="a11yhubbr-content-controls-filters">
+      <div class="a11yhubbr-content-control-group" title="Ordenar por">
+        <label class="a11yhubbr-content-select-wrap">
+          <span class="screen-reader-text">Ordenar por</span>
+          <i class="fa-solid fa-arrow-down-up-across-line a11yhubbr-content-select-icon" aria-hidden="true"></i>
+          <i class="fa-solid fa-chevron-down a11yhubbr-content-select-chevron" aria-hidden="true"></i>
+          <select name="<?php echo esc_attr($args['sort_name']); ?>" onchange="this.form.submit()">
+            <?php foreach ($args['sort_options'] as $value => $label): ?>
+              <option value="<?php echo esc_attr((string) $value); ?>" <?php selected($args['current_sort'], (string) $value); ?>><?php echo esc_html((string) $label); ?></option>
+            <?php endforeach; ?>
+          </select>
+        </label>
       </div>
-    <?php endif; ?>
+
+      <div class="a11yhubbr-content-control-group">
+        <label class="a11yhubbr-content-select-wrap" title="Exibir">
+          <span class="screen-reader-text">Exibir itens</span>
+          <i class="fa-solid fa-table-cells a11yhubbr-content-select-icon" aria-hidden="true"></i>
+          <i class="fa-solid fa-chevron-down a11yhubbr-content-select-chevron" aria-hidden="true"></i>
+          <select name="<?php echo esc_attr($args['per_page_name']); ?>" onchange="this.form.submit()">
+            <?php foreach ($args['per_page_options'] as $amount): ?>
+              <option value="<?php echo esc_attr((string) $amount); ?>" <?php selected((int) $args['current_per_page'], (int) $amount); ?>>
+                <?php echo esc_html((string) $amount . ' ' . (string) $args['per_page_label_suffix']); ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+        </label>
+      </div>
+
+      <?php if (!empty($args['show_reset']) && !empty($args['reset_url'])): ?>
+        <div class="a11yhubbr-content-control-group a11yhubbr-content-control-group-reset">
+          <a class="a11yhubbr-btn a11yhubbr-btn-tertiary a11yhubbr-content-reset-action" href="<?php echo esc_url((string) $args['reset_url']); ?>">
+            <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i>
+            <?php echo esc_html((string) $args['reset_label']); ?>
+          </a>
+        </div>
+      <?php endif; ?>
+    </div>
   </form>
 </div>

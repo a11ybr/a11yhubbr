@@ -1,0 +1,76 @@
+// Home-only layout adjustments and card behavior.
+@media (min-width: 760px) {
+  .a11yhubbr-home-grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .a11yhubbr-home-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .a11yhubbr-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.a11yhubbr-home-categories .a11yhubbr-home-grid {
+  gap: 1rem;
+}
+
+.a11yhubbr-home-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: .9rem;
+  align-items: start;
+  padding: 1.5rem 1.4rem;
+  min-height: 14rem;
+  box-shadow: none;
+  border: 1px solid var(--a11y-filter-card-border);
+  background: var(--a11y-filter-card-bg);
+  border-radius: var(--a11y-radius);
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease, background-color .15s ease;
+}
+
+.a11yhubbr-home-card-link:hover {
+  border-color: var(--a11y-filter-card-hover-border);
+  box-shadow: 0 8px 16px rgba(10, 34, 86, 0.08);
+  transform: translateY(-1px);
+}
+
+.a11yhubbr-home-card-link .a11yhubbr-home-icon {
+  margin: 0;
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--a11y-radius);
+  background: var(--a11y-filter-icon-bg);
+  color: var(--a11y-filter-icon-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.a11yhubbr-home-card-link .a11yhubbr-home-icon .a11yhubbr-icon {
+  color: var(--a11y-filter-icon-color);
+  font-size: 1.25rem;
+}
+
+.a11yhubbr-home-card-link .a11yhubbr-home-card-copy h3 {
+  margin: 0 0 .25rem;
+  font-size: clamp(1.15rem, 1rem + .2vw, 1.35rem);
+  color: var(--a11y-filter-title);
+  line-height: 1.25;
+}
+
+.a11yhubbr-home-card-link .a11yhubbr-home-card-copy p {
+  margin: 0;
+  color: var(--a11y-filter-muted);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}

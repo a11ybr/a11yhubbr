@@ -11,9 +11,73 @@ Requires PHP: 8.0
 Text Domain: a11yhubbr
 */
 
-@use 'partials/base/tokens-and-reset';
-@use 'partials/layout/header-and-nav';
-@use 'partials/pages/home';
-@use 'partials/pages/archives';
-@use 'partials/pages/single-and-submit';
-@use 'partials/utilities/tuning';
+// Fontes e tokens base
+@use 'base/tokens-and-reset';
+@use 'base/global-tuning';
+
+// Shell global e compat legada minima
+@use 'layout/site-shell';
+@use 'layout/section-shell';
+@use 'layout/legacy-compat';
+
+// Contextos de pagina
+@use 'pages/home';
+@use 'pages/archives';
+@use 'pages/about';
+@use 'pages/contact';
+@use 'pages/legal';
+@use 'pages/my-submissions';
+@use 'pages/single-and-submit';
+
+// Componentes compartilhados
+@use 'components/site-header';
+@use 'components/hero-and-page-header';
+@use 'components/archive-filters';
+@use 'components/cards-and-content';
+@use 'components/feature-cards';
+@use 'components/footer-and-newsletter';
+
+// Overrides residuais
+@use 'utilities/tuning';
+
+
+:root {
+  --ah-refresh-bg: #ffffff;
+  --ah-refresh-surface: rgba(255, 255, 255, 0.9);
+  --ah-refresh-border: #ddd7ca;
+  --ah-refresh-border-strong: #cfd9e6;
+  --ah-refresh-text: #182131;
+  --ah-refresh-text-soft: #5f6b7a;
+  --ah-refresh-text-muted: #7d8795;
+  --ah-refresh-heading: "Space Grotesk", "DM Sans", system-ui, sans-serif;
+  --ah-refresh-body: "DM Sans", system-ui, sans-serif;
+  --ah-refresh-blue: #2457c7;
+  --ah-refresh-blue-soft: #eaf0ff;
+  --ah-refresh-green: #1c8b61;
+  --ah-refresh-green-soft: #e9f8f0;
+  --ah-refresh-yellow: #c89200;
+  --ah-refresh-yellow-soft: #fff4ce;
+  --ah-refresh-neutral: #293345;
+  --ah-refresh-neutral-soft: #eef1f5;
+  --ah-refresh-shadow-sm: 0 8px 4px rgba(18, 24, 38, 0.08);
+  --ah-refresh-shadow-md: 0 18px 44px rgba(18, 24, 38, 0.08);
+  --ah-refresh-radius: 1.25rem;
+}
+
+body {
+  background: #ffffff;
+  color: var(--ah-refresh-text);
+  font-family: var(--ah-refresh-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+.a11yhubbr-menu a,
+.a11yhubbr-btn {
+  font-family: var(--ah-refresh-heading);
+}
+
+
+// *{box-shadow: 0 18px 44px rgba(255, 0, 0, 0.05);}

@@ -27,14 +27,12 @@ function a11yhubbr_enqueue_assets() {
         $css_ver
     );
 
-    if (!is_front_page()) {
-        wp_enqueue_style(
-            'a11yhubbr-fontawesome',
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
-            array(),
-            '6.5.2'
-        );
-    }
+    wp_enqueue_style(
+        'a11yhubbr-fontawesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+        array(),
+        '6.5.2'
+    );
 
     wp_style_add_data('a11yhubbr-style', 'rtl', 'replace');
 

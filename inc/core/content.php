@@ -49,7 +49,7 @@ function a11yhubbr_get_content_type_slug_from_input($value) {
 }
 
 
-function a11yhubbr_get_social_icon_class($url, $network = '') {
+function a11yhubbr_resolve_social_icon_class($url, $network = '') {
     $network = sanitize_key((string) $network);
     $network_map = array(
         'linkedin' => 'fa-brands fa-linkedin-in',
@@ -118,8 +118,12 @@ function a11yhubbr_get_social_icon_class($url, $network = '') {
     return 'fa-solid fa-globe';
 }
 
+function a11yhubbr_get_social_icon_class($url, $network = '') {
+    return a11yhubbr_resolve_social_icon_class($url, $network);
+}
 
-function a11yhubbr_get_social_network_key($url, $network = '') {
+
+function a11yhubbr_resolve_social_network_key($url, $network = '') {
     $network = sanitize_key((string) $network);
     if ($network !== '' && $network !== 'website') {
         return $network;
@@ -163,6 +167,11 @@ function a11yhubbr_get_social_network_key($url, $network = '') {
     }
 
     return 'website';
+}
+
+
+function a11yhubbr_get_social_network_key($url, $network = '') {
+    return a11yhubbr_resolve_social_network_key($url, $network);
 }
 
 
@@ -216,4 +225,3 @@ function a11yhubbr_parse_tags_from_input($raw_tags) {
     $parts = array_map('sanitize_text_field', $parts);
     return array_values(array_unique($parts));
 }
-

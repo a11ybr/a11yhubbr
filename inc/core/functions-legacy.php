@@ -236,118 +236,15 @@ function a11yhubbr_get_content_type_slug_from_input($value) {
 }
 
 function a11yhubbr_get_social_icon_class($url, $network = '') {
-    $network = sanitize_key((string) $network);
-    $network_map = array(
-        'linkedin' => 'fa-brands fa-linkedin-in',
-        'github' => 'fa-brands fa-github',
-        'gitlab' => 'fa-brands fa-gitlab',
-        'instagram' => 'fa-brands fa-instagram',
-        'x' => 'fa-brands fa-x-twitter',
-        'twitter' => 'fa-brands fa-x-twitter',
-        'facebook' => 'fa-brands fa-facebook-f',
-        'threads' => 'fa-brands fa-threads',
-        'bluesky' => 'fa-brands fa-bluesky',
-        'telegram' => 'fa-brands fa-telegram',
-        'whatsapp' => 'fa-brands fa-whatsapp',
-        'youtube' => 'fa-brands fa-youtube',
-        'tiktok' => 'fa-brands fa-tiktok',
-        'medium' => 'fa-brands fa-medium',
-        'behance' => 'fa-brands fa-behance',
-        'dribbble' => 'fa-brands fa-dribbble',
-        'discord' => 'fa-brands fa-discord',
-        'mastodon' => 'fa-brands fa-mastodon',
-        'devto' => 'fa-brands fa-dev',
-    );
-
-    if ($network !== '' && isset($network_map[$network])) {
-        return $network_map[$network];
-    }
-
-    $host = wp_parse_url((string) $url, PHP_URL_HOST);
-    $host = is_string($host) ? strtolower($host) : '';
-
-    if ($host === '') {
-        return 'fa-solid fa-globe';
-    }
-
-    $map = array(
-        'linkedin.com' => 'fa-brands fa-linkedin-in',
-        'github.com' => 'fa-brands fa-github',
-        'gitlab.com' => 'fa-brands fa-gitlab',
-        'instagram.com' => 'fa-brands fa-instagram',
-        'twitter.com' => 'fa-brands fa-x-twitter',
-        'x.com' => 'fa-brands fa-x-twitter',
-        'facebook.com' => 'fa-brands fa-facebook-f',
-        'threads.net' => 'fa-brands fa-threads',
-        'bsky.app' => 'fa-brands fa-bluesky',
-        'telegram.org' => 'fa-brands fa-telegram',
-        't.me' => 'fa-brands fa-telegram',
-        'wa.me' => 'fa-brands fa-whatsapp',
-        'whatsapp.com' => 'fa-brands fa-whatsapp',
-        'youtube.com' => 'fa-brands fa-youtube',
-        'youtu.be' => 'fa-brands fa-youtube',
-        'tiktok.com' => 'fa-brands fa-tiktok',
-        'medium.com' => 'fa-brands fa-medium',
-        'behance.net' => 'fa-brands fa-behance',
-        'dribbble.com' => 'fa-brands fa-dribbble',
-        'discord.com' => 'fa-brands fa-discord',
-        'mastodon.social' => 'fa-brands fa-mastodon',
-        'dev.to' => 'fa-brands fa-dev',
-    );
-
-    foreach ($map as $domain => $icon) {
-        if (strpos($host, $domain) !== false) {
-            return $icon;
-        }
-    }
-
-    return 'fa-solid fa-globe';
+    return function_exists('a11yhubbr_resolve_social_icon_class')
+        ? a11yhubbr_resolve_social_icon_class($url, $network)
+        : 'fa-solid fa-globe';
 }
 
 function a11yhubbr_get_social_network_key($url, $network = '') {
-    $network = sanitize_key((string) $network);
-    if ($network !== '' && $network !== 'website') {
-        return $network;
-    }
-
-    $host = wp_parse_url((string) $url, PHP_URL_HOST);
-    $host = is_string($host) ? strtolower($host) : '';
-    if ($host === '') {
-        return 'website';
-    }
-
-    $domain_map = array(
-        'linkedin.com' => 'linkedin',
-        'github.com' => 'github',
-        'gitlab.com' => 'gitlab',
-        'instagram.com' => 'instagram',
-        'twitter.com' => 'x',
-        'x.com' => 'x',
-        'facebook.com' => 'facebook',
-        'threads.net' => 'threads',
-        'bsky.app' => 'bluesky',
-        'telegram.org' => 'telegram',
-        't.me' => 'telegram',
-        'wa.me' => 'whatsapp',
-        'whatsapp.com' => 'whatsapp',
-        'youtube.com' => 'youtube',
-        'youtu.be' => 'youtube',
-        'tiktok.com' => 'tiktok',
-        'medium.com' => 'medium',
-        'behance.net' => 'behance',
-        'dribbble.com' => 'dribbble',
-        'discord.com' => 'discord',
-        'mastodon.social' => 'mastodon',
-        'dev.to' => 'devto',
-    );
-
-    foreach ($domain_map as $domain => $key) {
-        if (strpos($host, $domain) !== false) {
-            return $key;
-        }
-    }
-
-    return 'website';
+    return function_exists('a11yhubbr_resolve_social_network_key')
+        ? a11yhubbr_resolve_social_network_key($url, $network)
+        : 'website';
 }
 
 function a11yhubbr_find_posts_by_term($post_type, $term, $meta_keys = array(), $post_status = 'publish') {
@@ -678,7 +575,7 @@ function a11yhubbr_render_page_header($args = array()) {
             $is_last = ($index === count($breadcrumbs) - 1);
 
             if ($index > 0) {
-                echo '<span aria-hidden="true">&rsaquo;</span>';
+                echo '<span class="a11yhubbr-page-breadcrumb-separator" aria-hidden="true">&rsaquo;</span>';
             }
 
             if (!$is_last && !empty($url)) {

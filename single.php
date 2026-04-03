@@ -7,7 +7,7 @@ $types = function_exists('a11yhubbr_get_content_type_map') ? a11yhubbr_get_conte
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-content-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-content-page">
   <?php while (have_posts()): the_post(); ?>
     <?php
     $post_id = get_the_ID();
@@ -229,7 +229,6 @@ get_header();
         <article class="a11yhubbr-card a11yhubbr-rich-content">
           <div class="a11yhubbr-single-meta-head">
             <span class="a11yhubbr-content-item-badge a11yhubbr-content-item-badge--conteudos"><i class="<?php echo esc_attr($type_icon); ?>" aria-hidden="true"></i><?php echo esc_html($type_label); ?></span>
-            <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($source_link); ?>" target="_blank" rel="noopener noreferrer">Acessar conteudo <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
           </div>
 
           <div class="a11yhubbr-single-content-body"><?php echo wp_kses_post($content_to_render); ?></div>
@@ -242,15 +241,35 @@ get_header();
               <?php endforeach; ?>
             </div>
           <?php endif; ?>
+
+          <?php get_template_part('inc/components/single-side-engagement', null, array(
+            'share_url' => $permalink,
+            'share_title' => get_the_title(),
+            'layout' => 'inline',
+            'show_suggest' => false,
+          )); ?>
+
+          <?php if ($submitter_name !== '' || get_the_date() !== ''): ?>
+            <div class="a11yhubbr-single-muted-meta" aria-label="Metadados da submissão">
+              <?php if ($submitter_name !== ''): ?><span>Submetido por <?php echo esc_html($submitter_name); ?></span><?php endif; ?>
+              <span>Enviado em <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time></span>
+            </div>
+          <?php endif; ?>
         </article>
 
         <aside class="a11yhubbr-single-aside-stack">
-          <div class="a11yhubbr-side-card a11yhubbr-single-side">
-            <h2>Detalhes da submissao</h2>
+          <?php if ($source_link !== ''): ?>
+            <div class="a11yhubbr-side-card a11yhubbr-single-primary-action">
+              <h2>Acessar conteúdo</h2>
+              <p>Abra a referência original em uma nova aba.</p>
+              <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($source_link); ?>" target="_blank" rel="noopener noreferrer">Abrir conteúdo <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            </div>
+          <?php endif; ?>
+
+          <div class="a11yhubbr-side-card a11yhubbr-single-side a11yhubbr-single-side-meta">
+            <h2>Ficha técnica</h2>
             <dl>
               <div><dt>Tipo</dt><dd><?php echo esc_html($type_label); ?></dd></div>
-              <div><dt>Data</dt><dd><time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time></dd></div>
-              <?php if ($submitter_name !== ''): ?><div><dt>Autor</dt><dd><?php echo esc_html($submitter_name); ?></dd></div><?php endif; ?>
               <?php if ($submitter_org !== ''): ?><div><dt>Organizacao</dt><dd><?php echo esc_html($submitter_org); ?></dd></div><?php endif; ?>
               <?php if ($year_publication !== ''): ?><div><dt>Ano</dt><dd><?php echo esc_html($year_publication); ?></dd></div><?php endif; ?>
               <?php $depth_label = $resolve_content_option('depth', $depth); ?>
@@ -300,10 +319,10 @@ get_header();
           </div>
 
           <?php get_template_part('inc/components/single-side-engagement', null, array(
-            'share_url' => $permalink,
-            'share_title' => get_the_title(),
             'contact_url' => home_url('/contato'),
+            'suggest_url' => add_query_arg('source_post', $post_id, function_exists('a11yhubbr_get_submit_content_url') ? a11yhubbr_get_submit_content_url() : home_url('/submeter/submeter-conteudo')),
             'suggest_label' => 'Sugerir alteracao',
+            'show_share' => false,
           )); ?>
         </aside>
       </div>

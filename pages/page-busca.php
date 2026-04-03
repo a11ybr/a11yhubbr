@@ -145,7 +145,7 @@ $has_active_filters = ($query_text !== '' || $scope !== '' || $order !== 'recent
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-search-page a11yhubbr-content-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-search-page a11yhubbr-content-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(

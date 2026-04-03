@@ -5,14 +5,16 @@ if (!defined('ABSPATH')) {
 
 $bootstrap_files = array(
     '/inc/core/setup.php',
-    '/inc/core/icons.php',
     '/inc/core/routing.php',
     '/inc/core/content.php',
     '/inc/core/migrations.php',
     '/inc/core/header-context.php',
     '/inc/core/security.php',
+    '/inc/core/lgpd.php',
+    '/inc/core/seo.php',
     '/inc/core/submissions.php',
     '/inc/core/admin-columns.php',
+    '/inc/core/admin-content-editor.php',
     '/inc/core/template-routing.php',
     '/inc/modules/login-branding.php',
 );

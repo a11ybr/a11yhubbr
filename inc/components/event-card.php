@@ -31,10 +31,10 @@ $organizer = trim((string) $args['organizer']);
 $badge_class = trim((string) $args['badge_class']);
 $tags = isset($args['tags']) && is_array($args['tags']) ? array_values(array_filter(array_map('strval', $args['tags']))) : array();
 ?>
-<article class="a11yhubbr-event-card a11yhubbr-card-base">
+<article class="a11yhubbr-event-card a11yhubbr-card-base card-hover">
   <div class="a11yhubbr-event-card-top">
     <?php if ($label !== ''): ?>
-      <span class="a11yhubbr-content-item-badge<?php echo $badge_class !== '' ? ' ' . esc_attr($badge_class) : ''; ?>">Evento <?php echo esc_html($label); ?></span>
+      <span class="a11yhubbr-content-item-badge<?php echo $badge_class !== '' ? ' ' . esc_attr($badge_class) : ''; ?>"><?php echo esc_html($label); ?></span>
     <?php endif; ?>
     <div class="a11yhubbr-event-card-top-meta">
       <?php if ($date_text !== ''): ?>
@@ -64,7 +64,7 @@ $tags = isset($args['tags']) && is_array($args['tags']) ? array_values(array_fil
     <?php if ($location !== ''): ?>
       <p class="a11yhubbr-event-card-location">
         <?php if ($location !== ''): ?>
-          <span><?php echo function_exists('a11yhubbr_render_icon') ? a11yhubbr_render_icon('location') : ''; ?> <?php echo esc_html($location); ?></span>
+          <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?php echo esc_html($location); ?></span>
         <?php endif; ?>
       </p>
     <?php endif; ?>

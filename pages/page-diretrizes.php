@@ -42,7 +42,7 @@ $rules = array(
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-guidelines-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-guidelines-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
@@ -116,22 +116,5 @@ get_header();
 
   <?php get_template_part('inc/sections/como-funciona'); ?>
 
-
-  <section class="a11yhubbr-section a11yhubbr-section-cta">
-    <div class="a11yhubbr-container">
-      <?php get_template_part('inc/components/cta-box', null, array(
-        'title' => 'Dúvidas sobre as diretrizes?',
-        'description' => 'Se tiver dúvidas, entre em contato com a equipe para orientação antes de submeter.',
-        'primary' => array(
-          'label' => 'Submeter',
-          'url' => home_url('/submeter'),
-        ),
-        'secondary' => array(
-          'label' => 'Fale conosco',
-          'url' => '/contato',
-        ),
-      )); ?>
-    </div>
-  </section>
 </main>
 <?php get_footer(); ?>

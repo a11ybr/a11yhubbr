@@ -211,7 +211,7 @@ $format_event_time = static function ($post_id) {
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-content-page a11yhubbr-events-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-content-page a11yhubbr-events-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(

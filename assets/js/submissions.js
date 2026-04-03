@@ -1,6 +1,41 @@
 (function () {
   'use strict';
 
+  function initRadioProxyField(groupName, targetId) {
+    var target = document.getElementById(targetId);
+    var radios = document.querySelectorAll('input[type="radio"][name="' + groupName + '"]');
+    if (!target || !radios.length) {
+      return;
+    }
+
+    function syncRadiosFromTarget() {
+      var current = String(target.value || '').trim();
+      radios.forEach(function (radio) {
+        radio.checked = radio.value === current;
+      });
+    }
+
+    radios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (!radio.checked) {
+          return;
+        }
+        target.value = radio.value;
+        target.dispatchEvent(new Event('input', { bubbles: true }));
+        target.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    });
+
+    target.addEventListener('change', syncRadiosFromTarget);
+    syncRadiosFromTarget();
+  }
+
+  initRadioProxyField('modality_choice', 'event-modality');
+})();
+
+(function () {
+  'use strict';
+
   var addButton = document.getElementById('add-slot');
   var slots = document.getElementById('event-slots');
   if (!addButton || !slots) {

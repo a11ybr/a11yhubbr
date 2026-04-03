@@ -4,6 +4,70 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Headers HTTP de segurança
+ * Protege contra XSS, clickjacking e MIME sniffing (WCAG + hardening)
+ */
+add_action('send_headers', function () {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+});
+
+
+/**
+ * Bloquear enumeração de usuários via ?author=N
+ * Impede vazamento de usernames via redirects do WordPress
+ */
+add_action('init', function () {
+    if (isset($_GET['author']) && !is_admin()) {
+        wp_redirect(home_url(), 301);
+        exit;
+    }
+});
+
+
+/**
+ * Mensagem de erro de login genérica
+ * Não revela se o problema é o usuário ou a senha
+ */
+add_filter('login_errors', function () {
+    return 'Usuário ou senha incorretos.';
+});
+
+
+/**
+ * Limite de tentativas de login (brute-force básico via transients)
+ * Bloqueia IP após 5 falhas em 15 minutos
+ */
+add_action('wp_login_failed', function ($username) {
+    if (empty($_SERVER['REMOTE_ADDR'])) {
+        return;
+    }
+    $ip  = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+    $key = 'a11yhubbr_login_fail_' . md5($ip);
+    $tentativas = (int) get_transient($key);
+    set_transient($key, $tentativas + 1, 15 * MINUTE_IN_SECONDS);
+});
+
+add_filter('authenticate', function ($user, $username, $password) {
+    if (empty($_SERVER['REMOTE_ADDR'])) {
+        return $user;
+    }
+    $ip  = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+    $key = 'a11yhubbr_login_fail_' . md5($ip);
+    if ((int) get_transient($key) >= 5) {
+        return new WP_Error(
+            'too_many_retries',
+            'Muitas tentativas de login. Aguarde 15 minutos antes de tentar novamente.'
+        );
+    }
+    return $user;
+}, 30, 3);
+
+
 function a11yhubbr_security_settings_register() {
     register_setting('a11yhubbr_security', 'a11yhubbr_turnstile_enabled', array(
         'type' => 'string',

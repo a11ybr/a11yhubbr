@@ -1,0 +1,155 @@
+﻿
+.a11yhubbr-about-section {
+  padding: 3.3rem 0;
+}
+
+
+
+.a11yhubbr-about-section h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 1.25rem + 1vw, 2.8rem);
+  color: var(--a11y-text);
+}
+
+.a11yhubbr-about-section p {
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+
+/* Limita textos dos cards da seção Sobre para manter altura consistente */
+.a11yhubbr-about-section .a11yhubbr-feature-text,
+.a11yhubbr-about-section .a11yhubbr-about-flow-card p,
+.a11yhubbr-about-section .a11yhubbr-community-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.a11yhubbr-about-section .a11yhubbr-feature-text,
+.a11yhubbr-about-section .a11yhubbr-about-flow-card p {
+  max-height: calc(1.55em * 3);
+}
+
+.a11yhubbr-about-section .a11yhubbr-community-desc {
+  max-height: calc(1.45em * 3);
+}
+
+.a11yhubbr-about-flow-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.a11yhubbr-about-flow-card {
+    padding: 1.15rem;
+    border: 1px solid rgba(41, 51, 69, 0.08);
+    border-radius: 1.2rem;
+    background: #fff;
+    box-shadow: var(--ah-refresh-shadow-sm);
+    gap: 0.65rem;
+}
+
+.a11yhubbr-about-flow-icon {
+  margin-bottom: .7rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--a11y-radius);
+  background: var(--a11y-highlight-soft);
+  color: var(--a11y-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.a11yhubbr-about-flow-card h3 {
+  margin: 0 0 .35rem;
+  color: var(--a11y-text);
+  font-size: 1.15rem;
+}
+
+.a11yhubbr-about-flow-card p {
+  margin: 0;
+  font-size: .95rem;
+}
+
+.a11yhubbr-about-team-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.a11yhubbr-about-team-grid > * {
+  min-width: 0;
+  margin: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 320px;
+}
+
+.a11yhubbr-about-open-source {
+  margin-top: 1rem;
+  background: linear-gradient(140deg, var(--a11y-primary), var(--a11y-primary-2));
+  border: 1px solid var(--a11y-primary-2);
+  border-radius: var(--a11y-radius);
+  padding: 1.25rem 1.2rem;
+  color: #fff;
+}
+
+.a11yhubbr-about-open-source-head {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-bottom: .5rem;
+}
+
+.a11yhubbr-about-open-source-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: var(--a11y-radius);
+  background: rgba(255, 255, 255, .14);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.a11yhubbr-about-open-source h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.a11yhubbr-about-open-source p {
+  margin: 1rem 0 2rem;
+  color: rgba(255, 255, 255, .96);
+  font-size: 1rem;
+}
+
+.a11yhubbr-about-open-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 2.7rem;
+  padding: .52rem .9rem;
+  border-radius: var(--a11y-radius);
+  border: 1px solid rgba(255, 255, 255, .45);
+  background: #ffffff;
+  color: var(--a11y-text);
+  font-weight: var(--a11y-weight-bold);
+  text-decoration: none;
+}
+
+.a11yhubbr-about-open-source-link:hover,
+.a11yhubbr-about-open-source-link:focus-visible {
+  background: var(--a11y-soft-2);
+}
+
+

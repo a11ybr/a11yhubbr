@@ -1,0 +1,234 @@
+// Header skin, responsive panel behavior and action controls.
+.a11yhubbr-site-header {
+  border-bottom-color: rgba(221, 215, 202, 0.72);
+  // background: rgba(251, 248, 241, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.a11yhubbr-header-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.85rem;
+}
+
+.a11yhubbr-brand {
+  justify-self: start;
+}
+
+.a11yhubbr-logo {
+  display: inline-block;
+  width: 210px;
+  line-height: 0;
+}
+
+.a11yhubbr-logo img {
+  width: 10.5rem;
+  height: auto;
+  display: block;
+}
+
+.a11yhubbr-logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.a11yhubbr-nav {
+  justify-self: center;
+}
+
+.a11yhubbr-header-panel {
+  display: contents;
+}
+
+.a11yhubbr-menu {
+  gap: .35rem;
+}
+
+.a11yhubbr-menu a {
+  min-height: 2.55rem;
+  padding: .55rem .9rem;
+  border-radius: 999px;
+  color: var(--ah-refresh-text-soft);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-transform: none;
+}
+
+.a11yhubbr-menu .current-menu-item > a,
+.a11yhubbr-menu a:hover {
+  background: #fff;
+  color: var(--ah-refresh-text);
+  box-shadow: 0 8px 20px rgba(18, 24, 38, 0.05);
+}
+
+.a11yhubbr-header-search-btn,
+.a11yhubbr-header-search-clear,
+.a11yhubbr-menu-toggle {
+  width: 2.45rem;
+  height: 2.45rem;
+  border-color: var(--ah-refresh-border);
+  border-radius: .95rem;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.a11yhubbr-menu-toggle {
+  display: none;
+  color: var(--a11y-text);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.a11yhubbr-menu-toggle:hover,
+.a11yhubbr-menu-toggle:focus-visible {
+  background: var(--a11y-soft-2);
+  border-color: var(--a11y-border);
+}
+
+.a11yhubbr-header-actions {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.a11yhubbr-header-search-btn {
+  color: var(--a11y-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.a11yhubbr-header-search-btn:hover,
+.a11yhubbr-header-search-btn:focus-visible {
+  background: var(--a11y-soft-2);
+  border-color: var(--a11y-border);
+}
+
+.a11yhubbr-header-search-clear {
+  color: var(--a11y-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.a11yhubbr-header-search-clear:hover,
+.a11yhubbr-header-search-clear:focus-visible {
+  background: var(--a11y-soft-2);
+  border-color: var(--a11y-border);
+}
+
+.a11yhubbr-btn {
+  min-height: 2.9rem;
+  border-radius: 999px;
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.a11yhubbr-btn-primary,
+.a11yhubbr-btn-alternative,
+.a11yhubbr-btn-context {
+  background: var(--ah-refresh-neutral);
+  border-color: var(--ah-refresh-neutral);
+  color: #fff;
+  box-shadow: var(--ah-refresh-shadow-sm);
+}
+
+.a11yhubbr-btn-secondary,
+.a11yhubbr-btn-light,
+.a11yhubbr-btn-context-secondary,
+.a11yhubbr-btn-tertiary {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: var(--ah-refresh-border-strong);
+  color: var(--ah-refresh-text);
+}
+
+@media (max-width: 880px) {
+  .a11yhubbr-header-inner {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 1060px) {
+  .a11yhubbr-header-inner {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    padding-top: .6rem;
+    padding-bottom: .6rem;
+  }
+
+  .a11yhubbr-menu-toggle {
+    display: inline-flex;
+  }
+
+  .a11yhubbr-header-panel {
+    display: none;
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: .55rem;
+    padding-top: .6rem;
+    border-top: 1px solid #d8dfec;
+    gap: .7rem;
+  }
+
+  .a11yhubbr-header-panel.is-open {
+    display: grid;
+  }
+
+  .a11yhubbr-nav,
+  .a11yhubbr-menu {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .a11yhubbr-menu {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .35rem;
+  }
+
+  .a11yhubbr-menu a {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .a11yhubbr-header-actions {
+    justify-self: start;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: .55rem;
+  }
+
+  .a11yhubbr-header-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 860px) {
+  .a11yhubbr-header-inner {
+    align-items: flex-start;
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+  }
+
+  .a11yhubbr-menu {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 640px) {
+  .a11yhubbr-logo {
+    width: 170px;
+  }
+}

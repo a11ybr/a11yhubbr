@@ -15,7 +15,7 @@ $help_cards = array(
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
@@ -28,6 +28,12 @@ get_header();
 
   <section class="a11yhubbr-section a11yhubbr-submit-hub-section">
     <div class="a11yhubbr-container">
+      <?php if (is_user_logged_in() && function_exists('a11yhubbr_get_my_submissions_url')) : ?>
+        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">
+          Sua conta já pode enviar itens e acompanhar o andamento em
+          <a href="<?php echo esc_url(a11yhubbr_get_my_submissions_url()); ?>">Minhas submissões</a>.
+        </div>
+      <?php endif; ?>
       <div class="a11yhubbr-submit-hub-grid">
         <article class="a11yhubbr-submit-hub-card">
           <span class="a11yhubbr-submit-hub-icon" aria-hidden="true"><i class="fa-regular fa-file-lines"></i></span>

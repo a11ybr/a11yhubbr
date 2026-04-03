@@ -13,7 +13,7 @@ $format_slot = static function ($value) {
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-event-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-single-page a11yhubbr-single-event-page">
   <?php while (have_posts()): the_post(); ?>
     <?php
     $post_id = get_the_ID();
@@ -136,7 +136,7 @@ get_header();
 
     a11yhubbr_render_page_header(array(
         'breadcrumbs' => array(
-            array('label' => 'Página inicial', 'url' => home_url('/')),
+            array('label' => 'Pagina inicial', 'url' => home_url('/')),
             array('label' => 'Eventos', 'url' => home_url('/eventos')),
             array('label' => get_the_title()),
         ),
@@ -153,11 +153,6 @@ get_header();
         <article class="a11yhubbr-card a11yhubbr-rich-content">
           <div class="a11yhubbr-single-meta-head">
             <span class="a11yhubbr-content-item-badge a11yhubbr-content-item-badge--eventos"><?php echo esc_html($event_badge_label); ?></span>
-            <?php if ($event_link !== ''): ?>
-              <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($event_link); ?>" target="_blank" rel="noopener noreferrer">
-                Acessar evento <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
-              </a>
-            <?php endif; ?>
           </div>
 
           <div class="a11yhubbr-single-content-body"><?php echo wp_kses_post($content_to_render); ?></div>
@@ -199,9 +194,22 @@ get_header();
             </div>
           <?php endif; ?>
 
+          <?php get_template_part('inc/components/single-side-engagement', null, array(
+            'share_url' => $permalink,
+            'share_title' => get_the_title(),
+            'layout' => 'inline',
+            'show_suggest' => false,
+          )); ?>
+
+          <?php if (get_the_date() !== ''): ?>
+            <div class="a11yhubbr-single-muted-meta" aria-label="Metadados da submissao">
+              <span>Enviado em <time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time></span>
+            </div>
+          <?php endif; ?>
+
           <?php if (!empty($slots)): ?>
             <div class="a11yhubbr-single-slot-list">
-              <h3>Datas e horários</h3>
+              <h3>Datas e horarios</h3>
               <ul>
                 <?php foreach ($slots as $index => $slot): ?>
                   <?php
@@ -211,7 +219,7 @@ get_header();
                   <li>
                     <strong><?php echo esc_html('Data ' . ((int) $index + 1)); ?></strong>
                     <span><?php echo esc_html($start !== '' ? $start : '-'); ?></span>
-                    <span><?php echo esc_html($end !== '' ? 'até ' . $end : ''); ?></span>
+                    <span><?php echo esc_html($end !== '' ? 'ate ' . $end : ''); ?></span>
                   </li>
                 <?php endforeach; ?>
               </ul>
@@ -220,23 +228,31 @@ get_header();
         </article>
 
         <aside class="a11yhubbr-single-aside-stack">
-          <div class="a11yhubbr-side-card a11yhubbr-single-side">
-            <h2>Detalhes da submissão</h2>
+          <?php if ($event_link !== ''): ?>
+            <div class="a11yhubbr-side-card a11yhubbr-single-primary-action">
+              <h2>Acessar evento</h2>
+              <p>Abra o link principal para inscricao, detalhes ou transmissao.</p>
+              <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($event_link); ?>" target="_blank" rel="noopener noreferrer">
+                Abrir evento <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+            </div>
+          <?php endif; ?>
+          <div class="a11yhubbr-side-card a11yhubbr-single-side a11yhubbr-single-side-meta">
+            <h2>Ficha tecnica</h2>
             <dl>
               <div><dt>Tipo</dt><dd><?php echo esc_html($event_type !== '' ? $event_type : 'Evento'); ?></dd></div>
-              <div><dt>Data</dt><dd><time datetime="<?php echo esc_attr(get_the_date('c')); ?>"><?php echo esc_html(get_the_date('d/m/Y')); ?></time></dd></div>
+              <?php if ($organizer !== ''): ?><div><dt>Organizador</dt><dd><?php echo esc_html($organizer); ?></dd></div><?php endif; ?>
               <?php if ($postal_code !== ''): ?><div><dt>CEP</dt><dd><?php echo esc_html($postal_code); ?></dd></div><?php endif; ?>
               <?php if ($location !== ''): ?><div><dt><?php echo esc_html(sanitize_title($modality) === 'online' ? 'Plataforma' : 'Localizacao'); ?></dt><dd><?php echo esc_html($location); ?></dd></div><?php endif; ?>
               <?php if ($online_location !== '' && sanitize_title($modality) === 'hibrido'): ?><div><dt>Plataforma online</dt><dd><?php echo esc_html($online_location); ?></dd></div><?php endif; ?>
-              <?php if ($organizer !== ''): ?><div><dt>Organizador</dt><dd><?php echo esc_html($organizer); ?></dd></div><?php endif; ?>
             </dl>
           </div>
 
           <?php get_template_part('inc/components/single-side-engagement', null, array(
-            'share_url' => $permalink,
-            'share_title' => get_the_title(),
             'contact_url' => home_url('/contato'),
-            'suggest_label' => 'Sugerir alteração',
+            'suggest_url' => add_query_arg('source_post', $post_id, function_exists('a11yhubbr_get_submit_event_url') ? a11yhubbr_get_submit_event_url() : home_url('/submeter/submeter-eventos')),
+            'suggest_label' => 'Sugerir alteracao',
+            'show_share' => false,
           )); ?>
         </aside>
       </div>
@@ -296,3 +312,4 @@ get_header();
   <?php endwhile; ?>
 </main>
 <?php get_footer(); ?>
+

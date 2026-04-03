@@ -10,10 +10,14 @@ $status = isset($_GET['a11yhubbr_status']) ? sanitize_key(wp_unslash($_GET['a11y
 $form = isset($_GET['a11yhubbr_form']) ? sanitize_key(wp_unslash($_GET['a11yhubbr_form'])) : '';
 $submitted = ($status === 'success' && $form === 'profile');
 $has_error = ($status === 'error' && $form === 'profile');
+$is_logged_in = is_user_logged_in();
+$login_url = function_exists('a11yhubbr_get_submission_login_url') ? a11yhubbr_get_submission_login_url(get_permalink()) : wp_login_url(get_permalink());
+$registration_url = function_exists('a11yhubbr_get_submission_registration_url') ? a11yhubbr_get_submission_registration_url(get_permalink()) : '';
+$current_user = $is_logged_in ? wp_get_current_user() : null;
 
 get_header();
 ?>
-<main class="a11yhubbr-submit-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-submit-page">
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(
@@ -36,6 +40,18 @@ get_header();
 
       <div class="a11yhubbr-submit-grid">
         <div class="a11yhubbr-submit-main">
+          <?php if (!$is_logged_in) : ?>
+            <section class="a11yhubbr-card a11yhubbr-form-section">
+              <h2>Entre para submeter perfis</h2>
+              <p>Agora a submissão de perfis exige uma conta no WordPress. Entre para continuar e vincular a submissão ao seu usuário.</p>
+              <div class="a11yhubbr-form-actions">
+                <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($login_url); ?>">Entrar</a>
+                <?php if ($registration_url !== '') : ?>
+                  <a class="a11yhubbr-btn" href="<?php echo esc_url($registration_url); ?>">Criar conta</a>
+                <?php endif; ?>
+              </div>
+            </section>
+          <?php else : ?>
           <form method="post" enctype="multipart/form-data" class="a11yhubbr-form-grid a11yhubbr-submit-form" id="profile-form">
             <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
             <?php wp_nonce_field('a11yhubbr_profile', 'a11yhubbr_nonce'); ?>
@@ -49,9 +65,9 @@ get_header();
               <h2>Informações principais</h2>
 
               <div class="a11yhubbr-field-inline">
-                <label for="profile-type">Tipo de perfil *</label>
+                <label for="profile-type">Tipo de perfil <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <select id="profile-type" name="profile_type" required>
+                  <select id="profile-type" name="profile_type" required aria-required="true">
                     <option value="">Selecione</option>
                     <option>Profissional de IT</option>
                     <option>Empresa ou ONG</option>
@@ -64,34 +80,30 @@ get_header();
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="profile-name">Nome ou nome da organização *</label>
+                <label for="profile-name">Nome ou nome da organização <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="profile-name" type="text" name="name" required>
+                  <input id="profile-name" type="text" name="name" required aria-required="true">
                 </div>
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="profile-location">Localização (cidade, estado) *</label>
+                <label for="profile-location">Localização (cidade, estado) <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="profile-location" type="text" name="location" required>
+                  <input id="profile-location" type="text" name="location" required aria-required="true">
                 </div>
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="profile-description">Bio profissional ou descrição institucional *</label>
+                <label for="profile-description">Bio profissional ou descrição institucional <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <textarea id="profile-description" name="description" rows="5" required></textarea>
+                  <textarea id="profile-description" name="description" rows="5" required aria-required="true"></textarea>
                 </div>
               </div>
-            </section>
-
-            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-perfil-areas" data-collapsible-section>
-              <h2>Detalhes da submissão</h2>
 
               <div class="a11yhubbr-field-inline">
-                <label for="profile-role">Cargo / especialidade *</label>
+                <label for="profile-role">Cargo / especialidade <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="profile-role" type="text" name="role" required>
+                  <input id="profile-role" type="text" name="role" required aria-required="true">
                 </div>
               </div>
 
@@ -152,23 +164,14 @@ get_header();
               </div>
             </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-form-section-contact" id="sec-perfil-contato" data-collapsible-section>
-              <h2>Autor da submissão</h2>
-              <div class="a11yhubbr-contact-grid">
-                <div class="a11yhubbr-field-inline">
-                  <label for="profile-author">Nome *</label>
-                  <div class="a11yhubbr-field-control">
-                    <input id="profile-author" type="text" name="author" required>
-                  </div>
-                </div>
-                <div class="a11yhubbr-field-inline">
-                  <label for="profile-email">Email *</label>
-                  <div class="a11yhubbr-field-control">
-                    <input id="profile-email" type="email" name="email" required>
-                  </div>
-                </div>
-              </div>
-              <p class="a11yhubbr-help">O email será privado e utilizado apenas para que a organização da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissão.</p>
+            <section class="a11yhubbr-card a11yhubbr-submit-account" aria-label="Conta responsável pela submissão">
+              <h2>Conta responsável pela submissão</h2>
+              <p class="a11yhubbr-submit-account-summary">
+                <strong>Nome:</strong> <?php echo esc_html($current_user ? $current_user->display_name : ''); ?>
+                <br>
+                <strong>Email:</strong> <?php echo esc_html($current_user ? $current_user->user_email : ''); ?>
+              </p>
+              <p class="a11yhubbr-help">A submissão será vinculada à conta logada e esses dados serão usados pela equipe da <strong>A11YBR</strong> em caso de contato.</p>
               <?php if (function_exists('a11yhubbr_render_human_check_field')) { a11yhubbr_render_human_check_field(); } ?>
             </section>
 
@@ -176,6 +179,7 @@ get_header();
               <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_profile_submit" value="1">Enviar para revisão</button>
             </div>
           </form>
+          <?php endif; ?>
         </div>
 
         <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
@@ -183,9 +187,7 @@ get_header();
             <h2>Navegação do cadastro</h2>
             <nav aria-label="Etapas da submissão de perfil">
               <a href="#sec-perfil-detalhes">Informações principais</a>
-              <a href="#sec-perfil-areas">Detalhes da submissão</a>
               <a href="#sec-perfil-redes">Informações complementares</a>
-              <a href="#sec-perfil-contato">Autor da submissão</a>
             </nav>
           </section>
 

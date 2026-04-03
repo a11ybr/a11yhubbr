@@ -167,20 +167,20 @@ function a11yhubbr_sync_pages_title_excerpt_once() {
 
     $map = array(
         'pages/page-conteudos.php' => array(
-            'title' => 'ConteÃºdos',
+            'title' => 'Conteúdos',
             'excerpt' => 'Explore recursos organizados por tipo para facilitar sua busca por conhecimento em acessibilidade.',
         ),
         'pages/page-rede.php' => array(
             'title' => 'Rede',
-            'excerpt' => 'Profissionais e organizaÃ§Ãµes que atuam com acessibilidade digital.',
+            'excerpt' => 'Profissionais e organizações que atuam com acessibilidade digital.',
         ),
         'pages/page-eventos.php' => array(
             'title' => 'Eventos',
-            'excerpt' => 'ConferÃªncias, workshops, meetups e webinars sobre acessibilidade digital.',
+            'excerpt' => 'Conferências, workshops, meetups e webinars sobre acessibilidade digital.',
         ),
         'pages/page-submeter.php' => array(
             'title' => 'Submeter',
-            'excerpt' => 'Envie conteÃºdos, eventos e perfis para fortalecer a comunidade.',
+            'excerpt' => 'Envie conteúdos, eventos e perfis para fortalecer a comunidade.',
         ),
         'pages/page-submeter-conteudo.php' => array(
             'title' => 'Submeter conteudo',
@@ -188,23 +188,31 @@ function a11yhubbr_sync_pages_title_excerpt_once() {
         ),
         'pages/page-submeter-eventos.php' => array(
             'title' => 'Submeter evento',
-            'excerpt' => 'Divulgue workshops, conferÃªncias, meetups e webinars sobre acessibilidade.',
+            'excerpt' => 'Divulgue workshops, conferências, meetups e webinars sobre acessibilidade.',
         ),
         'pages/page-submeter-perfil.php' => array(
             'title' => 'Submeter perfil',
             'excerpt' => 'Cadastre profissionais e organizacoes da comunidade de acessibilidade.',
         ),
+        'pages/page-minhas-submissoes.php' => array(
+            'title' => 'Minhas submissões',
+            'excerpt' => 'Acompanhe conteúdos, eventos e perfis enviados pela sua conta.',
+        ),
         'pages/page-sobre.php' => array(
             'title' => 'Sobre a A11YBR',
             'excerpt' => 'O que somos, por que existimos e como funciona a plataforma.',
         ),
+        'pages/page-projeto.php' => array(
+            'title' => 'Projeto',
+            'excerpt' => 'Missao, visao, motivacao da comunidade e criterios de submissao da A11YBR.',
+        ),
         'pages/page-diretrizes.php' => array(
             'title' => 'Diretrizes da comunidade',
-            'excerpt' => 'CritÃ©rios de publicaÃ§Ã£o, padrÃµes de qualidade e regras de convivÃªncia da plataforma.',
+            'excerpt' => 'Critérios de publicação, padrões de qualidade e regras de convivência da plataforma.',
         ),
         'pages/page-contato.php' => array(
             'title' => 'Contato',
-            'excerpt' => 'Canal para sugerir alteraÃ§Ãµes, reportar informaÃ§Ãµes desatualizadas e tirar dÃ©vidas.',
+            'excerpt' => 'Canal para sugerir alterações, reportar informações desatualizadas e tirar dúvidas.',
         ),
     );
 
@@ -236,6 +244,32 @@ function a11yhubbr_sync_pages_title_excerpt_once() {
 add_action('init', 'a11yhubbr_sync_pages_title_excerpt_once');
 
 
+function a11yhubbr_ensure_projeto_page_once() {
+    if (get_option('a11yhubbr_projeto_page_created_v1') === '1') {
+        return;
+    }
+
+    $page = get_page_by_path('projeto');
+    if (!($page instanceof WP_Post)) {
+        $page_id = wp_insert_post(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_title' => 'Projeto',
+            'post_name' => 'projeto',
+            'post_excerpt' => 'Missao, visao, motivacao da comunidade e criterios de submissao da A11YBR.',
+        ));
+        if (!is_wp_error($page_id) && $page_id > 0) {
+            update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-projeto.php');
+        }
+    } else {
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-projeto.php');
+    }
+
+    update_option('a11yhubbr_projeto_page_created_v1', '1', false);
+}
+add_action('init', 'a11yhubbr_ensure_projeto_page_once');
+
+
 function a11yhubbr_ensure_diretrizes_page_once() {
     if (get_option('a11yhubbr_diretrizes_page_created_v1') === '1') {
         return;
@@ -248,7 +282,7 @@ function a11yhubbr_ensure_diretrizes_page_once() {
             'post_status' => 'publish',
             'post_title' => 'Diretrizes da comunidade',
             'post_name' => 'diretrizes-da-comunidade',
-            'post_excerpt' => 'CritÃ©rios de publicaÃ§Ã£o, padrÃµes de qualidade e regras de convivÃªncia da plataforma.',
+            'post_excerpt' => 'Critérios de publicação, padrões de qualidade e regras de convivência da plataforma.',
         ));
         if (!is_wp_error($page_id) && $page_id > 0) {
             update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-diretrizes.php');
@@ -274,7 +308,7 @@ function a11yhubbr_ensure_contato_page_once() {
             'post_status' => 'publish',
             'post_title' => 'Contato',
             'post_name' => 'contato',
-            'post_excerpt' => 'Canal para sugerir alteraÃ§Ãµes, reportar informaÃ§Ãµes desatualizadas e tirar dÃ©vidas.',
+            'post_excerpt' => 'Canal para sugerir alterações, reportar informações desatualizadas e tirar dúvidas.',
         ));
         if (!is_wp_error($page_id) && $page_id > 0) {
             update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-contato.php');
@@ -286,6 +320,32 @@ function a11yhubbr_ensure_contato_page_once() {
     update_option('a11yhubbr_contato_page_created_v1', '1', false);
 }
 add_action('init', 'a11yhubbr_ensure_contato_page_once');
+
+
+function a11yhubbr_ensure_my_submissions_page_once() {
+    if (get_option('a11yhubbr_my_submissions_page_created_v1') === '1') {
+        return;
+    }
+
+    $page = get_page_by_path('minhas-submissoes');
+    if (!($page instanceof WP_Post)) {
+        $page_id = wp_insert_post(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_title' => 'Minhas submissões',
+            'post_name' => 'minhas-submissoes',
+            'post_excerpt' => 'Acompanhe conteúdos, eventos e perfis enviados pela sua conta.',
+        ));
+        if (!is_wp_error($page_id) && $page_id > 0) {
+            update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-minhas-submissoes.php');
+        }
+    } else {
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-minhas-submissoes.php');
+    }
+
+    update_option('a11yhubbr_my_submissions_page_created_v1', '1', false);
+}
+add_action('init', 'a11yhubbr_ensure_my_submissions_page_once');
 
 
 function a11yhubbr_rename_community_to_rede_once() {
@@ -341,7 +401,7 @@ function a11yhubbr_rename_community_to_rede_once() {
             'ID' => (int) $page->ID,
             'post_title' => 'Rede',
             'post_name' => 'rede',
-            'post_excerpt' => 'Profissionais e organizaÃ§Ãµes que atuam com acessibilidade digital.',
+            'post_excerpt' => 'Profissionais e organizações que atuam com acessibilidade digital.',
         ));
         update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-rede.php');
     }
@@ -352,7 +412,7 @@ function a11yhubbr_rename_community_to_rede_once() {
         wp_update_post(array(
             'ID' => (int) $page_rede->ID,
             'post_title' => 'Rede',
-            'post_excerpt' => 'Profissionais e organizaÃ§Ãµes que atuam com acessibilidade digital.',
+            'post_excerpt' => 'Profissionais e organizações que atuam com acessibilidade digital.',
         ));
         update_post_meta((int) $page_rede->ID, '_wp_page_template', 'pages/page-rede.php');
     }
@@ -403,19 +463,19 @@ function a11yhubbr_seed_legal_pages_once() {
     $pages = array(
         array(
             'slug' => 'acessibilidade',
-            'title' => 'DeclaraÃ§Ã£o de Acessibilidade',
+            'title' => 'Declaração de Acessibilidade',
             'template' => 'pages/page-acessibilidade.php',
-            'excerpt' => 'Compromisso de acessibilidade, status de conformidade WCAG, limitaÃ§Ãµes conhecidas e canal de feedback.',
+            'excerpt' => 'Compromisso de acessibilidade, status de conformidade WCAG, limitações conhecidas e canal de feedback.',
         ),
         array(
             'slug' => 'termos-de-uso',
             'title' => 'Termos de Uso',
             'template' => 'pages/page-termos-de-uso.php',
-            'excerpt' => 'Regras de uso da plataforma, responsabilidades, moderaÃ§Ã£o, propriedade intelectual e limitaÃ§Ãµes.',
+            'excerpt' => 'Regras de uso da plataforma, responsabilidades, moderação, propriedade intelectual e limitações.',
         ),
         array(
             'slug' => 'politica-de-privacidade',
-            'title' => 'PolÃ­tica de Privacidade',
+            'title' => 'Política de Privacidade',
             'template' => 'pages/page-politica-de-privacidade.php',
             'excerpt' => 'Como coletamos, usamos e protegemos dados pessoais em conformidade com a LGPD.',
         ),
@@ -423,7 +483,7 @@ function a11yhubbr_seed_legal_pages_once() {
             'slug' => 'busca',
             'title' => 'Busca',
             'template' => 'pages/page-busca.php',
-            'excerpt' => 'Busque conteÃºdos, eventos e perfis em um Ãºnico lugar.',
+            'excerpt' => 'Busque conteúdos, eventos e perfis em um único lugar.',
         ),
     );
 
@@ -468,12 +528,14 @@ function a11yhubbr_migrate_page_templates_to_pages_dir_once() {
         'page-diretrizes.php' => 'pages/page-diretrizes.php',
         'page-eventos.php' => 'pages/page-eventos.php',
         'page-politica-de-privacidade.php' => 'pages/page-politica-de-privacidade.php',
+        'page-projeto.php' => 'pages/page-projeto.php',
         'page-rede.php' => 'pages/page-rede.php',
         'page-sobre.php' => 'pages/page-sobre.php',
         'page-submeter-conteudo.php' => 'pages/page-submeter-conteudo.php',
         'page-submeter-eventos.php' => 'pages/page-submeter-eventos.php',
         'page-submeter-perfil.php' => 'pages/page-submeter-perfil.php',
         'page-submeter.php' => 'pages/page-submeter.php',
+        'page-minhas-submissoes.php' => 'pages/page-minhas-submissoes.php',
         'page-termos-de-uso.php' => 'pages/page-termos-de-uso.php',
     );
 

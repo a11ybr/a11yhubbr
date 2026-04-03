@@ -1,0 +1,157 @@
+// Visual treatment for home hero and internal page headers.
+.a11yhubbr-home-hero,
+.a11yhubbr-page-header {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 87% 18%, rgba(252, 215, 110, 0.95), transparent 18%),
+    linear-gradient(135deg, #34b489 0%, #2fad84 52%, #299e75 100%);
+}
+
+.a11yhubbr-home-hero::after,
+.a11yhubbr-page-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: .22;
+  pointer-events: none;
+}
+
+.a11yhubbr-home-hero .a11yhubbr-container,
+.a11yhubbr-page-header .a11yhubbr-container {
+  position: relative;
+  z-index: 1;
+}
+
+.a11yhubbr-home-hero-content {
+  padding: clamp(4rem, 7vw, 6.2rem) 0;
+}
+
+.a11yhubbr-home-kicker-row .budge,
+.a11yhubbr-home-kicker-row p,
+.a11yhubbr-page-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.a11yhubbr-home-kicker-row .budge,
+.a11yhubbr-home-kicker-row p {
+  padding: .4rem .8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.a11yhubbr-page-breadcrumb {
+  flex-wrap: wrap;
+  gap: .45rem;
+}
+
+.a11yhubbr-page-breadcrumb a,
+.a11yhubbr-page-breadcrumb span {
+  color: inherit;
+}
+
+.a11yhubbr-page-breadcrumb-separator {
+  opacity: .72;
+}
+
+.a11yhubbr-page-header .a11yhubbr-container {
+  display: grid;
+  justify-items: start;
+  gap: .9rem;
+}
+
+.a11yhubbr-home-hero h1,
+.a11yhubbr-page-header-title {
+  color: #fff;
+  letter-spacing: -.05em;
+  line-height: .95;
+}
+
+.a11yhubbr-home-hero h1 {
+  max-width: none;
+  font-size: clamp(3rem, 6vw, 5rem);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.a11yhubbr-home-hero h1 .a11yhubbr-hero-line {
+  display: block;
+}
+
+body.home .a11yhubbr-home-hero h1 {
+  flex-direction: column;
+}
+
+.a11yhubbr-page-header-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .55rem;
+  font-size: clamp(2.6rem, 4vw, 4rem);
+}
+
+.a11yhubbr-page-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  line-height: 1;
+}
+
+.a11yhubbr-home-hero p,
+.a11yhubbr-page-header-summary {
+  max-width: 38rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.a11yhubbr-hero-mark {
+  position: relative;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.a11yhubbr-hero-mark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: .08em;
+  height: .18em;
+  border-radius: 999px;
+  background: linear-gradient(45deg, #31b086, #e5d271);
+  z-index: -1;
+}
+
+.a11yhubbr-home-title,
+.a11yhubbr-content-heading {
+  margin-bottom: .45rem;
+  color: var(--ah-refresh-text);
+  letter-spacing: -.04em;
+}
+
+.a11yhubbr-home-title {
+  font-size: clamp(2.1rem, 3vw, 3rem);
+}
+
+.a11yhubbr-home-subtitle,
+.a11yhubbr-content-heading-results {
+  margin: 0 0 1.25rem;
+  color: var(--ah-refresh-text-soft);
+}
+
+@media (max-width: 880px) {
+  .a11yhubbr-home-hero-content {
+    padding: 3.6rem 0;
+  }
+}

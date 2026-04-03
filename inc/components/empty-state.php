@@ -10,7 +10,6 @@ $defaults = array(
     'cta_url' => '',
     'cta_class' => 'a11yhubbr-btn-alternative',
     'icon' => 'fa-regular fa-folder-open',
-    'icon_key' => '',
 );
 
 $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $defaults;
@@ -18,9 +17,7 @@ $args = isset($args) && is_array($args) ? wp_parse_args($args, $defaults) : $def
 <article class="a11yhubbr-empty-state a11yhubbr-card-base">
   <h3>
     <?php
-    if (!empty($args['icon_key']) && function_exists('a11yhubbr_render_icon')) {
-        echo a11yhubbr_render_icon((string) $args['icon_key']);
-    } elseif (!empty($args['icon'])) {
+    if (!empty($args['icon'])) {
         echo '<i class="' . esc_attr((string) $args['icon']) . '" aria-hidden="true"></i>';
     }
     ?>

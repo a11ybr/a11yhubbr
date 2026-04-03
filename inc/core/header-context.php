@@ -130,7 +130,7 @@ function a11yhubbr_render_page_header($args = array()) {
             $is_last = ($index === count($breadcrumbs) - 1);
 
             if ($index > 0) {
-                echo '<span aria-hidden="true">&rsaquo;</span>';
+                echo '<span class="a11yhubbr-page-breadcrumb-separator" aria-hidden="true">&rsaquo;</span>';
             }
 
             if (!$is_last && !empty($url)) {

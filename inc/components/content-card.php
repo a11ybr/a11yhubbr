@@ -49,7 +49,7 @@ if ($action_label === '') {
   $action_label = 'Acessar';
 }
 ?>
-<article class="a11yhubbr-content-card a11yhubbr-card-base">
+<article class="a11yhubbr-content-card a11yhubbr-card-base card-hover">
   <div class="a11yhubbr-content-item-meta">
     <span class="a11yhubbr-content-item-badge<?php echo $badge_class !== '' ? ' ' . esc_attr($badge_class) : ''; ?>"><i
         class="<?php echo esc_attr($badge_icon !== '' ? $badge_icon : 'fa-regular fa-file-lines'); ?>"
@@ -75,20 +75,13 @@ if ($action_label === '') {
     <p class="a11yhubbr-content-card-author">Por <?php echo esc_html($author); ?></p>
   <?php endif; ?>
 
-  <?php if (!empty($tags) || $action_url !== ''): ?>
+  <?php if (!empty($tags)): ?>
     <div class="a11yhubbr-content-card-footer">
       <div class="a11yhubbr-content-card-tags">
         <?php foreach (array_slice($tags, 0, 2) as $tag): ?>
           <span><?php echo esc_html($tag); ?></span>
         <?php endforeach; ?>
       </div>
-      <?php if ($action_url !== ''): ?>
-        <a class="a11yhubbr-content-card-action" href="<?php echo esc_url($action_url); ?>">
-          <?php echo esc_html($action_label); ?>
-          <?php if ($show_external_icon): ?><i class="fa-solid fa-arrow-up-right-from-square"
-              aria-hidden="true"></i><?php endif; ?>
-        </a>
-      <?php endif; ?>
     </div>
   <?php endif; ?>
 </article>

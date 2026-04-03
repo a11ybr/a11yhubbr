@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main">
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(

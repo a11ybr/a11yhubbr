@@ -13,7 +13,16 @@ function a11yhubbr_get_page_url_by_template($template, $fallback_path = '/') {
         return $fallback;
     }
 
+    // Checar cache de request primeiro (mais rápido)
     if (isset($cache[$template])) {
+        return $cache[$template];
+    }
+
+    // Checar transient persistente (evita get_posts() em toda requisição)
+    $transient_key = 'a11yhubbr_tpl_url_' . md5($template);
+    $transient_val = get_transient($transient_key);
+    if ($transient_val !== false) {
+        $cache[$template] = (string) $transient_val;
         return $cache[$template];
     }
 
@@ -29,14 +38,28 @@ function a11yhubbr_get_page_url_by_template($template, $fallback_path = '/') {
     if (!empty($pages)) {
         $url = get_permalink((int) $pages[0]);
         if (is_string($url) && $url !== '') {
+            set_transient($transient_key, $url, HOUR_IN_SECONDS);
             $cache[$template] = $url;
             return $cache[$template];
         }
     }
 
+    // Não cachear fallbacks — a página pode ser criada depois
     $cache[$template] = $fallback;
     return $cache[$template];
 }
+
+
+/**
+ * Invalida transients de routing quando uma página é salva
+ * Garante que URLs reflitam mudanças de template imediatamente
+ */
+add_action('save_post_page', function ($post_id) {
+    $template = get_post_meta($post_id, '_wp_page_template', true);
+    if ($template) {
+        delete_transient('a11yhubbr_tpl_url_' . md5($template));
+    }
+});
 
 
 function a11yhubbr_get_submit_content_url() {
@@ -51,6 +74,11 @@ function a11yhubbr_get_submit_event_url() {
 
 function a11yhubbr_get_submit_profile_url() {
     return a11yhubbr_get_page_url_by_template('pages/page-submeter-perfil.php', '/submeter/submeter-perfil');
+}
+
+
+function a11yhubbr_get_my_submissions_url() {
+    return a11yhubbr_get_page_url_by_template('pages/page-minhas-submissoes.php', '/minhas-submissoes');
 }
 
 
@@ -122,4 +150,3 @@ function a11yhubbr_filter_primary_menu_items($items, $args) {
     return $filtered;
 }
 add_filter('wp_nav_menu_objects', 'a11yhubbr_filter_primary_menu_items', 10, 2);
-

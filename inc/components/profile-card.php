@@ -90,7 +90,7 @@ if (!is_string($excerpt) || trim($excerpt) === '') {
     $excerpt = wp_trim_words(wp_strip_all_tags(get_post_field('post_content', $post_id)), 26);
 }
 ?>
-<article class="a11yhubbr-community-profile-card a11yhubbr-card-base">
+<article class="a11yhubbr-community-profile-card a11yhubbr-card-base card-hover">
   <header class="a11yhubbr-community-profile-head">
     <?php if (has_post_thumbnail($post_id)): ?>
       <?php echo get_the_post_thumbnail($post_id, 'thumbnail', array('class' => 'a11yhubbr-community-avatar-image', 'loading' => 'lazy', 'decoding' => 'async')); ?>

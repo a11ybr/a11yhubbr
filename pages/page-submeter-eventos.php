@@ -10,10 +10,14 @@ $status = isset($_GET['a11yhubbr_status']) ? sanitize_key(wp_unslash($_GET['a11y
 $form = isset($_GET['a11yhubbr_form']) ? sanitize_key(wp_unslash($_GET['a11yhubbr_form'])) : '';
 $submitted = ($status === 'success' && $form === 'event');
 $has_error = ($status === 'error' && $form === 'event');
+$is_logged_in = is_user_logged_in();
+$login_url = function_exists('a11yhubbr_get_submission_login_url') ? a11yhubbr_get_submission_login_url(get_permalink()) : wp_login_url(get_permalink());
+$registration_url = function_exists('a11yhubbr_get_submission_registration_url') ? a11yhubbr_get_submission_registration_url(get_permalink()) : '';
+$current_user = $is_logged_in ? wp_get_current_user() : null;
 
 get_header();
 ?>
-<main class="a11yhubbr-submit-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-submit-page">
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(
@@ -36,6 +40,18 @@ get_header();
 
       <div class="a11yhubbr-submit-grid">
         <div class="a11yhubbr-submit-main">
+          <?php if (!$is_logged_in) : ?>
+            <section class="a11yhubbr-card a11yhubbr-form-section">
+              <h2>Entre para submeter eventos</h2>
+              <p>Agora a submissão de eventos exige uma conta no WordPress. Entre para continuar e vincular a submissão ao seu usuário.</p>
+              <div class="a11yhubbr-form-actions">
+                <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($login_url); ?>">Entrar</a>
+                <?php if ($registration_url !== '') : ?>
+                  <a class="a11yhubbr-btn" href="<?php echo esc_url($registration_url); ?>">Criar conta</a>
+                <?php endif; ?>
+              </div>
+            </section>
+          <?php else : ?>
           <form method="post" class="a11yhubbr-form-grid a11yhubbr-submit-form" id="event-form">
             <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
             <?php wp_nonce_field('a11yhubbr_event', 'a11yhubbr_nonce'); ?>
@@ -48,22 +64,31 @@ get_header();
             <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-evento-principal" data-collapsible-section>
               <h2>Informações principais</h2>
 
-              <div class="a11yhubbr-field-inline">
-                <label for="event-modality">Modalidade *</label>
+              <div class="a11yhubbr-field-inline a11yhubbr-field-inline-choice">
+                <label id="event-modality-label">Modalidade <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <select id="event-modality" name="modality" required>
-                    <option value="">Selecione</option>
-                    <option value="presencial">Presencial</option>
-                    <option value="online">Online</option>
-                    <option value="hibrido">Híbrido</option>
-                  </select>
+                  <div class="a11yhubbr-choice-group" role="radiogroup" aria-labelledby="event-modality-label">
+                    <label class="a11yhubbr-radio-card" for="event-modality-presencial">
+                      <input id="event-modality-presencial" type="radio" name="modality_choice" value="presencial">
+                      <span>Presencial</span>
+                    </label>
+                    <label class="a11yhubbr-radio-card" for="event-modality-online">
+                      <input id="event-modality-online" type="radio" name="modality_choice" value="online">
+                      <span>Online</span>
+                    </label>
+                    <label class="a11yhubbr-radio-card" for="event-modality-hibrido">
+                      <input id="event-modality-hibrido" type="radio" name="modality_choice" value="hibrido">
+                      <span>Híbrido</span>
+                    </label>
+                  </div>
+                  <input id="event-modality" type="hidden" name="modality" required aria-required="true">
                 </div>
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-type">Tipo de evento *</label>
+                <label for="event-type">Tipo de evento <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <select id="event-type" name="event_type" required>
+                  <select id="event-type" name="event_type" required aria-required="true">
                     <option value="">Selecione</option>
                     <option>Workshop</option>
                     <option>Conferencia</option>
@@ -76,23 +101,20 @@ get_header();
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-title">Título do evento *</label>
+                <label for="event-title">Título do evento <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="event-title" type="text" name="title" required>
+                  <input id="event-title" type="text" name="title" required aria-required="true">
                 </div>
               </div>
-            </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-evento-datas" data-collapsible-section>
-              <h2>Detalhes da submissão</h2>
               <fieldset class="a11yhubbr-fieldset a11yhubbr-form-fieldset">
                 <legend>Datas e horários do evento *</legend>
                 <div id="event-slots" class="a11yhubbr-slots-list">
                   <div class="a11yhubbr-slot">
-                    <label for="slot-start-1">Início *
-                    <input id="slot-start-1" type="datetime-local" name="slot_start[]" required></label>
-                    <label for="slot-end-1">Fim *
-                    <input id="slot-end-1" type="datetime-local" name="slot_end[]" required></label>
+                    <label for="slot-start-1">Início <span aria-hidden="true">*</span>
+                    <input id="slot-start-1" type="datetime-local" name="slot_start[]" required aria-required="true"></label>
+                    <label for="slot-end-1">Fim <span aria-hidden="true">*</span>
+                    <input id="slot-end-1" type="datetime-local" name="slot_end[]" required aria-required="true"></label>
                     <button type="button" class="a11yhubbr-slot-remove" aria-label="Remover esta data" title="Remover esta data" hidden>&#128465;</button>
                   </div>
                 </div>
@@ -105,9 +127,9 @@ get_header();
               <div class="a11yhubbr-event-location-switch" data-event-location-group>
                 <div class="a11yhubbr-event-location-field" data-event-modality="presencial,hibrido" hidden>
                   <div class="a11yhubbr-field-inline">
-                    <label for="event-cep">CEP do evento *</label>
+                    <label for="event-cep">CEP do evento <span aria-hidden="true">*</span></label>
                     <div class="a11yhubbr-field-control">
-                      <input id="event-cep" type="text" name="event_cep" inputmode="numeric" pattern="\\d{5}-?\\d{3}" placeholder="00000-000" required>
+                      <input id="event-cep" type="text" name="event_cep" inputmode="numeric" pattern="\\d{5}-?\\d{3}" placeholder="00000-000" required aria-required="true">
                       <p class="a11yhubbr-help">Para eventos presenciais e híbridos, informe o CEP do local.</p>
                     </div>
                   </div>
@@ -115,29 +137,28 @@ get_header();
 
                 <div class="a11yhubbr-event-location-field" data-event-modality="online,hibrido" hidden>
                   <div class="a11yhubbr-field-inline">
-                    <label for="event-online-location">Plataforma / local online *</label>
+                    <label for="event-online-location">Plataforma / local online <span aria-hidden="true">*</span></label>
                     <div class="a11yhubbr-field-control">
-                      <input id="event-online-location" type="text" name="event_online_location" placeholder="Ex.: Zoom, Google Meet, YouTube, URL" required>
+                      <input id="event-online-location" type="text" name="event_online_location" placeholder="Ex.: Zoom, Google Meet, YouTube, URL" required aria-required="true">
                       <p class="a11yhubbr-help">Para eventos online e híbridos, informe a plataforma ou link de transmissão.</p>
                     </div>
                   </div>
                 </div>
               </div>
-            </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-evento-detalhes" data-collapsible-section>
               <h2>Informações complementares</h2>
+
               <div class="a11yhubbr-field-inline">
-                <label for="event-organizer">Organizador *</label>
+                <label for="event-organizer">Organizador <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="event-organizer" type="text" name="organizer" required>
+                  <input id="event-organizer" type="text" name="organizer" required aria-required="true">
                 </div>
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-link">Link do evento *</label>
+                <label for="event-link">Link do evento <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <input id="event-link" type="url" name="link" required>
+                  <input id="event-link" type="url" name="link" required aria-required="true">
                 </div>
               </div>
 
@@ -150,30 +171,21 @@ get_header();
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-description">Descrição *</label>
+                <label for="event-description">Descrição <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
-                  <textarea id="event-description" name="description" rows="5" required></textarea>
+                  <textarea id="event-description" name="description" rows="5" required aria-required="true"></textarea>
                 </div>
               </div>
             </section>
 
-            <section class="a11yhubbr-card a11yhubbr-form-section a11yhubbr-form-section-contact" id="sec-evento-contato" data-collapsible-section>
-              <h2>Autor da submissão</h2>
-              <div class="a11yhubbr-contact-grid">
-                <div class="a11yhubbr-field-inline">
-                  <label for="event-author">Nome *</label>
-                  <div class="a11yhubbr-field-control">
-                    <input id="event-author" type="text" name="author" required>
-                  </div>
-                </div>
-                <div class="a11yhubbr-field-inline">
-                  <label for="event-email">Email *</label>
-                  <div class="a11yhubbr-field-control">
-                    <input id="event-email" type="email" name="email" required>
-                  </div>
-                </div>
-              </div>
-              <p class="a11yhubbr-help">O email será privado e utilizado apenas para que a organização da <strong>A11YBR</strong> possa entrar em contato com a pessoa que realizou a submissão.</p>
+            <section class="a11yhubbr-card a11yhubbr-submit-account" aria-label="Conta responsável pela submissão">
+              <h2>Conta responsável pela submissão</h2>
+              <p class="a11yhubbr-submit-account-summary">
+                <strong>Nome:</strong> <?php echo esc_html($current_user ? $current_user->display_name : ''); ?>
+                <br>
+                <strong>Email:</strong> <?php echo esc_html($current_user ? $current_user->user_email : ''); ?>
+              </p>
+              <p class="a11yhubbr-help">A submissão será vinculada à conta logada e esses dados serão usados pela equipe da <strong>A11YBR</strong> em caso de contato.</p>
               <?php if (function_exists('a11yhubbr_render_human_check_field')) { a11yhubbr_render_human_check_field(); } ?>
             </section>
 
@@ -181,6 +193,7 @@ get_header();
               <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_event_submit" value="1">Enviar para revisão</button>
             </div>
           </form>
+          <?php endif; ?>
         </div>
 
         <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
@@ -188,9 +201,6 @@ get_header();
             <h2>Navegação do cadastro</h2>
             <nav aria-label="Etapas da submissão de evento">
               <a href="#sec-evento-principal">Informações principais</a>
-              <a href="#sec-evento-datas">Detalhes da submissão</a>
-              <a href="#sec-evento-detalhes">Informações complementares</a>
-              <a href="#sec-evento-contato">Autor da submissão</a>
             </nav>
           </section>
 

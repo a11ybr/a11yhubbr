@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-contact-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-contact-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
@@ -23,33 +23,53 @@ get_header();
   ?>
   <section class="a11yhubbr-section">
     <div class="a11yhubbr-container a11yhubbr-single-layout">
-      <article>
+      <article class="a11yhubbr-card a11yhubbr-rich-content a11yhubbr-contact-article">
         <h2>Fale com a equipe</h2>
         <p>Você pode usar o formulário para:</p>
         <ul>
-          <li>reportar informações incorretas ou links quebrados</li>
-          <li>sugerir melhorias ou novos conteúdos para a plataforma</li>
-          <li>enviar críticas construtivas ou feedback sobre o projeto</li>
-          <li>tirar dúvidas sobre conteúdos publicados</li>
-          <li>compartilhar ideias ou iniciativas relacionadas à acessibilidade digital</li>
+          <li>reportar informações incorretas ou links quebrados;</li>
+          <li>sugerir melhorias ou novos conteúdos para a plataforma;</li>
+          <li>enviar críticas construtivas ou feedback sobre o projeto;</li>
+          <li>tirar dúvidas sobre conteúdos publicados;</li>
+          <li>compartilhar ideias ou iniciativas relacionadas à acessibilidade digital;</li>
         </ul>
         <p>Se sua mensagem estiver relacionada a algum conteúdo específico da plataforma, inclua o link da página e
           descreva o contexto da sugestão.</p>
-        <p>Todas as mensagens são analisadas pela equipe editorial.</p>
+        <p>Todas as mensagens são analisadas pelo time da comunidade.</p>
 
         <hr>
 
         <p>Antes de enviar uma mensagem, veja também:</p>
 
-        <ul>
-          <li><a href="http://a11ybr.local/diretrizes-da-comunidade">Diretrizes da plataforma</a></li>
-          <li><a href="http://a11ybr.local/submeter#como-funciona">Como submeter conteúdo</a></li>
-          <li><a href="http://a11ybr.local/sobre#faq">Perguntas frequentes</a></li>
-        </ul>
+        <div class="a11yhubbr-contact-shortcuts" aria-label="Atalhos relacionados">
+          <a class="a11yhubbr-contact-shortcut-card" href="http://a11ybr.local/diretrizes-da-comunidade">
+            <span class="a11yhubbr-contact-shortcut-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
+            <span class="a11yhubbr-contact-shortcut-content">
+              <strong>Diretrizes da plataforma:</strong>
+              <span>Leia as regras e combinados editoriais da comunidade.</span>
+            </span>
+          </a>
+          <a class="a11yhubbr-contact-shortcut-card" href="http://a11ybr.local/submeter#como-funciona">
+            <span class="a11yhubbr-contact-shortcut-icon" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>
+            <span class="a11yhubbr-contact-shortcut-content">
+              <strong>Como submeter conteúdo:</strong>
+              <span>Entenda o fluxo de envio antes de entrar em contato.</span>
+            </span>
+          </a>
+          <a class="a11yhubbr-contact-shortcut-card" href="http://a11ybr.local/sobre#faq">
+            <span class="a11yhubbr-contact-shortcut-icon" aria-hidden="true"><i class="fa-regular fa-circle-question"></i></span>
+            <span class="a11yhubbr-contact-shortcut-content">
+              <strong>Perguntas frequentes:</strong>
+              <span>Consulte respostas rápidas para dúvidas mais comuns.</span>
+            </span>
+          </a>
+        </div>
 
+
+        <p>Campos marcados com asterisco são obrigatórios.</p>
         <form class="a11yhubbr-form-grid a11yhubbr-submit-form" method="post" action="mailto:a11yhubbr@gmail.com"
           enctype="text/plain">
-          <label>Tipo de mensagem
+          <label>Tipo de mensagem <span class="">*</span>
             <select name="tipo_mensagem" required>
               <option value="">Selecione</option>
               <option value="reportar-erro-em-conteudo">Reportar erro em conteúdo</option>
@@ -60,16 +80,16 @@ get_header();
               <option value="outro-assunto">Outro assunto</option>
             </select>
           </label>
-          <label>Mensagem
+          <label>Mensagem <span class="">*</span>
             <textarea name="mensagem" rows="6" required></textarea>
           </label>
           <label>Link da página relacionada (opcional)
             <input type="url" name="link" placeholder="https://...">
           </label>
-          <label>Seu nome
+          <label>Seu nome <span class="">*</span>
             <input type="text" name="nome" required>
           </label>
-          <label>Seu e-mail
+          <label>Seu e-mail <span class="">*</span>
             <input type="email" name="email" required>
           </label>
           <div class="a11yhubbr-form-actions">
@@ -77,8 +97,8 @@ get_header();
           </div>
         </form>
 
-        <p class="text-muted">As mensagens são analisadas pela equipe editorial. O prazo médio de resposta é de até
-          alguns dias úteis.</p>
+        <p class="text-muted">
+        <small> O prazo médio de resposta é de até 7 dias úteis.</small></p>
       </article>
 
       <aside class="a11yhubbr-side-card a11yhubbr-single-side">

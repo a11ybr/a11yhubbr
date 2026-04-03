@@ -1,0 +1,105 @@
+// Global shell: container, body chrome and base navigation skeleton.
+.a11yhubbr-container {
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.a11yhubbr-site-main {
+  min-height: 60vh;
+}
+
+body {
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--a11y-primary) 0%, var(--a11y-primary) 72%, var(--a11y-highlight) 100%) 1;
+}
+
+.a11yhubbr-site-header {
+  border-bottom: 1px solid var(--a11y-border);
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  --a11y-header-accent: var(--a11y-context-accent);
+}
+
+.a11yhubbr-site-header::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.a11yhubbr-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.2rem;
+}
+
+.a11yhubbr-brand {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  font-weight: var(--a11y-weight-bold);
+}
+
+.a11yhubbr-menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .2rem;
+}
+
+.a11yhubbr-menu a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-decoration: none;
+  color: #1a2440;
+  font-weight: var(--a11y-weight-semibold);
+  font-size: .76rem;
+  text-transform: uppercase;
+  letter-spacing: .02rem;
+  padding: .48rem .62rem;
+  border-radius: var(--a11y-radius);
+  border: 1px solid transparent;
+  transition: background-color .16s ease, color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.a11yhubbr-menu a:hover,
+.a11yhubbr-menu a:focus-visible {
+  background: var(--a11y-menu-hover-bg);
+  color: var(--a11y-menu-hover-color);
+  border-color: var(--a11y-menu-hover-border);
+  outline: none;
+}
+
+.a11yhubbr-menu li.current-menu-item > a,
+.a11yhubbr-menu li.current_page_item > a,
+.a11yhubbr-menu li.current-menu-ancestor > a,
+.a11yhubbr-menu a[aria-current="page"] {
+  color: #ffffff;
+  background-color: var(--a11y-menu-current-bg);
+  border-color: var(--a11y-menu-current-border);
+  box-shadow: inset 0 -2px 0 0 rgba(255, 255, 255, .22);
+}
+
+.a11yhubbr-menu li.current-menu-item > a:hover,
+.a11yhubbr-menu li.current_page_item > a:hover,
+.a11yhubbr-menu li.current-menu-ancestor > a:hover,
+.a11yhubbr-menu a[aria-current="page"]:hover {
+  background: var(--a11y-menu-current-bg-hover);
+  color: #ffffff;
+  border-color: var(--a11y-menu-current-border);
+}

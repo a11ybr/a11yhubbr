@@ -122,7 +122,7 @@ $title_suffix = ($selected_type !== '' && isset($display_types[$selected_type]))
 $has_active_filters = ($selected_type !== '' || $search_term !== '' || $sort !== 'recentes' || $per_page !== 8);
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-content-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-content-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(

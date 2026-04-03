@@ -189,7 +189,7 @@ $has_active_filters = ($selected_type !== '' || $search_term !== '' || $sort !==
 
 get_header();
 ?>
-<main class="a11yhubbr-site-main a11yhubbr-community-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-community-page">
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
@@ -307,10 +307,6 @@ get_header();
       <?php wp_reset_postdata(); ?>
     </div>
   </section>
-
-
-  <?php include locate_template('inc/sections/faca-parte.php'); ?>
-
 
 
 </main>

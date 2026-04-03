@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,6 +19,7 @@ function a11yhubbr_register_submission_cpts() {
         'publicly_queryable' => true,
         'exclude_from_search' => false,
         'show_in_admin_bar' => false,
+        'show_in_rest' => true,
         'supports' => array('title', 'editor', 'excerpt', 'custom-fields', 'thumbnail', 'author'),
         'taxonomies' => array('category', 'post_tag'),
         'has_archive' => false,
@@ -41,6 +42,7 @@ function a11yhubbr_register_submission_cpts() {
         'publicly_queryable' => true,
         'exclude_from_search' => true,
         'show_in_admin_bar' => false,
+        'show_in_rest' => true,
         'supports' => array('title', 'editor', 'custom-fields'),
         'taxonomies' => array('post_tag'),
         'has_archive' => false,
@@ -63,6 +65,7 @@ function a11yhubbr_register_submission_cpts() {
         'publicly_queryable' => true,
         'exclude_from_search' => true,
         'show_in_admin_bar' => false,
+        'show_in_rest' => true,
         'supports' => array('title', 'editor', 'custom-fields', 'thumbnail'),
         'taxonomies' => array('category', 'post_tag'),
         'has_archive' => false,
@@ -102,6 +105,79 @@ function a11yhubbr_get_submission_config() {
             'label' => 'Submeter perfil',
         ),
     );
+}
+
+
+function a11yhubbr_get_submission_login_url($redirect = '') {
+    $target = $redirect !== '' ? $redirect : home_url('/submeter');
+    return wp_login_url($target);
+}
+
+
+function a11yhubbr_get_submission_registration_url($redirect = '') {
+    if (!(bool) get_option('users_can_register')) {
+        return '';
+    }
+
+    $target = $redirect !== '' ? $redirect : home_url('/submeter');
+    return add_query_arg('redirect_to', $target, wp_registration_url());
+}
+
+
+function a11yhubbr_get_submission_user_context() {
+    if (!is_user_logged_in()) {
+        return array(
+            'user_id' => 0,
+            'author' => '',
+            'email' => '',
+        );
+    }
+
+    $user = wp_get_current_user();
+    $author = $user->display_name !== '' ? $user->display_name : $user->user_login;
+
+    return array(
+        'user_id' => (int) $user->ID,
+        'author' => sanitize_text_field($author),
+        'email' => sanitize_email($user->user_email),
+    );
+}
+
+
+function a11yhubbr_get_profile_owner_user_id($post) {
+    $post = get_post($post);
+    if (!$post instanceof WP_Post || $post->post_type !== 'a11y_perfil') {
+        return 0;
+    }
+
+    return (int) get_post_meta($post->ID, '_a11yhubbr_owner_user_id', true);
+}
+
+
+function a11yhubbr_can_manage_submission_post($post, $user_id = 0) {
+    $post = get_post($post);
+    if (!$post instanceof WP_Post) {
+        return false;
+    }
+
+    $user_id = $user_id > 0 ? (int) $user_id : get_current_user_id();
+    if ($user_id <= 0) {
+        return false;
+    }
+
+    if (user_can($user_id, 'edit_post', $post->ID)) {
+        return true;
+    }
+
+    if ((int) $post->post_author === $user_id) {
+        return true;
+    }
+
+    if ($post->post_type === 'a11y_perfil' && a11yhubbr_get_profile_owner_user_id($post) === $user_id) {
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -152,6 +228,8 @@ function a11yhubbr_detect_form_type() {
 
 function a11yhubbr_sanitize_submission_data($type) {
     $raw = wp_unslash($_POST);
+    $user_context = a11yhubbr_get_submission_user_context();
+    $source_post_id = isset($raw['source_post']) ? absint($raw['source_post']) : 0;
 
     if ($type === 'content') {
         $context_config = a11yhubbr_get_content_context_config();
@@ -162,11 +240,13 @@ function a11yhubbr_sanitize_submission_data($type) {
             'type' => $type_slug,
             'title' => sanitize_text_field($raw['title'] ?? ''),
             'description' => sanitize_textarea_field($raw['description'] ?? ''),
-            'author' => sanitize_text_field($raw['author'] ?? ''),
+            'author' => $user_context['author'],
             'organization' => sanitize_text_field($raw['organization'] ?? ''),
             'link' => esc_url_raw($raw['link'] ?? ''),
             'tags' => a11yhubbr_parse_tags_from_input($raw['tags'] ?? ''),
-            'email' => sanitize_email($raw['email'] ?? ''),
+            'email' => $user_context['email'],
+            'user_id' => $user_context['user_id'],
+            'source_post_id' => $source_post_id,
             'year_publication' => $year_value > 0 ? $year_value : '',
             'depth' => a11yhubbr_sanitize_choice($raw['depth'] ?? '', $choices['depth'] ?? array()),
             'article_authors' => sanitize_text_field($raw['article_authors'] ?? ''),
@@ -234,8 +314,10 @@ function a11yhubbr_sanitize_submission_data($type) {
             'organizer' => sanitize_text_field($raw['organizer'] ?? ''),
             'link' => esc_url_raw($raw['link'] ?? ''),
             'tags' => a11yhubbr_parse_tags_from_input($raw['tags'] ?? ''),
-            'author' => sanitize_text_field($raw['author'] ?? ''),
-            'email' => sanitize_email($raw['email'] ?? ''),
+            'author' => $user_context['author'],
+            'email' => $user_context['email'],
+            'user_id' => $user_context['user_id'],
+            'source_post_id' => $source_post_id,
             'slots' => $slots,
         );
     }
@@ -248,7 +330,7 @@ function a11yhubbr_sanitize_submission_data($type) {
         'role' => sanitize_text_field($raw['role'] ?? ''),
         'website' => esc_url_raw($raw['website'] ?? ''),
         'tags' => a11yhubbr_parse_tags_from_input($raw['tags'] ?? ''),
-        'author' => sanitize_text_field($raw['author'] ?? ''),
+        'author' => $user_context['author'],
         'social_links' => (static function () use ($raw) {
             $networks = isset($raw['social_network']) && is_array($raw['social_network']) ? $raw['social_network'] : array();
             $urls = isset($raw['social_url']) && is_array($raw['social_url']) ? $raw['social_url'] : array();
@@ -270,12 +352,397 @@ function a11yhubbr_sanitize_submission_data($type) {
 
             return $items;
         })(),
-        'email' => sanitize_email($raw['email'] ?? ''),
+        'email' => $user_context['email'],
+        'user_id' => $user_context['user_id'],
+        'source_post_id' => $source_post_id,
         'profile_image_name' => isset($_FILES['profile_image']['name'])
             ? sanitize_file_name(wp_unslash($_FILES['profile_image']['name']))
             : '',
     );
 }
+
+
+function a11yhubbr_get_submission_source_post($type) {
+    $source_post_id = isset($_GET['source_post']) ? absint(wp_unslash($_GET['source_post'])) : 0;
+    if ($source_post_id <= 0) {
+        return null;
+    }
+
+    $post = get_post($source_post_id);
+    if (!$post instanceof WP_Post) {
+        return null;
+    }
+
+    $allowed_map = array(
+        'content' => 'a11y_conteudo',
+        'event' => 'a11y_evento',
+        'profile' => 'a11y_perfil',
+    );
+
+    $expected_post_type = $allowed_map[$type] ?? '';
+    if ($expected_post_type === '' || $post->post_type !== $expected_post_type) {
+        return null;
+    }
+
+    if (!in_array($post->post_status, array('publish', 'pending', 'draft', 'private'), true)) {
+        return null;
+    }
+
+    if (!a11yhubbr_can_manage_submission_post($post)) {
+        return null;
+    }
+
+    return $post;
+}
+
+
+function a11yhubbr_get_prefill_query_url($base_url, $source_post_id) {
+    if ($source_post_id <= 0) {
+        return $base_url;
+    }
+
+    return add_query_arg('source_post', $source_post_id, $base_url);
+}
+
+
+function a11yhubbr_get_content_submission_prefill($post) {
+    if (!$post instanceof WP_Post) {
+        return array();
+    }
+
+    $categories = get_the_terms($post->ID, 'category');
+    $type_slug = '';
+    if (!empty($categories) && !is_wp_error($categories)) {
+        foreach ($categories as $term) {
+            $candidate = a11yhubbr_get_content_type_slug_from_input((string) $term->slug);
+            if ($candidate !== '') {
+                $type_slug = $candidate;
+                break;
+            }
+        }
+    }
+
+    if ($type_slug === '') {
+        $type_slug = a11yhubbr_get_content_type_slug_from_input((string) get_post_meta($post->ID, '_a11yhubbr_content_type', true));
+    }
+
+    $tags = wp_get_post_terms($post->ID, 'post_tag', array('fields' => 'names'));
+    if (!is_array($tags)) {
+        $tags = array();
+    }
+
+    return array(
+        'source_post' => (int) $post->ID,
+        'type' => $type_slug,
+        'title' => (string) get_the_title($post),
+        'description' => (string) $post->post_content,
+        'organization' => (string) get_post_meta($post->ID, '_a11yhubbr_submitter_org', true),
+        'link' => (string) get_post_meta($post->ID, '_a11yhubbr_source_link', true),
+        'tags' => implode(', ', $tags),
+        'year_publication' => (string) get_post_meta($post->ID, '_a11yhubbr_content_year_publication', true),
+        'depth' => (string) get_post_meta($post->ID, '_a11yhubbr_content_depth', true),
+        'article_authors' => (string) get_post_meta($post->ID, '_a11yhubbr_content_article_authors', true),
+        'article_kind' => (string) get_post_meta($post->ID, '_a11yhubbr_content_article_kind', true),
+        'book_modality' => (string) get_post_meta($post->ID, '_a11yhubbr_content_book_modality', true),
+        'book_price' => (string) get_post_meta($post->ID, '_a11yhubbr_content_book_price', true),
+        'tool_type' => (string) get_post_meta($post->ID, '_a11yhubbr_content_tool_type', true),
+        'tool_model' => (string) get_post_meta($post->ID, '_a11yhubbr_content_tool_model', true),
+        'media_theme' => (string) get_post_meta($post->ID, '_a11yhubbr_content_media_theme', true),
+        'media_channel_type' => (string) get_post_meta($post->ID, '_a11yhubbr_content_media_channel_type', true),
+        'media_format' => (string) get_post_meta($post->ID, '_a11yhubbr_content_media_format', true),
+        'media_platform' => (string) get_post_meta($post->ID, '_a11yhubbr_content_media_platform', true),
+        'media_frequency' => (string) get_post_meta($post->ID, '_a11yhubbr_content_media_frequency', true),
+        'site_business_model' => (string) get_post_meta($post->ID, '_a11yhubbr_content_site_business_model', true),
+        'site_stage' => (string) get_post_meta($post->ID, '_a11yhubbr_content_site_stage', true),
+        'site_access_model' => (string) get_post_meta($post->ID, '_a11yhubbr_content_site_access_model', true),
+    );
+}
+
+
+function a11yhubbr_get_event_submission_prefill($post) {
+    if (!$post instanceof WP_Post) {
+        return array();
+    }
+
+    $tags = wp_get_post_terms($post->ID, 'post_tag', array('fields' => 'names'));
+    if (!is_array($tags)) {
+        $tags = array();
+    }
+
+    $slots = json_decode((string) get_post_meta($post->ID, '_a11yhubbr_event_slots', true), true);
+    if (!is_array($slots) || empty($slots)) {
+        $slots = array(array('start' => '', 'end' => ''));
+    }
+
+    return array(
+        'source_post' => (int) $post->ID,
+        'modality' => (string) get_post_meta($post->ID, '_a11yhubbr_event_modality', true),
+        'event_type' => (string) get_post_meta($post->ID, '_a11yhubbr_event_type', true),
+        'title' => (string) get_the_title($post),
+        'event_cep' => (string) get_post_meta($post->ID, '_a11yhubbr_event_postal_code', true),
+        'event_online_location' => (string) get_post_meta($post->ID, '_a11yhubbr_event_online_location', true),
+        'organizer' => (string) get_post_meta($post->ID, '_a11yhubbr_event_organizer', true),
+        'link' => (string) get_post_meta($post->ID, '_a11yhubbr_event_link', true),
+        'tags' => implode(', ', $tags),
+        'description' => (string) $post->post_content,
+        'slots' => $slots,
+    );
+}
+
+
+function a11yhubbr_get_profile_submission_prefill($post) {
+    if (!$post instanceof WP_Post) {
+        return array();
+    }
+
+    $tags = wp_get_post_terms($post->ID, 'post_tag', array('fields' => 'names'));
+    if (!is_array($tags)) {
+        $tags = array();
+    }
+
+    $social_links = json_decode((string) get_post_meta($post->ID, '_a11yhubbr_profile_social_links', true), true);
+    if (!is_array($social_links) || empty($social_links)) {
+        $social_links = array(array('network' => '', 'url' => ''));
+    }
+
+    return array(
+        'source_post' => (int) $post->ID,
+        'profile_type' => (string) get_post_meta($post->ID, '_a11yhubbr_profile_type', true),
+        'name' => (string) get_the_title($post),
+        'location' => (string) get_post_meta($post->ID, '_a11yhubbr_profile_location', true),
+        'description' => (string) $post->post_content,
+        'role' => (string) get_post_meta($post->ID, '_a11yhubbr_profile_role', true),
+        'website' => (string) get_post_meta($post->ID, '_a11yhubbr_profile_website', true),
+        'tags' => implode(', ', $tags),
+        'social_links' => $social_links,
+    );
+}
+
+
+function a11yhubbr_get_submission_prefill_payload_for_current_request() {
+    if (is_page_template('pages/page-submeter-conteudo.php')) {
+        $source_post = a11yhubbr_get_submission_source_post('content');
+        if ($source_post instanceof WP_Post) {
+            return array(
+                'type' => 'content',
+                'title' => get_the_title($source_post),
+                'data' => a11yhubbr_get_content_submission_prefill($source_post),
+            );
+        }
+    }
+
+    if (is_page_template('pages/page-submeter-eventos.php')) {
+        $source_post = a11yhubbr_get_submission_source_post('event');
+        if ($source_post instanceof WP_Post) {
+            return array(
+                'type' => 'event',
+                'title' => get_the_title($source_post),
+                'data' => a11yhubbr_get_event_submission_prefill($source_post),
+            );
+        }
+    }
+
+    if (is_page_template('pages/page-submeter-perfil.php')) {
+        $source_post = a11yhubbr_get_submission_source_post('profile');
+        if ($source_post instanceof WP_Post) {
+            return array(
+                'type' => 'profile',
+                'title' => get_the_title($source_post),
+                'data' => a11yhubbr_get_profile_submission_prefill($source_post),
+            );
+        }
+    }
+
+    return null;
+}
+
+
+function a11yhubbr_enqueue_submission_prefill_script() {
+    if (is_admin()) {
+        return;
+    }
+
+    $payload = a11yhubbr_get_submission_prefill_payload_for_current_request();
+    if (!is_array($payload) || empty($payload['data']) || !wp_script_is('a11yhubbr-submissions', 'enqueued')) {
+        return;
+    }
+
+    $json = wp_json_encode($payload);
+    if (!is_string($json) || $json === '') {
+        return;
+    }
+
+    $script = <<<JS
+(function () {
+  var payload = {$json};
+  if (!payload || !payload.data) {
+    return;
+  }
+
+  function setValue(id, value) {
+    var field = document.getElementById(id);
+    if (!field || value === undefined || value === null) {
+      return;
+    }
+    field.value = String(value);
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    field.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function ensureHiddenField(form, name, value) {
+    if (!form) {
+      return;
+    }
+    var field = form.querySelector('input[name="' + name + '"]');
+    if (!field) {
+      field = document.createElement('input');
+      field.type = 'hidden';
+      field.name = name;
+      form.appendChild(field);
+    }
+    field.value = String(value || '');
+  }
+
+  function insertNotice(form, title) {
+    if (!form || !title) {
+      return;
+    }
+    var container = form.closest('.a11yhubbr-container');
+    if (!container || container.querySelector('.a11yhubbr-prefill-toast')) {
+      return;
+    }
+    var notice = document.createElement('div');
+    notice.className = 'a11yhubbr-toast a11yhubbr-prefill-toast';
+    notice.setAttribute('role', 'status');
+    notice.innerHTML = 'Voce esta sugerindo uma edicao para: <strong>' + title + '</strong>.';
+    var submitGrid = container.querySelector('.a11yhubbr-submit-grid');
+    if (submitGrid) {
+      container.insertBefore(notice, submitGrid);
+    } else {
+      container.prepend(notice);
+    }
+  }
+
+  function updateSubmitLabel(form) {
+    var button = form ? form.querySelector('.a11yhubbr-form-submit') : null;
+    if (button) {
+      button.textContent = 'Enviar sugestao de edicao';
+    }
+  }
+
+  function prefillContent(form, data) {
+    setValue('content-type-select', data.type || '');
+    setValue('content-title', data.title || '');
+    setValue('content-description', data.description || '');
+    setValue('content-organization', data.organization || '');
+    setValue('content-link', data.link || '');
+    setValue('content-tags', data.tags || '');
+    setValue('content-year-publication', data.year_publication || '');
+    setValue('content-depth', data.depth || '');
+    setValue('content-article-authors', data.article_authors || '');
+    setValue('content-article-kind', data.article_kind || '');
+    setValue('content-book-modality', data.book_modality || '');
+    setValue('content-book-price', data.book_price || '');
+    setValue('content-tool-type', data.tool_type || '');
+    setValue('content-tool-model', data.tool_model || '');
+    setValue('content-media-theme', data.media_theme || '');
+    setValue('content-media-channel-type', data.media_channel_type || '');
+    setValue('content-media-format', data.media_format || '');
+    setValue('content-media-platform', data.media_platform || '');
+    setValue('content-media-frequency', data.media_frequency || '');
+    setValue('content-site-business-model', data.site_business_model || '');
+    setValue('content-site-stage', data.site_stage || '');
+    setValue('content-site-access-model', data.site_access_model || '');
+  }
+
+  function prefillEvent(form, data) {
+    setValue('event-modality', data.modality || '');
+    setValue('event-type', data.event_type || '');
+    setValue('event-title', data.title || '');
+    setValue('event-cep', data.event_cep || '');
+    setValue('event-online-location', data.event_online_location || '');
+    setValue('event-organizer', data.organizer || '');
+    setValue('event-link', data.link || '');
+    setValue('event-tags', data.tags || '');
+    setValue('event-description', data.description || '');
+
+    var rows = document.getElementById('event-slots');
+    var addButton = document.getElementById('add-slot');
+    if (rows && addButton && Array.isArray(data.slots) && data.slots.length) {
+      var existing = rows.querySelectorAll('.a11yhubbr-slot');
+      for (var i = existing.length; i < data.slots.length; i++) {
+        addButton.click();
+      }
+      rows.querySelectorAll('.a11yhubbr-slot').forEach(function (row, index) {
+        var slot = data.slots[index] || {};
+        var start = row.querySelector('input[name="slot_start[]"]');
+        var end = row.querySelector('input[name="slot_end[]"]');
+        if (start) start.value = slot.start || '';
+        if (end) end.value = slot.end || '';
+      });
+    }
+  }
+
+  function prefillProfile(form, data) {
+    setValue('profile-type', data.profile_type || '');
+    setValue('profile-name', data.name || '');
+    setValue('profile-location', data.location || '');
+    setValue('profile-description', data.description || '');
+    setValue('profile-role', data.role || '');
+    setValue('profile-website', data.website || '');
+    setValue('profile-tags', data.tags || '');
+
+    var rows = document.getElementById('profile-social-links');
+    var addButton = document.getElementById('add-social-link');
+    if (rows && addButton && Array.isArray(data.social_links) && data.social_links.length) {
+      var existing = rows.querySelectorAll('.a11yhubbr-slot');
+      for (var i = existing.length; i < data.social_links.length; i++) {
+        addButton.click();
+      }
+      rows.querySelectorAll('.a11yhubbr-slot').forEach(function (row, index) {
+        var item = data.social_links[index] || {};
+        var network = row.querySelector('select[name="social_network[]"]');
+        var url = row.querySelector('input[name="social_url[]"]');
+        if (network) network.value = item.network || '';
+        if (url) url.value = item.url || '';
+      });
+    }
+  }
+
+  window.addEventListener('load', function () {
+    var formIdMap = {
+      content: 'content-form',
+      event: 'event-form',
+      profile: 'profile-form'
+    };
+    var form = document.getElementById(formIdMap[payload.type] || '');
+    if (!form) {
+      return;
+    }
+
+    ensureHiddenField(form, 'source_post', payload.data.source_post || 0);
+    ensureHiddenField(form, 'a11yhubbr_redirect', window.location.href);
+    insertNotice(form, payload.title || '');
+    updateSubmitLabel(form);
+
+    if (payload.type === 'content') {
+      prefillContent(form, payload.data);
+    } else if (payload.type === 'event') {
+      prefillEvent(form, payload.data);
+    } else if (payload.type === 'profile') {
+      prefillProfile(form, payload.data);
+    }
+
+    if (typeof form.a11yhubbrRefreshAccordionState === 'function') {
+      form.a11yhubbrRefreshAccordionState();
+    }
+  });
+})();
+JS;
+
+    wp_add_inline_script('a11yhubbr-submissions', $script, 'after');
+}
+add_action('wp_enqueue_scripts', 'a11yhubbr_enqueue_submission_prefill_script', 20);
 
 
 function a11yhubbr_validate_content_submission_data($data) {
@@ -410,6 +877,7 @@ function a11yhubbr_create_pending_content_post($data) {
         'post_title'   => $title,
         'post_excerpt' => wp_trim_words(wp_strip_all_tags($data['description']), 28),
         'post_content' => (string) $data['description'],
+        'post_author'  => isset($data['user_id']) ? (int) $data['user_id'] : 0,
     );
 
     $post_id = wp_insert_post($postarr, true);
@@ -425,7 +893,7 @@ function a11yhubbr_create_pending_content_post($data) {
         wp_set_post_terms($post_id, $data['tags'], 'post_tag', false);
     }
 
-    // Compatibilidade temporÃ©ria com dados legados que liam meta.
+    // Compatibilidade temporÃ¡ria com dados legados que liam meta.
     update_post_meta($post_id, '_a11yhubbr_content_type', $type_label);
     update_post_meta($post_id, '_a11yhubbr_submitter_name', $data['author']);
     update_post_meta($post_id, '_a11yhubbr_submitter_org', $data['organization']);
@@ -447,6 +915,10 @@ function a11yhubbr_create_pending_content_post($data) {
     update_post_meta($post_id, '_a11yhubbr_content_site_business_model', $data['site_business_model']);
     update_post_meta($post_id, '_a11yhubbr_content_site_stage', $data['site_stage']);
     update_post_meta($post_id, '_a11yhubbr_content_site_access_model', $data['site_access_model']);
+    if (!empty($data['source_post_id'])) {
+        update_post_meta($post_id, '_a11yhubbr_edit_source_post', (int) $data['source_post_id']);
+        update_post_meta($post_id, '_a11yhubbr_submission_mode', 'update');
+    }
 
     return $post_id;
 }
@@ -461,6 +933,7 @@ function a11yhubbr_create_pending_event_post($data) {
         'post_title'   => $title,
         'post_excerpt' => wp_trim_words(wp_strip_all_tags($data['description']), 28),
         'post_content' => (string) $data['description'],
+        'post_author'  => isset($data['user_id']) ? (int) $data['user_id'] : 0,
     );
 
     $post_id = wp_insert_post($postarr, true);
@@ -481,6 +954,10 @@ function a11yhubbr_create_pending_event_post($data) {
     if (!empty($data['tags'])) {
         wp_set_post_terms($post_id, $data['tags'], 'post_tag', false);
     }
+    if (!empty($data['source_post_id'])) {
+        update_post_meta($post_id, '_a11yhubbr_edit_source_post', (int) $data['source_post_id']);
+        update_post_meta($post_id, '_a11yhubbr_submission_mode', 'update');
+    }
 
     return $post_id;
 }
@@ -495,11 +972,20 @@ function a11yhubbr_create_pending_profile_post($data) {
         'post_title'   => $title,
         'post_excerpt' => wp_trim_words(wp_strip_all_tags($data['description']), 28),
         'post_content' => (string) $data['description'],
+        'post_author'  => isset($data['user_id']) ? (int) $data['user_id'] : 0,
     );
 
     $post_id = wp_insert_post($postarr, true);
     if (is_wp_error($post_id)) {
         return $post_id;
+    }
+
+    $owner_user_id = isset($data['user_id']) ? (int) $data['user_id'] : 0;
+    if (!empty($data['source_post_id'])) {
+        $source_owner_user_id = a11yhubbr_get_profile_owner_user_id((int) $data['source_post_id']);
+        if ($source_owner_user_id > 0) {
+            $owner_user_id = $source_owner_user_id;
+        }
     }
 
     update_post_meta($post_id, '_a11yhubbr_profile_type', $data['profile_type']);
@@ -510,8 +996,15 @@ function a11yhubbr_create_pending_profile_post($data) {
     update_post_meta($post_id, '_a11yhubbr_profile_image_name', $data['profile_image_name']);
     update_post_meta($post_id, '_a11yhubbr_submitter_name', $data['author']);
     update_post_meta($post_id, '_a11yhubbr_contact_email', $data['email']);
+    if ($owner_user_id > 0) {
+        update_post_meta($post_id, '_a11yhubbr_owner_user_id', $owner_user_id);
+    }
     if (!empty($data['tags'])) {
         wp_set_post_terms($post_id, $data['tags'], 'post_tag', false);
+    }
+    if (!empty($data['source_post_id'])) {
+        update_post_meta($post_id, '_a11yhubbr_edit_source_post', (int) $data['source_post_id']);
+        update_post_meta($post_id, '_a11yhubbr_submission_mode', 'update');
     }
 
     if (!empty($_FILES['profile_image']['name'])) {
@@ -540,24 +1033,24 @@ function a11yhubbr_build_email_message($type, $data) {
             'Tipo: ' . $type_label . ' (' . $type_slug . ')',
             'Titulo: ' . $data['title'],
             'Descricao: ' . $data['description'],
-            'Autor da submissão: ' . $data['author'],
-            'Organização: ' . $data['organization'],
+            'Autor da submissÃ£o: ' . $data['author'],
+            'OrganizaÃ§Ã£o: ' . $data['organization'],
             'Link: ' . $data['link'],
-            'Ano de publicação/atualização: ' . ($data['year_publication'] !== '' ? $data['year_publication'] : '-'),
-            'Nível de profundidade: ' . ($data['depth'] !== '' ? $data['depth'] : '-'),
+            'Ano de publicaÃ§Ã£o/atualizaÃ§Ã£o: ' . ($data['year_publication'] !== '' ? $data['year_publication'] : '-'),
+            'NÃ­vel de profundidade: ' . ($data['depth'] !== '' ? $data['depth'] : '-'),
             'Autorias (artigos): ' . ($data['article_authors'] !== '' ? $data['article_authors'] : '-'),
             'Tipo de artigo: ' . ($data['article_kind'] !== '' ? $data['article_kind'] : '-'),
             'Modalidade (livros e materiais): ' . ($data['book_modality'] !== '' ? $data['book_modality'] : '-'),
-            'Preço (livros e materiais): ' . ($data['book_price'] !== '' ? $data['book_price'] : '-'),
+            'PreÃ§o (livros e materiais): ' . ($data['book_price'] !== '' ? $data['book_price'] : '-'),
             'Tipo de ferramenta: ' . ($data['tool_type'] !== '' ? $data['tool_type'] : '-'),
             'Modelo de ferramenta: ' . ($data['tool_model'] !== '' ? $data['tool_model'] : '-'),
-            'Tema principal (multimídia): ' . ($data['media_theme'] !== '' ? $data['media_theme'] : '-'),
-            'Mídia: ' . ($data['media_channel_type'] !== '' ? $data['media_channel_type'] : '-'),
+            'Tema principal (multimÃ­dia): ' . ($data['media_theme'] !== '' ? $data['media_theme'] : '-'),
+            'MÃ­dia: ' . ($data['media_channel_type'] !== '' ? $data['media_channel_type'] : '-'),
             'Formato: ' . ($data['media_format'] !== '' ? $data['media_format'] : '-'),
             'Plataforma: ' . ($data['media_platform'] !== '' ? $data['media_platform'] : '-'),
-            'Frequência: ' . ($data['media_frequency'] !== '' ? $data['media_frequency'] : '-'),
-            'Modelo de negócio (site/sistema): ' . ($data['site_business_model'] !== '' ? $data['site_business_model'] : '-'),
-            'Estágio do produto: ' . ($data['site_stage'] !== '' ? $data['site_stage'] : '-'),
+            'FrequÃªncia: ' . ($data['media_frequency'] !== '' ? $data['media_frequency'] : '-'),
+            'Modelo de negÃ³cio (site/sistema): ' . ($data['site_business_model'] !== '' ? $data['site_business_model'] : '-'),
+            'EstÃ¡gio do produto: ' . ($data['site_stage'] !== '' ? $data['site_stage'] : '-'),
             'Modelo de acesso: ' . ($data['site_access_model'] !== '' ? $data['site_access_model'] : '-'),
             'Tags: ' . implode(', ', $data['tags']),
             'Email de contato: ' . $data['email'],
@@ -575,22 +1068,22 @@ function a11yhubbr_build_email_message($type, $data) {
             '------------------------',
             'Modalidade: ' . ($modality_label[$data['modality']] ?? $data['modality']),
             'Tipo de evento: ' . $data['event_type'],
-            'Título: ' . $data['title'],
-            'Localização: ' . $data['location'],
+            'TÃ­tulo: ' . $data['title'],
+            'LocalizaÃ§Ã£o: ' . $data['location'],
             'CEP: ' . ($data['event_cep'] !== '' ? $data['event_cep'] : '-'),
             'Local online/plataforma: ' . ($data['event_online_location'] !== '' ? $data['event_online_location'] : '-'),
-            'Descrição: ' . $data['description'],
+            'DescriÃ§Ã£o: ' . $data['description'],
             'Organizador: ' . $data['organizer'],
             'Link: ' . $data['link'],
             'Tags: ' . implode(', ', $data['tags']),
-            'Autor da submissão: ' . $data['author'],
+            'Autor da submissÃ£o: ' . $data['author'],
             'Email de contato: ' . $data['email'],
             '',
-            'Datas e horários:',
+            'Datas e horÃ¡rios:',
         );
 
         foreach ($data['slots'] as $index => $slot) {
-            $lines[] = sprintf('%d) Início: %s | Fim: %s', $index + 1, $slot['start'], $slot['end']);
+            $lines[] = sprintf('%d) InÃ­cio: %s | Fim: %s', $index + 1, $slot['start'], $slot['end']);
         }
 
         return implode("\n", $lines);
@@ -600,9 +1093,9 @@ function a11yhubbr_build_email_message($type, $data) {
         'Nova submissao de perfil',
         '------------------------',
         'Tipo de perfil: ' . $data['profile_type'],
-        'Nome/Organização: ' . $data['name'],
-        'Localização: ' . $data['location'],
-        'Descrição: ' . $data['description'],
+        'Nome/OrganizaÃ§Ã£o: ' . $data['name'],
+        'LocalizaÃ§Ã£o: ' . $data['location'],
+        'DescriÃ§Ã£o: ' . $data['description'],
         'Cargo/Especialidade: ' . $data['role'],
         'Website: ' . $data['website'],
         'Tags: ' . implode(', ', $data['tags']),
@@ -612,7 +1105,7 @@ function a11yhubbr_build_email_message($type, $data) {
             }, $data['social_links']))
             : ''),
         'Arquivo de foto: ' . $data['profile_image_name'],
-        'Autor da submissão: ' . $data['author'],
+        'Autor da submissÃ£o: ' . $data['author'],
         'Email de contato: ' . $data['email'],
     ));
 }
@@ -707,6 +1200,11 @@ function a11yhubbr_handle_form_submissions() {
         return;
     }
 
+    if (!is_user_logged_in()) {
+        wp_safe_redirect(a11yhubbr_get_submission_login_url(a11yhubbr_get_redirect_target()));
+        exit;
+    }
+
     $nonce = isset($_POST['a11yhubbr_nonce'])
         ? sanitize_text_field(wp_unslash($_POST['a11yhubbr_nonce']))
         : '';
@@ -752,7 +1250,7 @@ function a11yhubbr_handle_form_submissions() {
         }
     } else {
         if (!a11yhubbr_validate_profile_submission_data($data)) {
-            $result = new WP_Error('invalid_profile_data', 'Dados de perfil inválidos');
+            $result = new WP_Error('invalid_profile_data', 'Dados de perfil invÃ¡lidos');
             $created = false;
         } else {
             $result = a11yhubbr_create_pending_profile_post($data);
