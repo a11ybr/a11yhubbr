@@ -82,6 +82,16 @@ function a11yhubbr_get_my_submissions_url() {
 }
 
 
+function a11yhubbr_get_login_page_url() {
+    return a11yhubbr_get_page_url_by_template('pages/page-entrar.php', '/entrar');
+}
+
+
+function a11yhubbr_get_registration_page_url() {
+    return a11yhubbr_get_page_url_by_template('pages/page-cadastro.php', '/cadastro');
+}
+
+
 function a11yhubbr_get_accessibility_page_url() {
     return a11yhubbr_get_page_url_by_template('pages/page-acessibilidade.php', '/acessibilidade');
 }

@@ -21,7 +21,7 @@ get_header();
   <?php
   a11yhubbr_render_page_header(array(
       'breadcrumbs' => array(
-          array('label' => 'Página inicial', 'url' => home_url('/')),
+          array('label' => 'P&aacute;gina inicial', 'url' => home_url('/')),
           array('label' => 'Submeter', 'url' => home_url('/submeter')),
           array('label' => 'Submeter eventos'),
       ),
@@ -32,10 +32,10 @@ get_header();
   <section class="a11yhubbr-submit-section">
     <div class="a11yhubbr-container">
       <?php if ($submitted) : ?>
-        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">Evento enviado para revisão com sucesso.</div>
+        <div class="a11yhubbr-toast a11yhubbr-toast-success" role="status">Evento enviado para revis&atilde;o com sucesso.</div>
       <?php endif; ?>
       <?php if ($has_error) : ?>
-        <div class="a11yhubbr-toast a11yhubbr-toast-error" role="alert">Não foi possível enviar agora. Tente novamente em instantes.</div>
+        <div class="a11yhubbr-toast a11yhubbr-toast-error" role="alert">N&atilde;o foi poss&iacute;vel enviar agora. Tente novamente em instantes.</div>
       <?php endif; ?>
 
       <div class="a11yhubbr-submit-grid">
@@ -43,7 +43,7 @@ get_header();
           <?php if (!$is_logged_in) : ?>
             <section class="a11yhubbr-card a11yhubbr-form-section">
               <h2>Entre para submeter eventos</h2>
-              <p>Agora a submissão de eventos exige uma conta no WordPress. Entre para continuar e vincular a submissão ao seu usuário.</p>
+              <p>Agora a submiss&atilde;o de eventos exige uma conta no WordPress. Entre para continuar e vincular a submiss&atilde;o ao seu usu&aacute;rio.</p>
               <div class="a11yhubbr-form-actions">
                 <a class="a11yhubbr-btn a11yhubbr-btn-primary" href="<?php echo esc_url($login_url); ?>">Entrar</a>
                 <?php if ($registration_url !== '') : ?>
@@ -53,7 +53,7 @@ get_header();
             </section>
           <?php else : ?>
           <form method="post" class="a11yhubbr-form-grid a11yhubbr-submit-form" id="event-form">
-            <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
+            <p class="a11yhubbr-required-legend"><span class="a11yhubbr-required-mark" aria-hidden="true">*</span> Campos obrigat&oacute;rios</p>
             <?php wp_nonce_field('a11yhubbr_event', 'a11yhubbr_nonce'); ?>
             <input type="hidden" name="a11yhubbr_redirect" value="<?php echo esc_url(get_permalink()); ?>">
             <input type="hidden" name="a11yhubbr_ts" value="<?php echo esc_attr((string) time()); ?>">
@@ -62,7 +62,7 @@ get_header();
             </label>
 
             <section class="a11yhubbr-card a11yhubbr-form-section" id="sec-evento-principal" data-collapsible-section>
-              <h2>Informações principais</h2>
+              <h2>Informa&ccedil;&otilde;es principais</h2>
 
               <div class="a11yhubbr-field-inline a11yhubbr-field-inline-choice">
                 <label id="event-modality-label">Modalidade <span aria-hidden="true">*</span></label>
@@ -78,7 +78,7 @@ get_header();
                     </label>
                     <label class="a11yhubbr-radio-card" for="event-modality-hibrido">
                       <input id="event-modality-hibrido" type="radio" name="modality_choice" value="hibrido">
-                      <span>Híbrido</span>
+                      <span>H&iacute;brido</span>
                     </label>
                   </div>
                   <input id="event-modality" type="hidden" name="modality" required aria-required="true">
@@ -101,27 +101,29 @@ get_header();
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-title">Título do evento <span aria-hidden="true">*</span></label>
+                <label for="event-title">T&iacute;tulo do evento <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
                   <input id="event-title" type="text" name="title" required aria-required="true">
                 </div>
               </div>
 
               <fieldset class="a11yhubbr-fieldset a11yhubbr-form-fieldset">
-                <legend>Datas e horários do evento *</legend>
+                <legend>Datas e hor&aacute;rios do evento *</legend>
                 <div id="event-slots" class="a11yhubbr-slots-list">
                   <div class="a11yhubbr-slot">
-                    <label for="slot-start-1">Início <span aria-hidden="true">*</span>
-                    <input id="slot-start-1" type="datetime-local" name="slot_start[]" required aria-required="true"></label>
-                    <label for="slot-end-1">Fim <span aria-hidden="true">*</span>
-                    <input id="slot-end-1" type="datetime-local" name="slot_end[]" required aria-required="true"></label>
+                    <label class="a11yhubbr-slot-field" for="slot-start-1">Inicio <span aria-hidden="true">*</span>
+                      <input id="slot-start-1" type="datetime-local" name="slot_start[]" required aria-required="true">
+                    </label>
+                    <label class="a11yhubbr-slot-field" for="slot-end-1">Fim <span aria-hidden="true">*</span>
+                      <input id="slot-end-1" type="datetime-local" name="slot_end[]" required aria-required="true">
+                    </label>
                     <button type="button" class="a11yhubbr-slot-remove" aria-label="Remover esta data" title="Remover esta data" hidden>&#128465;</button>
                   </div>
                 </div>
                 <div class="a11yhubbr-slot-actions">
                   <button type="button" class="a11yhubbr-link-btn a11yhubbr-btn" id="add-slot">+ Adicionar item</button>
                 </div>
-                <p class="a11yhubbr-help">Para eventos com múltiplas datas, adicione todas as datas e horários.</p>
+                <p class="a11yhubbr-help">Para eventos com m&uacute;ltiplas datas, adicione todas as datas e hor&aacute;rios.</p>
               </fieldset>
 
               <div class="a11yhubbr-event-location-switch" data-event-location-group>
@@ -129,8 +131,8 @@ get_header();
                   <div class="a11yhubbr-field-inline">
                     <label for="event-cep">CEP do evento <span aria-hidden="true">*</span></label>
                     <div class="a11yhubbr-field-control">
-                      <input id="event-cep" type="text" name="event_cep" inputmode="numeric" pattern="\\d{5}-?\\d{3}" placeholder="00000-000" required aria-required="true">
-                      <p class="a11yhubbr-help">Para eventos presenciais e híbridos, informe o CEP do local.</p>
+                      <input id="event-cep" type="text" name="event_cep" inputmode="numeric" pattern="\d{5}-?\d{3}" placeholder="00000-000" required aria-required="true">
+                      <p class="a11yhubbr-help">Para eventos presenciais e h&iacute;bridos, informe o CEP do local.</p>
                     </div>
                   </div>
                 </div>
@@ -140,13 +142,13 @@ get_header();
                     <label for="event-online-location">Plataforma / local online <span aria-hidden="true">*</span></label>
                     <div class="a11yhubbr-field-control">
                       <input id="event-online-location" type="text" name="event_online_location" placeholder="Ex.: Zoom, Google Meet, YouTube, URL" required aria-required="true">
-                      <p class="a11yhubbr-help">Para eventos online e híbridos, informe a plataforma ou link de transmissão.</p>
+                      <p class="a11yhubbr-help">Para eventos online e h&iacute;bridos, informe a plataforma ou link de transmiss&atilde;o.</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h2>Informações complementares</h2>
+              <h2>Informa&ccedil;&otilde;es complementares</h2>
 
               <div class="a11yhubbr-field-inline">
                 <label for="event-organizer">Organizador <span aria-hidden="true">*</span></label>
@@ -163,7 +165,7 @@ get_header();
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-tags">Tags (separadas por vírgulas)</label>
+                <label for="event-tags">Tags (separadas por v&iacute;rgulas)</label>
                 <div class="a11yhubbr-field-control">
                   <input id="event-tags" type="text" name="tags" placeholder="workshop, acessibilidade, online">
                   <p class="a11yhubbr-help">As tags ajudam a indexar o evento por tema.</p>
@@ -171,36 +173,36 @@ get_header();
               </div>
 
               <div class="a11yhubbr-field-inline">
-                <label for="event-description">Descrição <span aria-hidden="true">*</span></label>
+                <label for="event-description">Descri&ccedil;&atilde;o <span aria-hidden="true">*</span></label>
                 <div class="a11yhubbr-field-control">
                   <textarea id="event-description" name="description" rows="5" required aria-required="true"></textarea>
                 </div>
               </div>
             </section>
 
-            <section class="a11yhubbr-card a11yhubbr-submit-account" aria-label="Conta responsável pela submissão">
-              <h2>Conta responsável pela submissão</h2>
+            <section class="a11yhubbr-card a11yhubbr-submit-account" aria-label="Conta respons&aacute;vel pela submiss&atilde;o">
+              <h2>Conta respons&aacute;vel pela submiss&atilde;o</h2>
               <p class="a11yhubbr-submit-account-summary">
                 <strong>Nome:</strong> <?php echo esc_html($current_user ? $current_user->display_name : ''); ?>
                 <br>
                 <strong>Email:</strong> <?php echo esc_html($current_user ? $current_user->user_email : ''); ?>
               </p>
-              <p class="a11yhubbr-help">A submissão será vinculada à conta logada e esses dados serão usados pela equipe da <strong>A11YBR</strong> em caso de contato.</p>
+              <p class="a11yhubbr-help">A submiss&atilde;o ser&aacute; vinculada &agrave; conta logada e esses dados ser&atilde;o usados pela equipe da <strong>A11YBR</strong> em caso de contato.</p>
               <?php if (function_exists('a11yhubbr_render_human_check_field')) { a11yhubbr_render_human_check_field(); } ?>
             </section>
 
             <div class="a11yhubbr-form-actions">
-              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_event_submit" value="1">Enviar para revisão</button>
+              <button class="a11yhubbr-btn a11yhubbr-btn-primary a11yhubbr-form-submit" type="submit" name="a11yhubbr_event_submit" value="1">Enviar para revis&atilde;o</button>
             </div>
           </form>
           <?php endif; ?>
         </div>
 
-        <aside class="a11yhubbr-submit-aside" aria-label="Informações complementares">
+        <aside class="a11yhubbr-submit-aside" aria-label="Informa&ccedil;&otilde;es complementares">
           <section class="a11yhubbr-side-card a11yhubbr-submit-outline">
-            <h2>Navegação do cadastro</h2>
-            <nav aria-label="Etapas da submissão de evento">
-              <a href="#sec-evento-principal">Informações principais</a>
+            <h2>Navega&ccedil;&atilde;o do cadastro</h2>
+            <nav aria-label="Etapas da submiss&atilde;o de evento">
+              <a href="#sec-evento-principal">Informa&ccedil;&otilde;es principais</a>
             </nav>
           </section>
 
@@ -209,18 +211,18 @@ get_header();
             <ul>
               <li>Evento com foco em acessibilidade digital.</li>
               <li>Informe modalidade e local/plataforma.</li>
-              <li>Inclua datas e horários completos.</li>
+              <li>Inclua datas e hor&aacute;rios completos.</li>
               <li>Adicione link oficial do evento.</li>
             </ul>
           </section>
 
           <section class="a11yhubbr-side-card a11yhubbr-side-card-primary">
-            <h2>Processo de revisão</h2>
+            <h2>Processo de revis&atilde;o</h2>
             <ol>
-              <li>Submissão recebida</li>
-              <li>Análise editorial</li>
+              <li>Submiss&atilde;o recebida</li>
+              <li>An&aacute;lise editorial</li>
               <li>Feedback por email</li>
-              <li>Publicação após aprovação</li>
+              <li>Publica&ccedil;&atilde;o ap&oacute;s aprova&ccedil;&atilde;o</li>
             </ol>
           </section>
         </aside>

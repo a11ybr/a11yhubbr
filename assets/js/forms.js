@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   'use strict';
 
   function normalizeLabelAssociations(scope) {
@@ -115,10 +115,8 @@
     var row = document.createElement('div');
     row.className = 'a11yhubbr-slot';
     row.innerHTML =
-      '<label for="' + startId + '">InÃ­cio *</label>' +
-      '<input id="' + startId + '" type="datetime-local" name="slot_start[]" required>' +
-      '<label for="' + endId + '">Fim *</label>' +
-      '<input id="' + endId + '" type="datetime-local" name="slot_end[]" required>' +
+      '<label class="a11yhubbr-slot-field" for="' + startId + '">Inicio <span aria-hidden="true">*</span><input id="' + startId + '" type="datetime-local" name="slot_start[]" required aria-required="true"></label>' +
+      '<label class="a11yhubbr-slot-field" for="' + endId + '">Fim <span aria-hidden="true">*</span><input id="' + endId + '" type="datetime-local" name="slot_end[]" required aria-required="true"></label>' +
       '<button type="button" class="a11yhubbr-slot-remove" aria-label="Remover esta data" title="Remover esta data">&#128465;</button>';
     slots.appendChild(row);
     if (window.a11yhubbrNormalizeLabelAssociations) {
@@ -694,7 +692,7 @@
     if (emailField) {
       emailField.setAttribute('placeholder', 'seu@email.com');
       if (!emailField.getAttribute('aria-label')) {
-        emailField.setAttribute('aria-label', 'EndereÃ§o de e-mail');
+        emailField.setAttribute('aria-label', 'EndereÃƒÂ§o de e-mail');
       }
     }
 
@@ -712,9 +710,9 @@
       var isSuccess = className.indexOf('success') >= 0 || /subscribed|thank|sucesso|inscrit/.test(text);
       var isError = className.indexOf('error') >= 0 || /invalid|error|failed|falha|already|exists|existe/.test(text);
       if (isSuccess) {
-        node.textContent = 'InscriÃ§Ã£o confirmada com sucesso. Obrigado por fazer parte da comunidade A11YBR.';
+        node.textContent = 'InscriÃƒÂ§ÃƒÂ£o confirmada com sucesso. Obrigado por fazer parte da comunidade A11YBR.';
       } else if (isError) {
-        node.textContent = 'NÃ£o foi possÃ­vel concluir a inscriÃ§Ã£o agora. Verifique o e-mail e tente novamente.';
+        node.textContent = 'NÃƒÂ£o foi possÃƒÂ­vel concluir a inscriÃƒÂ§ÃƒÂ£o agora. Verifique o e-mail e tente novamente.';
       }
     });
   }

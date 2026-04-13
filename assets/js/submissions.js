@@ -80,10 +80,8 @@
     var row = document.createElement('div');
     row.className = 'a11yhubbr-slot';
     row.innerHTML =
-      '<label for="' + startId + '">Inicio *</label>' +
-      '<input id="' + startId + '" type="datetime-local" name="slot_start[]" required>' +
-      '<label for="' + endId + '">Fim *</label>' +
-      '<input id="' + endId + '" type="datetime-local" name="slot_end[]" required>' +
+      '<label class="a11yhubbr-slot-field" for="' + startId + '">Inicio <span aria-hidden="true">*</span><input id="' + startId + '" type="datetime-local" name="slot_start[]" required aria-required="true"></label>' +
+      '<label class="a11yhubbr-slot-field" for="' + endId + '">Fim <span aria-hidden="true">*</span><input id="' + endId + '" type="datetime-local" name="slot_end[]" required aria-required="true"></label>' +
       '<button type="button" class="a11yhubbr-slot-remove" aria-label="Remover esta data" title="Remover esta data">&#128465;</button>';
     slots.appendChild(row);
     if (window.a11yhubbrNormalizeLabelAssociations) {

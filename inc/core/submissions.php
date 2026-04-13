@@ -110,7 +110,11 @@ function a11yhubbr_get_submission_config() {
 
 function a11yhubbr_get_submission_login_url($redirect = '') {
     $target = $redirect !== '' ? $redirect : home_url('/submeter');
-    return wp_login_url($target);
+    $login_url = function_exists('a11yhubbr_get_login_page_url')
+        ? a11yhubbr_get_login_page_url()
+        : home_url('/entrar');
+
+    return add_query_arg('redirect_to', rawurlencode($target), $login_url);
 }
 
 
@@ -120,7 +124,11 @@ function a11yhubbr_get_submission_registration_url($redirect = '') {
     }
 
     $target = $redirect !== '' ? $redirect : home_url('/submeter');
-    return add_query_arg('redirect_to', $target, wp_registration_url());
+    $registration_url = function_exists('a11yhubbr_get_registration_page_url')
+        ? a11yhubbr_get_registration_page_url()
+        : home_url('/cadastro');
+
+    return add_query_arg('redirect_to', rawurlencode($target), $registration_url);
 }
 
 
@@ -142,6 +150,228 @@ function a11yhubbr_get_submission_user_context() {
         'email' => sanitize_email($user->user_email),
     );
 }
+
+
+function a11yhubbr_get_requested_redirect_target($param = 'redirect_to', $fallback = '') {
+    $safe_fallback = $fallback !== '' ? $fallback : home_url('/submeter');
+    $raw_value = isset($_REQUEST[$param]) ? wp_unslash($_REQUEST[$param]) : '';
+    $value = is_string($raw_value) ? rawurldecode($raw_value) : '';
+    $value = $value !== '' ? esc_url_raw($value) : '';
+
+    if ($value !== '') {
+        return wp_validate_redirect($value, $safe_fallback);
+    }
+
+    return $safe_fallback;
+}
+
+
+function a11yhubbr_get_registration_error_code($code) {
+    $allowed = array(
+        'invalid_nonce',
+        'closed',
+        'logged_in',
+        'empty_fields',
+        'password_mismatch',
+        'invalid_username',
+        'username_exists',
+        'invalid_email',
+        'email_exists',
+        'create_failed',
+    );
+
+    $normalized = sanitize_key((string) $code);
+    return in_array($normalized, $allowed, true) ? $normalized : 'create_failed';
+}
+
+
+function a11yhubbr_get_registration_error_redirect($error_code, $redirect_target = '') {
+    $base_url = function_exists('a11yhubbr_get_registration_page_url')
+        ? a11yhubbr_get_registration_page_url()
+        : home_url('/cadastro');
+
+    return add_query_arg(array(
+        'a11yhubbr_register_status' => 'error',
+        'a11yhubbr_register_error' => a11yhubbr_get_registration_error_code($error_code),
+        'redirect_to' => rawurlencode($redirect_target !== '' ? $redirect_target : home_url('/submeter')),
+    ), $base_url);
+}
+
+
+function a11yhubbr_get_login_error_code($code) {
+    $allowed = array(
+        'invalid_nonce',
+        'empty_fields',
+        'invalid_login',
+    );
+
+    $normalized = sanitize_key((string) $code);
+    return in_array($normalized, $allowed, true) ? $normalized : 'invalid_login';
+}
+
+
+function a11yhubbr_get_login_error_redirect($error_code, $redirect_target = '') {
+    $base_url = function_exists('a11yhubbr_get_login_page_url')
+        ? a11yhubbr_get_login_page_url()
+        : home_url('/entrar');
+
+    return add_query_arg(array(
+        'a11yhubbr_login_status' => 'error',
+        'a11yhubbr_login_error' => a11yhubbr_get_login_error_code($error_code),
+        'redirect_to' => rawurlencode($redirect_target !== '' ? $redirect_target : home_url('/submeter')),
+    ), $base_url);
+}
+
+
+function a11yhubbr_handle_login_form() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['a11yhubbr_login_submit'])) {
+        return;
+    }
+
+    $redirect_target = a11yhubbr_get_requested_redirect_target('redirect_to', home_url('/submeter'));
+
+    if (is_user_logged_in()) {
+        wp_safe_redirect($redirect_target);
+        exit;
+    }
+
+    $nonce = isset($_POST['a11yhubbr_login_nonce'])
+        ? sanitize_text_field(wp_unslash($_POST['a11yhubbr_login_nonce']))
+        : '';
+
+    if ($nonce === '' || !wp_verify_nonce($nonce, 'a11yhubbr_login_user')) {
+        wp_safe_redirect(a11yhubbr_get_login_error_redirect('invalid_nonce', $redirect_target));
+        exit;
+    }
+
+    $username = isset($_POST['log'])
+        ? sanitize_text_field(wp_unslash($_POST['log']))
+        : '';
+    $password = isset($_POST['pwd'])
+        ? (string) wp_unslash($_POST['pwd'])
+        : '';
+    $remember = !empty($_POST['rememberme']);
+
+    if ($username === '' || $password === '') {
+        wp_safe_redirect(a11yhubbr_get_login_error_redirect('empty_fields', $redirect_target));
+        exit;
+    }
+
+    $signon = wp_signon(array(
+        'user_login' => $username,
+        'user_password' => $password,
+        'remember' => $remember,
+    ), is_ssl());
+
+    if (is_wp_error($signon)) {
+        wp_safe_redirect(a11yhubbr_get_login_error_redirect('invalid_login', $redirect_target));
+        exit;
+    }
+
+    wp_safe_redirect($redirect_target);
+    exit;
+}
+add_action('init', 'a11yhubbr_handle_login_form');
+
+
+function a11yhubbr_handle_registration_form() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['a11yhubbr_register_submit'])) {
+        return;
+    }
+
+    $redirect_target = a11yhubbr_get_requested_redirect_target('redirect_to', home_url('/submeter'));
+
+    if (!(bool) get_option('users_can_register')) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('closed', $redirect_target));
+        exit;
+    }
+
+    if (is_user_logged_in()) {
+        wp_safe_redirect($redirect_target);
+        exit;
+    }
+
+    $nonce = isset($_POST['a11yhubbr_register_nonce'])
+        ? sanitize_text_field(wp_unslash($_POST['a11yhubbr_register_nonce']))
+        : '';
+
+    if ($nonce === '' || !wp_verify_nonce($nonce, 'a11yhubbr_register_user')) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('invalid_nonce', $redirect_target));
+        exit;
+    }
+
+    $username = isset($_POST['user_login'])
+        ? sanitize_user(wp_unslash($_POST['user_login']), true)
+        : '';
+    $email = isset($_POST['user_email'])
+        ? sanitize_email(wp_unslash($_POST['user_email']))
+        : '';
+    $display_name = isset($_POST['display_name'])
+        ? sanitize_text_field(wp_unslash($_POST['display_name']))
+        : '';
+    $password = isset($_POST['user_pass'])
+        ? (string) wp_unslash($_POST['user_pass'])
+        : '';
+    $password_confirm = isset($_POST['user_pass_confirm'])
+        ? (string) wp_unslash($_POST['user_pass_confirm'])
+        : '';
+
+    if ($username === '' || $email === '' || $password === '' || $password_confirm === '') {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('empty_fields', $redirect_target));
+        exit;
+    }
+
+    if ($password !== $password_confirm) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('password_mismatch', $redirect_target));
+        exit;
+    }
+
+    if (!validate_username($username)) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('invalid_username', $redirect_target));
+        exit;
+    }
+
+    if (username_exists($username)) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('username_exists', $redirect_target));
+        exit;
+    }
+
+    if (!is_email($email)) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('invalid_email', $redirect_target));
+        exit;
+    }
+
+    if (email_exists($email)) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('email_exists', $redirect_target));
+        exit;
+    }
+
+    $user_id = wp_insert_user(array(
+        'user_login' => $username,
+        'user_email' => $email,
+        'user_pass' => $password,
+        'display_name' => $display_name !== '' ? $display_name : $username,
+        'role' => get_option('default_role', 'subscriber'),
+    ));
+
+    if (is_wp_error($user_id) || (int) $user_id <= 0) {
+        wp_safe_redirect(a11yhubbr_get_registration_error_redirect('create_failed', $redirect_target));
+        exit;
+    }
+
+    $user = get_user_by('id', (int) $user_id);
+    if ($user instanceof WP_User) {
+        wp_clear_auth_cookie();
+        wp_set_current_user((int) $user_id);
+        wp_set_auth_cookie((int) $user_id, true);
+        do_action('wp_login', $user->user_login, $user);
+    }
+
+    $success_redirect = add_query_arg('a11yhubbr_register_status', 'success', $redirect_target);
+    wp_safe_redirect($success_redirect);
+    exit;
+}
+add_action('init', 'a11yhubbr_handle_registration_form');
 
 
 function a11yhubbr_get_profile_owner_user_id($post) {

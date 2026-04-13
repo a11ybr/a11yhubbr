@@ -182,6 +182,14 @@ function a11yhubbr_sync_pages_title_excerpt_once() {
             'title' => 'Submeter',
             'excerpt' => 'Envie conteúdos, eventos e perfis para fortalecer a comunidade.',
         ),
+        'pages/page-entrar.php' => array(
+            'title' => 'Entrar',
+            'excerpt' => 'Acesse sua conta para submeter e acompanhar contribuições.',
+        ),
+        'pages/page-cadastro.php' => array(
+            'title' => 'Criar conta',
+            'excerpt' => 'Cadastre-se para enviar conteúdos, eventos e perfis pela plataforma.',
+        ),
         'pages/page-submeter-conteudo.php' => array(
             'title' => 'Submeter conteudo',
             'excerpt' => 'Compartilhe artigos, ferramentas, livros e outros recursos sobre acessibilidade.',
@@ -346,6 +354,58 @@ function a11yhubbr_ensure_my_submissions_page_once() {
     update_option('a11yhubbr_my_submissions_page_created_v1', '1', false);
 }
 add_action('init', 'a11yhubbr_ensure_my_submissions_page_once');
+
+
+function a11yhubbr_ensure_login_page_once() {
+    if (get_option('a11yhubbr_login_page_created_v1') === '1') {
+        return;
+    }
+
+    $page = get_page_by_path('entrar');
+    if (!($page instanceof WP_Post)) {
+        $page_id = wp_insert_post(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_title' => 'Entrar',
+            'post_name' => 'entrar',
+            'post_excerpt' => 'Acesse sua conta para submeter e acompanhar contribuições.',
+        ));
+        if (!is_wp_error($page_id) && $page_id > 0) {
+            update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-entrar.php');
+        }
+    } else {
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-entrar.php');
+    }
+
+    update_option('a11yhubbr_login_page_created_v1', '1', false);
+}
+add_action('init', 'a11yhubbr_ensure_login_page_once');
+
+
+function a11yhubbr_ensure_registration_page_once() {
+    if (get_option('a11yhubbr_registration_page_created_v1') === '1') {
+        return;
+    }
+
+    $page = get_page_by_path('cadastro');
+    if (!($page instanceof WP_Post)) {
+        $page_id = wp_insert_post(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_title' => 'Criar conta',
+            'post_name' => 'cadastro',
+            'post_excerpt' => 'Cadastre-se para enviar conteúdos, eventos e perfis pela plataforma.',
+        ));
+        if (!is_wp_error($page_id) && $page_id > 0) {
+            update_post_meta((int) $page_id, '_wp_page_template', 'pages/page-cadastro.php');
+        }
+    } else {
+        update_post_meta((int) $page->ID, '_wp_page_template', 'pages/page-cadastro.php');
+    }
+
+    update_option('a11yhubbr_registration_page_created_v1', '1', false);
+}
+add_action('init', 'a11yhubbr_ensure_registration_page_once');
 
 
 function a11yhubbr_rename_community_to_rede_once() {
@@ -523,8 +583,10 @@ function a11yhubbr_migrate_page_templates_to_pages_dir_once() {
     $template_map = array(
         'page-acessibilidade.php' => 'pages/page-acessibilidade.php',
         'page-busca.php' => 'pages/page-busca.php',
+        'page-entrar.php' => 'pages/page-entrar.php',
         'page-contato.php' => 'pages/page-contato.php',
         'page-conteudos.php' => 'pages/page-conteudos.php',
+        'page-cadastro.php' => 'pages/page-cadastro.php',
         'page-diretrizes.php' => 'pages/page-diretrizes.php',
         'page-eventos.php' => 'pages/page-eventos.php',
         'page-politica-de-privacidade.php' => 'pages/page-politica-de-privacidade.php',

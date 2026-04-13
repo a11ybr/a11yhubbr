@@ -1,5 +1,5 @@
 <?php require_once get_template_directory() . '/inc/components/cta-box.php'; ?>
-<footer class="a11yhubbr-site-footer">
+<footer id="rodape-site" class="a11yhubbr-site-footer" tabindex="-1">
   <?php if (function_exists('a11yhubbr_render_global_page_cta')) : ?>
     <section class="a11yhubbr-section">
       <div class="a11yhubbr-container">

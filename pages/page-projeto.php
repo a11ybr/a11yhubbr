@@ -107,7 +107,7 @@ $review_notes = array(
 
 get_header();
 ?>
-<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-project-page">
+<main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main a11yhubbr-about-page a11yhubbr-project-page">
     <?php
     a11yhubbr_render_page_header(array(
         'breadcrumbs' => array(
@@ -118,18 +118,18 @@ get_header();
     ));
     ?>
 
-    <section class="a11yhubbr-section a11yhubbr-project-intro">
+    <section class="a11yhubbr-about-section a11yhubbr-section-intro">
         <div class="a11yhubbr-container">
-            <div class="a11yhubbr-project-hero a11yhubbr-card">
-                <p class="a11yhubbr-project-eyebrow">Projeto comunitario</p>
+            <article class="a11yhubbr-card a11yhubbr-about-vision-card a11yhubbr-project-hero">
+                <p class="a11yhubbr-home-kicker a11yhubbr-project-eyebrow">Projeto comunitario</p>
                 <div class="a11yhubbr-project-hero-copy">
                     <h2>Uma pagina para explicar por que a A11YBR existe</h2>
                     <p>A A11YBR organiza referencias sobre acessibilidade digital no Brasil. O objetivo e reunir informacoes uteis, dar visibilidade ao que ja existe e facilitar conexoes entre pessoas, grupos e organizacoes sem transformar a pauta em vitrine.</p>
                 </div>
-                <div class="a11yhubbr-project-summary-grid">
+                <div class="a11yhubbr-about-highlights-grid a11yhubbr-project-summary-grid">
                     <?php foreach ($summary_points as $item) : ?>
-                        <article class="a11yhubbr-project-summary-card">
-                            <span class="a11yhubbr-project-card-icon is-summary" aria-hidden="true">
+                        <article class="a11yhubbr-card a11yhubbr-about-highlight-card a11yhubbr-project-summary-card">
+                            <span class="a11yhubbr-about-highlight-icon a11yhubbr-project-card-icon is-summary" aria-hidden="true">
                                 <i class="<?php echo esc_attr($item['icon']); ?>"></i>
                             </span>
                             <div>
@@ -139,14 +139,14 @@ get_header();
                         </article>
                     <?php endforeach; ?>
                 </div>
-            </div>
+            </article>
         </div>
     </section>
 
-    <section class="a11yhubbr-section a11yhubbr-section-soft">
-        <div class="a11yhubbr-container">
-            <h2 class="a11yhubbr-section-title">Base conceitual do projeto</h2>
-            <div class="a11yhubbr-cards-grid a11yhubbr-project-principles-grid">
+    <section class="a11yhubbr-about-section a11yhubbr-section-soft">
+        <div class="a11yhubbr-container a11yhubbr-about-values-shell">
+            <h2>Base conceitual do projeto</h2>
+            <div class="a11yhubbr-about-values-grid a11yhubbr-project-principles-grid">
                 <?php foreach ($principles as $item) : ?>
                     <?php get_template_part('inc/components/feature-card', null, array(
                         'icon' => $item['icon'],
@@ -158,10 +158,10 @@ get_header();
         </div>
     </section>
 
-    <section class="a11yhubbr-section">
-        <div class="a11yhubbr-container">
+    <section class="a11yhubbr-about-section">
+        <div class="a11yhubbr-container a11yhubbr-about-values-shell">
             <div class="a11yhubbr-project-story-head">
-                <p class="a11yhubbr-project-eyebrow">Storytelling</p>
+                <p class="a11yhubbr-home-kicker a11yhubbr-project-eyebrow">Storytelling</p>
                 <h2>De onde vem a motivacao da comunidade</h2>
                 <p>O desafio nem sempre e falta de iniciativa. Muitas vezes e falta de visibilidade, contexto e continuidade publica para o que ja esta sendo feito.</p>
             </div>
@@ -177,10 +177,10 @@ get_header();
         </div>
     </section>
 
-    <section class="a11yhubbr-section a11yhubbr-section-soft">
-        <div class="a11yhubbr-container">
+    <section class="a11yhubbr-about-section a11yhubbr-section-soft">
+        <div class="a11yhubbr-container a11yhubbr-about-values-shell">
             <div class="a11yhubbr-project-section-head">
-                <h2 class="a11yhubbr-section-title">O que pode ser submetido</h2>
+                <h2>O que pode ser submetido</h2>
                 <p>A plataforma foi desenhada para receber tres frentes principais de informacao. Cada uma delas ajuda a construir uma visao mais ampla do ecossistema.</p>
             </div>
 
@@ -202,10 +202,10 @@ get_header();
         </div>
     </section>
 
-    <section class="a11yhubbr-section">
-        <div class="a11yhubbr-container">
+    <section class="a11yhubbr-about-section">
+        <div class="a11yhubbr-container a11yhubbr-about-values-shell">
             <div class="a11yhubbr-project-section-head">
-                <h2 class="a11yhubbr-section-title">Como tratamos as submissoes</h2>
+                <h2>Como tratamos as submissoes</h2>
                 <p>O processo de envio existe para manter o diretorio util, compreensivel e confiavel. A ideia nao e filtrar por prestigio, mas por aderencia ao escopo e clareza da informacao.</p>
             </div>
 
