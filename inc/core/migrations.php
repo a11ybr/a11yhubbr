@@ -4,8 +4,24 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+function a11yhubbr_should_run_migrations() {
+    if (function_exists('wp_doing_ajax') && wp_doing_ajax()) {
+        return false;
+    }
+
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return false;
+    }
+
+    if (defined('WP_CLI') && WP_CLI) {
+        return true;
+    }
+
+    return is_admin() && current_user_can('manage_options');
+}
+
 function a11yhubbr_migrate_legacy_content_type_meta_to_category() {
-    if (!is_admin()) {
+    if (!a11yhubbr_should_run_migrations()) {
         return;
     }
 
@@ -55,7 +71,7 @@ add_action('admin_init', 'a11yhubbr_migrate_legacy_content_type_meta_to_category
 
 
 function a11yhubbr_migrate_legacy_network_posts_to_profiles() {
-    if (!is_admin()) {
+    if (!a11yhubbr_should_run_migrations()) {
         return;
     }
 
@@ -143,6 +159,10 @@ add_action('admin_init', 'a11yhubbr_migrate_legacy_network_posts_to_profiles');
 
 
 function a11yhubbr_rename_books_category_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_books_category_renamed_v1') === '1') {
         return;
     }
@@ -157,10 +177,14 @@ function a11yhubbr_rename_books_category_once() {
 
     update_option('a11yhubbr_books_category_renamed_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_rename_books_category_once');
+add_action('admin_init', 'a11yhubbr_rename_books_category_once');
 
 
 function a11yhubbr_sync_pages_title_excerpt_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_pages_title_excerpt_synced_v4') === '1') {
         return;
     }
@@ -249,10 +273,14 @@ function a11yhubbr_sync_pages_title_excerpt_once() {
 
     update_option('a11yhubbr_pages_title_excerpt_synced_v4', '1', false);
 }
-add_action('init', 'a11yhubbr_sync_pages_title_excerpt_once');
+add_action('admin_init', 'a11yhubbr_sync_pages_title_excerpt_once');
 
 
 function a11yhubbr_ensure_projeto_page_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_projeto_page_created_v1') === '1') {
         return;
     }
@@ -275,10 +303,14 @@ function a11yhubbr_ensure_projeto_page_once() {
 
     update_option('a11yhubbr_projeto_page_created_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_ensure_projeto_page_once');
+add_action('admin_init', 'a11yhubbr_ensure_projeto_page_once');
 
 
 function a11yhubbr_ensure_diretrizes_page_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_diretrizes_page_created_v1') === '1') {
         return;
     }
@@ -301,10 +333,14 @@ function a11yhubbr_ensure_diretrizes_page_once() {
 
     update_option('a11yhubbr_diretrizes_page_created_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_ensure_diretrizes_page_once');
+add_action('admin_init', 'a11yhubbr_ensure_diretrizes_page_once');
 
 
 function a11yhubbr_ensure_contato_page_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_contato_page_created_v1') === '1') {
         return;
     }
@@ -327,10 +363,14 @@ function a11yhubbr_ensure_contato_page_once() {
 
     update_option('a11yhubbr_contato_page_created_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_ensure_contato_page_once');
+add_action('admin_init', 'a11yhubbr_ensure_contato_page_once');
 
 
 function a11yhubbr_ensure_my_submissions_page_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_my_submissions_page_created_v1') === '1') {
         return;
     }
@@ -353,10 +393,14 @@ function a11yhubbr_ensure_my_submissions_page_once() {
 
     update_option('a11yhubbr_my_submissions_page_created_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_ensure_my_submissions_page_once');
+add_action('admin_init', 'a11yhubbr_ensure_my_submissions_page_once');
 
 
 function a11yhubbr_ensure_login_page_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_login_page_created_v1') === '1') {
         return;
     }
@@ -379,10 +423,14 @@ function a11yhubbr_ensure_login_page_once() {
 
     update_option('a11yhubbr_login_page_created_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_ensure_login_page_once');
+add_action('admin_init', 'a11yhubbr_ensure_login_page_once');
 
 
 function a11yhubbr_ensure_registration_page_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_registration_page_created_v1') === '1') {
         return;
     }
@@ -405,10 +453,14 @@ function a11yhubbr_ensure_registration_page_once() {
 
     update_option('a11yhubbr_registration_page_created_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_ensure_registration_page_once');
+add_action('admin_init', 'a11yhubbr_ensure_registration_page_once');
 
 
 function a11yhubbr_rename_community_to_rede_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_rename_rede_done_v4') === '1') {
         return;
     }
@@ -508,11 +560,11 @@ function a11yhubbr_rename_community_to_rede_once() {
 
     update_option('a11yhubbr_rename_rede_done_v4', '1', false);
 }
-add_action('init', 'a11yhubbr_rename_community_to_rede_once');
+add_action('admin_init', 'a11yhubbr_rename_community_to_rede_once');
 
 
 function a11yhubbr_seed_legal_pages_once() {
-    if (!is_admin()) {
+    if (!a11yhubbr_should_run_migrations()) {
         return;
     }
 
@@ -576,6 +628,10 @@ add_action('admin_init', 'a11yhubbr_seed_legal_pages_once');
 
 
 function a11yhubbr_migrate_page_templates_to_pages_dir_once() {
+    if (!a11yhubbr_should_run_migrations()) {
+        return;
+    }
+
     if (get_option('a11yhubbr_templates_pages_dir_migrated_v1') === '1') {
         return;
     }
@@ -618,11 +674,11 @@ function a11yhubbr_migrate_page_templates_to_pages_dir_once() {
 
     update_option('a11yhubbr_templates_pages_dir_migrated_v1', '1', false);
 }
-add_action('init', 'a11yhubbr_migrate_page_templates_to_pages_dir_once');
+add_action('admin_init', 'a11yhubbr_migrate_page_templates_to_pages_dir_once');
 
 
 function a11yhubbr_migrate_posts_to_content_cpt_once() {
-    if (!is_admin()) {
+    if (!a11yhubbr_should_run_migrations()) {
         return;
     }
 

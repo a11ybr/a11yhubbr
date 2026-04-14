@@ -78,8 +78,8 @@
   font-size: 1.55rem;
   line-height: 1;
   margin-bottom: 0;
-  background: #eef1f5;
-  color: #293345;
+  background: var(--ah-refresh-neutral-soft);
+  color: var(--ah-refresh-neutral);
   border-radius: 1rem;
 }
 
@@ -247,7 +247,7 @@
   border: var(--a11y-toolbar-control-border);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
-  color: #0f1a2d;
+  color: var(--ah-refresh-text-dark);
   min-height: 3rem;
   padding: 0 .85rem;
   font: inherit;
@@ -329,7 +329,7 @@
 }
 
 .a11yhubbr-content-select-wrap select:focus-visible {
-  outline: 2px solid var(--a11y-screen-accent, #2457c7);
+  outline: 2px solid var(--a11y-screen-accent, var(--ah-refresh-blue));
   outline-offset: 2px;
 }
 

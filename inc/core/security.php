@@ -4,6 +4,22 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+function a11yhubbr_security_is_public_web_request() {
+    if (is_admin()) {
+        return false;
+    }
+
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return false;
+    }
+
+    if (function_exists('wp_doing_ajax') && wp_doing_ajax()) {
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * Headers HTTP de segurança
  * Protege contra XSS, clickjacking e MIME sniffing (WCAG + hardening)
@@ -22,8 +38,16 @@ add_action('send_headers', function () {
  * Impede vazamento de usernames via redirects do WordPress
  */
 add_action('init', function () {
-    if (isset($_GET['author']) && !is_admin()) {
-        wp_redirect(home_url(), 301);
+    if (!a11yhubbr_security_is_public_web_request()) {
+        return;
+    }
+
+    if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) !== 'GET') {
+        return;
+    }
+
+    if (isset($_GET['author'])) {
+        wp_safe_redirect(home_url(), 301);
         exit;
     }
 });
@@ -216,4 +240,3 @@ function a11yhubbr_turnstile_is_valid() {
     $payload = json_decode((string) wp_remote_retrieve_body($response), true);
     return is_array($payload) && !empty($payload['success']);
 }
-

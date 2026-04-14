@@ -64,8 +64,8 @@
 
 .a11yhubbr-home-icon,
 .a11yhubbr-feature-icon-box {
-  background: #eef1f5;
-  color: #293345;
+  background: var(--ah-refresh-neutral-soft);
+  color: var(--ah-refresh-neutral);
   border-radius: 1rem;
 }
 
@@ -76,8 +76,8 @@
 .a11yhubbr-content-item-badge--eventos,
 .a11yhubbr-content-item-badge--rede,
 .a11yhubbr-home-events .a11yhubbr-content-item-badge {
-  background: #eef1f5;
-  color: #293345;
+  background: var(--ah-refresh-neutral-soft);
+  color: var(--ah-refresh-neutral);
 }
 
 .a11yhubbr-content-item-badge {
@@ -86,7 +86,7 @@
   gap: .4rem;
   padding: .32rem .7rem;
   border: 1px solid var(--a11y-border);
-  background: #eef1f5;
+  background: var(--ah-refresh-neutral-soft);
   color: var(--a11y-text);
   border-radius: 999px;
   font-size: .82rem;
@@ -111,7 +111,7 @@
 
 .a11yhubbr-content-card-tags span {
   border-radius: 999px;
-  background: #f0f4fa;
+  background: var(--ah-refresh-surface-soft);
   color: var(--ah-refresh-text-soft);
 }
 
@@ -143,8 +143,8 @@
 .a11yhubbr-about-flow-icon,
 .a11yhubbr-feature-icon-box,
 .a11yhubbr-submit-hub-icon {
-  background: #eef1f5;
-  color: #293345;
+  background: var(--ah-refresh-neutral-soft);
+  color: var(--ah-refresh-neutral);
 }
 
 .a11yhubbr-about-open-source-icon {
@@ -165,7 +165,7 @@
 
 .a11yhubbr-submit-cta-box h2 {
   margin: 0 0 .5rem;
-  color: #0f1a2d;
+  color: var(--ah-refresh-text-dark);
 }
 
 .a11yhubbr-submit-cta-box p {

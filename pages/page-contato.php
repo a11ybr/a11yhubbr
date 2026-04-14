@@ -42,21 +42,21 @@ get_header();
         <p>Antes de enviar uma mensagem, veja também:</p>
 
         <div class="a11yhubbr-contact-shortcuts" aria-label="Atalhos relacionados">
-          <a class="a11yhubbr-contact-shortcut-card" href="http://a11ybr.local/diretrizes-da-comunidade">
+          <a class="a11yhubbr-contact-shortcut-card" href="<?php echo esc_url(home_url('/diretrizes-da-comunidade')); ?>">
             <span class="a11yhubbr-contact-shortcut-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
             <span class="a11yhubbr-contact-shortcut-content">
               <strong>Diretrizes da plataforma:</strong>
               <span>Leia as regras e combinados editoriais da comunidade.</span>
             </span>
           </a>
-          <a class="a11yhubbr-contact-shortcut-card" href="http://a11ybr.local/submeter#como-funciona">
+          <a class="a11yhubbr-contact-shortcut-card" href="<?php echo esc_url(home_url('/submeter')); ?>#como-funciona">
             <span class="a11yhubbr-contact-shortcut-icon" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>
             <span class="a11yhubbr-contact-shortcut-content">
               <strong>Como submeter conteúdo:</strong>
               <span>Entenda o fluxo de envio antes de entrar em contato.</span>
             </span>
           </a>
-          <a class="a11yhubbr-contact-shortcut-card" href="http://a11ybr.local/sobre#faq">
+          <a class="a11yhubbr-contact-shortcut-card" href="<?php echo esc_url(home_url('/sobre')); ?>#faq">
             <span class="a11yhubbr-contact-shortcut-icon" aria-hidden="true"><i class="fa-regular fa-circle-question"></i></span>
             <span class="a11yhubbr-contact-shortcut-content">
               <strong>Perguntas frequentes:</strong>
@@ -67,10 +67,21 @@ get_header();
 
 
         <p>Campos marcados com asterisco são obrigatórios.</p>
-        <form class="a11yhubbr-form-grid a11yhubbr-submit-form" method="post" action="mailto:a11yhubbr@gmail.com"
-          enctype="text/plain">
-          <label>Tipo de mensagem <span class="">*</span>
-            <select name="tipo_mensagem" required>
+
+        <div id="contact-feedback" class="a11yhubbr-contact-feedback" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+        <form id="hub-contact-form" class="a11yhubbr-form-grid a11yhubbr-submit-form" method="post" novalidate>
+          <?php wp_nonce_field('hub_contact_submit', 'hub_contact_nonce'); ?>
+
+          <!-- Honeypot anti-spam: deve ficar vazio -->
+          <div class="a11yhubbr-sr-only" aria-hidden="true">
+            <label for="contact-website">Deixe este campo em branco</label>
+            <input id="contact-website" type="text" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="a11yhubbr-field">
+            <label for="contact-tipo">Tipo de mensagem <span aria-hidden="true">*</span></label>
+            <select id="contact-tipo" name="tipo_mensagem" required aria-required="true">
               <option value="">Selecione</option>
               <option value="reportar-erro-em-conteudo">Reportar erro em conteúdo</option>
               <option value="sugerir-melhoria-ou-atualizacao">Sugerir melhoria ou atualização</option>
@@ -79,26 +90,33 @@ get_header();
               <option value="compartilhar-iniciativa-ou-recurso">Compartilhar iniciativa ou recurso</option>
               <option value="outro-assunto">Outro assunto</option>
             </select>
-          </label>
-          <label>Mensagem <span class="">*</span>
-            <textarea name="mensagem" rows="6" required></textarea>
-          </label>
-          <label>Link da página relacionada (opcional)
-            <input type="url" name="link" placeholder="https://...">
-          </label>
-          <label>Seu nome <span class="">*</span>
-            <input type="text" name="nome" required>
-          </label>
-          <label>Seu e-mail <span class="">*</span>
-            <input type="email" name="email" required>
-          </label>
+          </div>
+          <div class="a11yhubbr-field">
+            <label for="contact-mensagem">Mensagem <span aria-hidden="true">*</span></label>
+            <textarea id="contact-mensagem" name="mensagem" rows="6" required aria-required="true"></textarea>
+          </div>
+          <div class="a11yhubbr-field">
+            <label for="contact-link">Link da página relacionada (opcional)</label>
+            <input id="contact-link" type="url" name="link" placeholder="https://...">
+          </div>
+          <div class="a11yhubbr-field">
+            <label for="contact-nome">Seu nome <span aria-hidden="true">*</span></label>
+            <input id="contact-nome" type="text" name="nome" required aria-required="true" autocomplete="name">
+          </div>
+          <div class="a11yhubbr-field">
+            <label for="contact-email">Seu e-mail <span aria-hidden="true">*</span></label>
+            <input id="contact-email" type="email" name="email" required aria-required="true" autocomplete="email">
+          </div>
           <div class="a11yhubbr-form-actions">
-            <button type="submit" class="a11yhubbr-btn a11yhubbr-btn-primary">Enviar mensagem</button>
+            <button id="contact-submit" type="submit" class="a11yhubbr-btn a11yhubbr-btn-primary">
+              <span class="contact-btn-label">Enviar mensagem</span>
+              <span class="contact-btn-sending a11yhubbr-sr-only" aria-hidden="true">Enviando…</span>
+            </button>
           </div>
         </form>
 
         <p class="text-muted">
-        <small> O prazo médio de resposta é de até 7 dias úteis.</small></p>
+        <small>O prazo médio de resposta é de até 7 dias úteis.</small></p>
       </article>
 
       <aside class="a11yhubbr-side-card a11yhubbr-single-side">

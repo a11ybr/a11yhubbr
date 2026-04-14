@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 if (!defined('ABSPATH')) {
     exit;
@@ -77,10 +77,47 @@ function a11yhubbr_register_submission_cpts() {
 add_action('init', 'a11yhubbr_register_submission_cpts');
 
 
+function a11yhubbr_is_rest_request() {
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return true;
+    }
+
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '';
+    if ($request_uri === '') {
+        return false;
+    }
+
+    $rest_prefix = '/' . trim((string) rest_get_url_prefix(), '/') . '/';
+    return strpos($request_uri, $rest_prefix) !== false;
+}
+
+
+function a11yhubbr_is_public_post_request() {
+    if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) !== 'POST') {
+        return false;
+    }
+
+    if (is_admin()) {
+        return false;
+    }
+
+    if (function_exists('wp_doing_ajax') && wp_doing_ajax()) {
+        return false;
+    }
+
+    return !a11yhubbr_is_rest_request();
+}
+
+
 function a11yhubbr_flush_rewrite_rules_once() {
     if (get_option('a11yhubbr_rewrite_flushed_v2') === '1') {
         return;
     }
+
+    if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
+        return;
+    }
+
     flush_rewrite_rules(false);
     update_option('a11yhubbr_rewrite_flushed_v2', '1', false);
 }
@@ -224,7 +261,7 @@ function a11yhubbr_get_login_error_redirect($error_code, $redirect_target = '') 
 
 
 function a11yhubbr_handle_login_form() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['a11yhubbr_login_submit'])) {
+    if (!a11yhubbr_is_public_post_request() || !isset($_POST['a11yhubbr_login_submit'])) {
         return;
     }
 
@@ -275,7 +312,7 @@ add_action('init', 'a11yhubbr_handle_login_form');
 
 
 function a11yhubbr_handle_registration_form() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['a11yhubbr_register_submit'])) {
+    if (!a11yhubbr_is_public_post_request() || !isset($_POST['a11yhubbr_register_submit'])) {
         return;
     }
 
@@ -1415,7 +1452,7 @@ function a11yhubbr_get_redirect_target() {
 }
 
 function a11yhubbr_handle_form_submissions() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    if (!a11yhubbr_is_public_post_request()) {
         return;
     }
 

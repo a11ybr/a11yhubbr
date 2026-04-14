@@ -63,9 +63,7 @@ $tags = isset($args['tags']) && is_array($args['tags']) ? array_values(array_fil
 
     <?php if ($location !== ''): ?>
       <p class="a11yhubbr-event-card-location">
-        <?php if ($location !== ''): ?>
-          <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?php echo esc_html($location); ?></span>
-        <?php endif; ?>
+        <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <?php echo esc_html($location); ?></span>
       </p>
     <?php endif; ?>
 

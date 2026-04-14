@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 
 $defaults = array(
     'title' => 'Nada por aqui ainda',
-    'message' => 'Ainda nÃ£o hÃ¡ itens para exibir nesta seÃ§Ã£o.',
+    'message' => 'Ainda não há itens para exibir nesta seção.',
     'cta_label' => '',
     'cta_url' => '',
     'cta_class' => 'a11yhubbr-btn-alternative',

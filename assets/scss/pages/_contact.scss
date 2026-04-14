@@ -73,7 +73,7 @@
   height: 2.8rem;
   border-radius: .95rem;
   background: #e9edf2;
-  color: #293345;
+  color: var(--ah-refresh-neutral);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -97,6 +97,28 @@
   color: var(--ah-refresh-text-soft);
   font-size: .93rem;
   line-height: 1.5;
+}
+
+.a11yhubbr-contact-feedback {
+  border-radius: var(--a11y-radius);
+  padding: var(--a11y-toast-padding-y) var(--a11y-toast-padding-x);
+  border: 1px solid transparent;
+  box-shadow: var(--a11y-toast-shadow);
+  font-size: .97rem;
+  line-height: 1.5;
+  outline: none;
+}
+
+.a11yhubbr-contact-feedback.a11yhubbr-toast-success {
+  background: var(--a11y-toast-success-bg);
+  border-color: var(--a11y-toast-success-border);
+  color: var(--a11y-toast-success-text);
+}
+
+.a11yhubbr-contact-feedback.a11yhubbr-toast-error {
+  background: var(--a11y-toast-error-bg);
+  border-color: var(--a11y-toast-error-border);
+  color: var(--a11y-toast-error-text);
 }
 
 .a11yhubbr-contact-page .a11yhubbr-single-side {

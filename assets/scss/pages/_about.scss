@@ -51,7 +51,7 @@
   height: 2.8rem;
   border-radius: 1rem;
   background: #e9edf2;
-  color: #293345;
+  color: var(--ah-refresh-neutral);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -180,11 +180,11 @@
 
 .a11yhubbr-about-faq-group h3 {
   margin: 2rem 0 .5rem;
-  color: #0f1a2d;
+  color: var(--ah-refresh-text-dark);
 }
 
 .a11yhubbr-about-faq-group details {
-  border: 1px solid #d8dfec;
+  border: 1px solid var(--ah-refresh-border-light);
   border-radius: var(--a11y-radius);
   background: #fff;
   padding: .8rem .95rem;

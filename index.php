@@ -1,4 +1,9 @@
-<?php get_header(); ?>
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+get_header(); ?>
 <main id="conteudo-principal" tabindex="-1" class="a11yhubbr-site-main">
   <section class="a11yhubbr-section">
     <div class="a11yhubbr-container a11yhubbr-content-single">

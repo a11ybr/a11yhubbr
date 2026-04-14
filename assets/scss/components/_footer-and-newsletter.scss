@@ -112,7 +112,7 @@
 .a11yhubbr-footer-newsletter-form .newsletter-input {
   width: 100%;
   min-height: 3rem;
-  border: 1px solid #d8dfec;
+  border: 1px solid var(--ah-refresh-border-light);
   border-radius: var(--a11y-radius);
   padding: .75rem .95rem;
   font-size: 1rem;
@@ -325,7 +325,7 @@
 
 .a11yhubbr-site-footer {
   margin-top: 0;
-  border-top: 1px solid #e1e6ef;
+  border-top: 1px solid var(--ah-refresh-border-muted);
   background: #fff;
 }
 
@@ -373,7 +373,7 @@
 }
 
 .a11yhubbr-footer-list a {
-  color: #0f1a2d;
+  color: var(--ah-refresh-text-dark);
   font-size: .92rem;
   line-height: 1.35;
   text-decoration: none;
@@ -384,8 +384,22 @@
   text-decoration: underline;
 }
 
+.a11yhubbr-footer-copy a {
+  color: #2b3d69;
+  font-weight: var(--a11y-weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  font-size: .92rem;
+}
+
+.a11yhubbr-footer-copy a:hover,
+.a11yhubbr-footer-copy a:focus-visible {
+  color: var(--a11y-primary);
+  text-decoration-thickness: 2px;
+}
+
 .a11yhubbr-footer-copy {
-  border-top: 1px solid #e1e6ef;
+  border-top: 1px solid var(--ah-refresh-border-muted);
   padding-top: 1.35rem;
   padding-bottom: 1.6rem;
   color: var(--ah-refresh-text-muted);
