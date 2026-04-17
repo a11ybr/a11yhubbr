@@ -108,6 +108,12 @@ body.home .a11yhubbr-home-hero h1 {
   line-height: 1;
 }
 
+// Badge dentro do hero: cor com contraste adequado sobre o fundo verde-escuro
+// #2b3d69 sobre #e8edf9 (fundo padrão do badge) = ~8.72:1 (WCAG AAA)
+.a11yhubbr-home-hero .a11yhubbr-content-item-badge {
+  color: #2b3d69;
+}
+
 .a11yhubbr-home-hero p,
 .a11yhubbr-page-header-summary {
   max-width: 38rem;

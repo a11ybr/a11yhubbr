@@ -23,7 +23,7 @@ get_header();
   <?php
   a11yhubbr_render_page_header(array(
     'breadcrumbs' => array(
-      array('label' => 'Pagina inicial', 'url' => home_url('/')),
+      array('label' => 'Página inicial', 'url' => home_url('/')),
       array('label' => 'Submeter'),
     ),
     'icon' => 'fa-solid fa-arrow-up-from-bracket',

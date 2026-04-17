@@ -10,7 +10,7 @@ Tested up to: 6.8
 Requires PHP: 8.0
 Text Domain: a11yhubbr
 */
-
+ 
 // Fontes e tokens base
 @use 'base/tokens-and-reset';
 @use 'base/global-tuning';
@@ -20,7 +20,7 @@ Text Domain: a11yhubbr
 @use 'layout/section-shell';
 @use 'layout/legacy-compat';
 
-// Contextos de pagina
+// Contextos de pagina 
 @use 'pages/home';
 @use 'pages/archives';
 @use 'pages/about';

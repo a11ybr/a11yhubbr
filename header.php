@@ -26,8 +26,9 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
   <div class="a11yhubbr-site-header">
     <div class="a11yhubbr-container a11yhubbr-header-inner">
       <a class="a11yhubbr-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="A11YBR - P&aacute;gina inicial">
-        <span class="a11yhubbr-logo" aria-hidden="true">
-          <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/logo-a11ybr.svg'); ?>" alt=""
+        <span class="a11yhubbr-logo">
+          <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/logo-a11ybr.svg'); ?>"
+            alt="Comunidade de Acessibilidade Digital Brasileira"
             loading="eager" decoding="async">
         </span>
       </a>

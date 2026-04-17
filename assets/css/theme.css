@@ -395,6 +395,11 @@ body.a11yhubbr-context-rede .a11yhubbr-site-header {
   flex-wrap: wrap;
 }
 
+/* Badge dentro do hero: força cor com contraste adequado sobre o fundo azul-escuro */
+.a11yhubbr-home-hero .a11yhubbr-content-item-badge {
+  color: #2b3d69;
+}
+
 .a11yhubbr-home-collab-badge {
   display: inline-flex;
   align-items: center;
@@ -2703,9 +2708,12 @@ body.a11yhubbr-context-rede .a11yhubbr-section-cta .a11yhubbr-btn-context-second
   margin: 0 0 .9rem;
 }
 
-.a11yhubbr-home-events .a11yhubbr-event-card .a11yhubbr-content-item-badge{    background: #eaf7f0;
-    border-color: #bfe3cd;
-    color: #1f7a53;}
+/* Contraste mínimo 4.5:1: #1b6b48 sobre #eaf7f0 ≈ 5.96:1 (WCAG AA) */
+.a11yhubbr-home-events .a11yhubbr-event-card .a11yhubbr-content-item-badge {
+  background: #eaf7f0;
+  border-color: #bfe3cd;
+  color: #1b6b48;
+}
 
 
 .a11yhubbr-card-base {
@@ -2977,11 +2985,13 @@ body.a11yhubbr-context-rede .a11yhubbr-section-cta .a11yhubbr-btn-context-second
   min-width: 0;
 }
 
+/* Contraste mínimo 4.5:1: #4a5e7c sobre #fff ≈ 6.59:1 (WCAG AA) */
 .a11yhubbr-event-card-date,
 .a11yhubbr-event-card-time {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+  color: #4a5e7c;
 }
 
 .a11yhubbr-event-card-body {

@@ -80,6 +80,13 @@
   color: var(--ah-refresh-neutral);
 }
 
+// Override verde para badge de eventos na home: contraste 5.96:1 sobre #eaf7f0 (WCAG AA)
+.a11yhubbr-home-events .a11yhubbr-event-card .a11yhubbr-content-item-badge {
+  background: #eaf7f0;
+  border-color: #bfe3cd;
+  color: #1b6b48;
+}
+
 .a11yhubbr-content-item-badge {
   display: inline-flex;
   align-items: center;
@@ -100,6 +107,13 @@
 .a11yhubbr-content-card-author,
 .a11yhubbr-community-location {
   color: var(--ah-refresh-text-muted);
+}
+
+// Data e hora do event-card: contraste 6.59:1 sobre branco (WCAG AA)
+// Sobrescreve --ah-refresh-text-muted (#7d8795) que falha no contraste (3.63:1)
+.a11yhubbr-event-card-date,
+.a11yhubbr-event-card-time {
+  color: #4a5e7c;
 }
 
 .a11yhubbr-content-card-excerpt,

@@ -4329,6 +4329,10 @@ body.home .a11yhubbr-home-hero h1 {
   line-height: 1;
 }
 
+.a11yhubbr-home-hero .a11yhubbr-content-item-badge {
+  color: #2b3d69;
+}
+
 .a11yhubbr-home-hero p,
 .a11yhubbr-page-header-summary {
   max-width: 38rem;
@@ -4850,6 +4854,12 @@ body.home .a11yhubbr-home-hero h1 {
   color: var(--ah-refresh-neutral);
 }
 
+.a11yhubbr-home-events .a11yhubbr-event-card .a11yhubbr-content-item-badge {
+  background: #eaf7f0;
+  border-color: #bfe3cd;
+  color: #1b6b48;
+}
+
 .a11yhubbr-content-item-badge {
   display: inline-flex;
   align-items: center;
@@ -4870,6 +4880,11 @@ body.home .a11yhubbr-home-hero h1 {
 .a11yhubbr-content-card-author,
 .a11yhubbr-community-location {
   color: var(--ah-refresh-text-muted);
+}
+
+.a11yhubbr-event-card-date,
+.a11yhubbr-event-card-time {
+  color: #4a5e7c;
 }
 
 .a11yhubbr-content-card-excerpt,
