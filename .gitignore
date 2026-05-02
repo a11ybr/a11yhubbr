@@ -28,3 +28,8 @@ dist-ssr
 # Source maps
 *.css.map
 *.js.map
+
+
+/node_modules
+.claude
+.codex
