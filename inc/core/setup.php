@@ -4,22 +4,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function a11yhubbr_is_frontend_runtime_request() {
-    if (is_admin()) {
-        return false;
-    }
-
-    if (defined('REST_REQUEST') && REST_REQUEST) {
-        return false;
-    }
-
-    if (function_exists('wp_doing_ajax') && wp_doing_ajax()) {
-        return false;
-    }
-
-    return true;
-}
-
 function a11yhubbr_enqueue_assets() {
     $theme = wp_get_theme();
     // `style.css` is the Sass build output and the canonical frontend stylesheet.
@@ -86,6 +70,7 @@ function a11yhubbr_enqueue_assets() {
         wp_script_add_data('a11yhubbr-contact', 'strategy', 'defer');
         wp_localize_script('a11yhubbr-contact', 'hubContactData', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('hub_contact_submit'),
         ));
     }
 }
@@ -108,7 +93,7 @@ add_filter('wp_resource_hints', 'a11yhubbr_resource_hints', 10, 2);
 
 
 function a11yhubbr_optimize_frontend_head() {
-    if (!a11yhubbr_is_frontend_runtime_request()) {
+    if (!a11yhubbr_is_frontend_request_context()) {
         return;
     }
 
@@ -137,7 +122,7 @@ add_filter('tiny_mce_plugins', 'a11yhubbr_disable_emoji_tinymce');
 
 
 function a11yhubbr_optimize_frontend_styles() {
-    if (!a11yhubbr_is_frontend_runtime_request()) {
+    if (!a11yhubbr_is_frontend_request_context()) {
         return;
     }
 
@@ -152,7 +137,7 @@ add_action('wp_print_styles', 'a11yhubbr_optimize_frontend_styles', 100);
 
 
 function a11yhubbr_disable_block_frontend_overhead() {
-    if (!a11yhubbr_is_frontend_runtime_request()) {
+    if (!a11yhubbr_is_frontend_request_context()) {
         return;
     }
 
@@ -164,7 +149,7 @@ add_action('wp_loaded', 'a11yhubbr_disable_block_frontend_overhead');
 
 
 function a11yhubbr_optimize_frontend_scripts() {
-    if (!a11yhubbr_is_frontend_runtime_request()) {
+    if (!a11yhubbr_is_frontend_request_context()) {
         return;
     }
 
@@ -182,6 +167,16 @@ function a11yhubbr_theme_setup() {
     add_theme_support('post-thumbnails');
     add_theme_support('editor-styles');
     add_theme_support('responsive-embeds');
+    add_theme_support('html5', array(
+        'search-form',
+        'comment-form',
+        'comment-list',
+        'gallery',
+        'caption',
+        'script',
+        'style',
+    ));
+    add_editor_style('style.css');
     register_nav_menus(array(
         'primary' => __('Menu Primario', 'a11yhubbr'),
         'footer_platform'  => __('Rodape - Plataforma', 'a11yhubbr'),

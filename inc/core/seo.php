@@ -56,7 +56,10 @@ function a11yhubbr_inject_seo_head() {
     echo '<meta property="og:locale"      content="pt_BR">' . "\n";
 
     if ($image) {
+        $img_ext  = strtolower(pathinfo(wp_parse_url($image['url'], PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
+        $img_mime = ($img_ext === 'jpg' || $img_ext === 'jpeg') ? 'image/jpeg' : 'image/' . ($img_ext ?: 'png');
         echo '<meta property="og:image"        content="' . esc_url($image['url']) . '">' . "\n";
+        echo '<meta property="og:image:type"   content="' . esc_attr($img_mime) . '">' . "\n";
         echo '<meta property="og:image:width"  content="' . esc_attr((string) $image['width']) . '">' . "\n";
         echo '<meta property="og:image:height" content="' . esc_attr((string) $image['height']) . '">' . "\n";
         echo '<meta property="og:image:alt"    content="' . esc_attr($image['alt']) . '">' . "\n";
@@ -64,10 +67,12 @@ function a11yhubbr_inject_seo_head() {
 
     // Twitter Card
     echo '<meta name="twitter:card"        content="summary_large_image">' . "\n";
+    echo '<meta name="twitter:site"        content="@a11yhubbr">' . "\n";
     echo '<meta name="twitter:title"       content="' . esc_attr($title) . '">' . "\n";
     echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
     if ($image) {
-        echo '<meta name="twitter:image"   content="' . esc_url($image['url']) . '">' . "\n";
+        echo '<meta name="twitter:image"     content="' . esc_url($image['url']) . '">' . "\n";
+        echo '<meta name="twitter:image:alt" content="' . esc_attr($image['alt']) . '">' . "\n";
     }
 }
 
@@ -163,7 +168,15 @@ function a11yhubbr_seo_get_canonical() {
         return (string) get_permalink();
     }
     if (is_front_page()) {
-        return home_url('/');
+        $paged = (int) get_query_var('paged');
+        return $paged > 1 ? (string) get_pagenum_link($paged) : home_url('/');
+    }
+    if (is_post_type_archive() || is_category() || is_tag() || is_tax()) {
+        $paged = (int) get_query_var('paged');
+        return $paged > 1 ? (string) get_pagenum_link($paged) : (string) get_term_link(get_queried_object());
+    }
+    if (is_page()) {
+        return (string) get_permalink();
     }
     global $wp;
     return home_url(add_query_arg(array(), $wp->request));
@@ -273,7 +286,7 @@ function a11yhubbr_schema_organization() {
             'url'   => get_template_directory_uri() . '/assets/img/logo-a11ybr.svg',
         ),
         'sameAs'   => array(
-            'https://github.com/a11yhubbr',
+            'https://github.com/wagnerbeethoven/a11yhubbr',
             'https://bsky.app/profile/a11yhubbr.bsky.social',
             'https://x.com/a11yhubbr',
             'https://linkedin.com/company/a11yhubbr',
@@ -393,26 +406,31 @@ function a11yhubbr_schema_person() {
     $role         = get_post_meta($post->ID, '_a11yhubbr_role', true);
     $social_links = get_post_meta($post->ID, '_a11yhubbr_social_links', true);
 
-    $schema = array(
-        '@context'         => 'https://schema.org',
-        '@type'            => array('Person', 'ProfilePage'),
-        'name'             => get_the_title(),
-        'url'              => get_permalink(),
-        'inLanguage'       => 'pt-BR',
-        'mainEntityOfPage' => get_permalink(),
+    $person = array(
+        '@type' => 'Person',
+        '@id'   => get_permalink() . '#person',
+        'name'  => get_the_title(),
+        'url'   => get_permalink(),
     );
 
-    if ($bio)  $schema['description'] = wp_strip_all_tags((string) $bio);
-    if ($role) $schema['jobTitle']    = sanitize_text_field((string) $role);
+    if ($bio)  $person['description'] = wp_strip_all_tags((string) $bio);
+    if ($role) $person['jobTitle']    = sanitize_text_field((string) $role);
 
     $image = a11yhubbr_seo_get_image();
-    if ($image) $schema['image'] = $image['url'];
+    if ($image) $person['image'] = $image['url'];
 
     if (is_array($social_links) && !empty($social_links)) {
-        $schema['sameAs'] = array_map('esc_url', $social_links);
+        $person['sameAs'] = array_map('esc_url', $social_links);
     }
 
-    return $schema;
+    return array(
+        '@context'   => 'https://schema.org',
+        '@type'      => 'ProfilePage',
+        'url'        => get_permalink(),
+        'inLanguage' => 'pt-BR',
+        'name'       => get_the_title(),
+        'mainEntity' => $person,
+    );
 }
 
 

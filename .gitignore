@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+
+# Source maps
+*.css.map
+*.js.map

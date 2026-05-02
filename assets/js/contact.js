@@ -57,6 +57,7 @@
 
     var data = new FormData(form);
     data.append('action', 'hub_contact_submit');
+    data.append('nonce', hubContactData.nonce);
 
     fetch(hubContactData.ajaxUrl, {
       method: 'POST',

@@ -17,15 +17,15 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
 
 <body <?php body_class(); ?>>
   <?php wp_body_open(); ?>
-  <nav class="a11yhubbr-skip-links" aria-label="Atalhos de navega&ccedil;&atilde;o">
-    <a href="#conteudo-principal" class="a11yhubbr-skip-link">Ir para o conte&uacute;do [1]</a>
+  <nav class="a11yhubbr-skip-links" aria-label="Atalhos de navegação">
+    <a href="#conteudo-principal" class="a11yhubbr-skip-link">Ir para o conteúdo [1]</a>
     <a href="#menu-principal" class="a11yhubbr-skip-link">Ir para o menu principal [2]</a>
     <a href="#pesquisa-site" class="a11yhubbr-skip-link">Ir para pesquisa [3]</a>
-    <a href="#rodape-site" class="a11yhubbr-skip-link">Ir para o rodap&eacute; [4]</a>
+    <a href="#rodape-site" class="a11yhubbr-skip-link">Ir para o rodapé [4]</a>
   </nav>
   <div class="a11yhubbr-site-header">
     <div class="a11yhubbr-container a11yhubbr-header-inner">
-      <a class="a11yhubbr-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="A11YBR - P&aacute;gina inicial">
+      <a class="a11yhubbr-brand" href="<?php echo esc_url(home_url('/')); ?>" aria-label="A11YBR - Página inicial">
         <span class="a11yhubbr-logo">
           <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/logo-a11ybr.svg'); ?>"
             alt="Comunidade de Acessibilidade Digital Brasileira"
@@ -39,7 +39,7 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
       </button>
 
       <div class="a11yhubbr-header-panel" id="a11yhubbr-header-panel">
-        <nav id="menu-principal" aria-label="Navega&ccedil;&atilde;o principal" class="a11yhubbr-nav" tabindex="-1">
+        <nav id="menu-principal" aria-label="Navegação principal" class="a11yhubbr-nav" tabindex="-1">
           <?php
           wp_nav_menu(array(
             'theme_location' => 'primary',
@@ -50,7 +50,7 @@ $search_term_header = isset($_GET['busca']) ? sanitize_text_field(wp_unslash($_G
           ?>
           <?php if (!has_nav_menu('primary')): ?>
             <ul class="a11yhubbr-menu">
-              <li><a href="<?php echo esc_url(home_url('/conteudos')); ?>">Conte&uacute;dos</a></li>
+              <li><a href="<?php echo esc_url(home_url('/conteudos')); ?>">Conteúdos</a></li>
               <li><a href="<?php echo esc_url(home_url('/rede')); ?>">Rede</a></li>
               <li><a href="<?php echo esc_url(home_url('/eventos')); ?>">Eventos</a></li>
               <li><a href="<?php echo esc_url(home_url('/sobre')); ?>">Sobre</a></li>

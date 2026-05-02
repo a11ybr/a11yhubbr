@@ -11,7 +11,6 @@ Tested up to: 6.8
 Requires PHP: 8.0
 Text Domain: a11yhubbr
 */
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 :root {
   --a11y-primary: #2f7d57;
   --a11y-primary-2: #276849;

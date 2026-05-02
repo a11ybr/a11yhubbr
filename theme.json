@@ -11,23 +11,28 @@
       "custom": true,
       "customGradient": true,
       "palette": [
-        { "slug": "primary", "name": "Primary", "color": "#132d6b" },
-        { "slug": "primary-2", "name": "Primary 2", "color": "#0f2558" },
-        { "slug": "text", "name": "Text", "color": "#0f1a2d" },
-        { "slug": "muted", "name": "Muted", "color": "#596782" },
-        { "slug": "surface", "name": "Surface", "color": "#ffffff" },
-        { "slug": "soft", "name": "Soft", "color": "#f5f7fb" },
-        { "slug": "soft-2", "name": "Soft 2", "color": "#e9eefb" },
-        { "slug": "border", "name": "Border", "color": "#d8dfec" },
-        { "slug": "success", "name": "Success", "color": "#3ca174" },
-        { "slug": "danger", "name": "Danger", "color": "#d41745" },
-        { "slug": "brand-yellow", "name": "Brand Yellow", "color": "#fad47a" }
+        { "slug": "primary",          "name": "Primary",          "color": "#2f7d57" },
+        { "slug": "primary-2",        "name": "Primary 2",        "color": "#276849" },
+        { "slug": "text",             "name": "Text",             "color": "#2a2f2d" },
+        { "slug": "text-soft",        "name": "Text Soft",        "color": "#59615e" },
+        { "slug": "surface",          "name": "Surface",          "color": "#ffffff" },
+        { "slug": "soft",             "name": "Soft",             "color": "#f1ede4" },
+        { "slug": "border",           "name": "Border",           "color": "#d9d4c7" },
+        { "slug": "highlight",        "name": "Highlight",        "color": "#e3b72f" },
+        { "slug": "highlight-2",      "name": "Highlight 2",      "color": "#d4a419" },
+        { "slug": "highlight-soft",   "name": "Highlight Soft",   "color": "#f8edbf" },
+        { "slug": "danger",           "name": "Danger",           "color": "#d41745" }
       ],
       "gradients": [
         {
-          "slug": "brand-blue",
-          "name": "Brand Blue",
-          "gradient": "linear-gradient(140deg, #102a63 0%, #173e88 100%)"
+          "slug": "brand-green",
+          "name": "Brand Green",
+          "gradient": "linear-gradient(140deg, #276849 0%, #2f7d57 100%)"
+        },
+        {
+          "slug": "brand-yellow",
+          "name": "Brand Yellow",
+          "gradient": "linear-gradient(140deg, #d4a419 0%, #e3b72f 100%)"
         }
       ]
     },
@@ -35,11 +40,11 @@
       "units": ["px", "rem", "%", "vw", "vh"],
       "spacingSizes": [
         { "slug": "2xs", "name": "2XS", "size": "0.25rem" },
-        { "slug": "xs", "name": "XS", "size": "0.5rem" },
-        { "slug": "sm", "name": "SM", "size": "0.75rem" },
-        { "slug": "md", "name": "MD", "size": "1rem" },
-        { "slug": "lg", "name": "LG", "size": "1.5rem" },
-        { "slug": "xl", "name": "XL", "size": "2rem" },
+        { "slug": "xs",  "name": "XS",  "size": "0.5rem" },
+        { "slug": "sm",  "name": "SM",  "size": "0.75rem" },
+        { "slug": "md",  "name": "MD",  "size": "1rem" },
+        { "slug": "lg",  "name": "LG",  "size": "1.5rem" },
+        { "slug": "xl",  "name": "XL",  "size": "2rem" },
         { "slug": "2xl", "name": "2XL", "size": "3rem" }
       ]
     },
@@ -47,17 +52,22 @@
       "fluid": true,
       "fontFamilies": [
         {
-          "slug": "open-sans",
-          "name": "Open Sans",
-          "fontFamily": "'Open Sans', system-ui, -apple-system, 'Segoe UI', sans-serif"
+          "slug": "dm-sans",
+          "name": "DM Sans",
+          "fontFamily": "'DM Sans', system-ui, -apple-system, sans-serif"
+        },
+        {
+          "slug": "space-grotesk",
+          "name": "Space Grotesk",
+          "fontFamily": "'Space Grotesk', system-ui, sans-serif"
         }
       ],
       "fontSizes": [
-        { "slug": "xs", "name": "XS", "size": "0.75rem" },
-        { "slug": "sm", "name": "SM", "size": "0.875rem" },
-        { "slug": "md", "name": "MD", "size": "1rem" },
-        { "slug": "lg", "name": "LG", "size": "1.125rem" },
-        { "slug": "xl", "name": "XL", "size": "1.5rem" },
+        { "slug": "xs",  "name": "XS",  "size": "0.75rem" },
+        { "slug": "sm",  "name": "SM",  "size": "0.875rem" },
+        { "slug": "md",  "name": "MD",  "size": "1rem" },
+        { "slug": "lg",  "name": "LG",  "size": "1.125rem" },
+        { "slug": "xl",  "name": "XL",  "size": "1.5rem" },
         { "slug": "2xl", "name": "2XL", "size": "2rem" },
         { "slug": "3xl", "name": "3XL", "size": "2.75rem" }
       ]
@@ -69,7 +79,7 @@
       "text": "var(--wp--preset--color--text)"
     },
     "typography": {
-      "fontFamily": "var(--wp--preset--font-family--open-sans)",
+      "fontFamily": "var(--wp--preset--font-family--dm-sans)",
       "lineHeight": "1.55"
     },
     "elements": {
@@ -80,13 +90,14 @@
       },
       "heading": {
         "typography": {
+          "fontFamily": "var(--wp--preset--font-family--space-grotesk)",
           "fontWeight": "700",
           "lineHeight": "1.2"
         }
       },
       "button": {
         "border": {
-          "radius": "0.625rem"
+          "radius": "0.25rem"
         },
         "color": {
           "background": "var(--wp--preset--color--primary)",
@@ -97,10 +108,10 @@
         },
         "spacing": {
           "padding": {
-            "top": "0.75rem",
-            "right": "1rem",
-            "bottom": "0.75rem",
-            "left": "1rem"
+            "top": "0.72rem",
+            "right": "1.12rem",
+            "bottom": "0.72rem",
+            "left": "1.12rem"
           }
         }
       }
