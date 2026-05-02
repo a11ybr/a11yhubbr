@@ -184,7 +184,24 @@ get_header();
               </div>
             </section>
           <?php endif; ?>
-
+  <?php if (!empty($slots)): ?>
+            <div class="a11yhubbr-single-slot-list">
+              <h3>Datas e horarios</h3>
+              <ul>
+                <?php foreach ($slots as $index => $slot): ?>
+                  <?php
+                  $start = isset($slot['start']) ? $format_slot($slot['start']) : '';
+                  $end = isset($slot['end']) ? $format_slot($slot['end']) : '';
+                  ?>
+                  <li>
+                    <strong><?php echo esc_html('Data ' . ((int) $index + 1)); ?></strong>
+                    <span><?php echo esc_html($start !== '' ? $start : '-'); ?></span>
+                    <span><?php echo esc_html($end !== '' ? 'ate ' . $end : ''); ?></span>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+            </div>
+          <?php endif; ?>
           <?php if (!empty($tags) && !is_wp_error($tags)): ?>
             <h3>Tags</h3>
             <div class="a11yhubbr-single-tags">
@@ -207,24 +224,7 @@ get_header();
             </div>
           <?php endif; ?>
 
-          <?php if (!empty($slots)): ?>
-            <div class="a11yhubbr-single-slot-list">
-              <h3>Datas e horarios</h3>
-              <ul>
-                <?php foreach ($slots as $index => $slot): ?>
-                  <?php
-                  $start = isset($slot['start']) ? $format_slot($slot['start']) : '';
-                  $end = isset($slot['end']) ? $format_slot($slot['end']) : '';
-                  ?>
-                  <li>
-                    <strong><?php echo esc_html('Data ' . ((int) $index + 1)); ?></strong>
-                    <span><?php echo esc_html($start !== '' ? $start : '-'); ?></span>
-                    <span><?php echo esc_html($end !== '' ? 'ate ' . $end : ''); ?></span>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
-            </div>
-          <?php endif; ?>
+        
         </article>
 
         <aside class="a11yhubbr-single-aside-stack">
