@@ -22,6 +22,7 @@ function a11yhubbr_is_frontend_runtime_request() {
 
 function a11yhubbr_enqueue_assets() {
     $theme = wp_get_theme();
+    // `style.css` is the Sass build output and the canonical frontend stylesheet.
     $css_path = get_template_directory() . '/style.css';
     $site_js_path = get_template_directory() . '/assets/js/site.js';
     $submissions_js_path = get_template_directory() . '/assets/js/submissions.js';
@@ -32,16 +33,9 @@ function a11yhubbr_enqueue_assets() {
     $contact_js_ver = file_exists($contact_js_path) ? (string) filemtime($contact_js_path) : $theme->get('Version');
 
     wp_enqueue_style(
-        'a11yhubbr-fonts',
-        'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-        array(),
-        null
-    );
-
-    wp_enqueue_style(
         'a11yhubbr-style',
         get_stylesheet_uri(),
-        array('a11yhubbr-fonts'),
+        array(),
         $css_ver
     );
 
@@ -108,7 +102,6 @@ function a11yhubbr_resource_hints($hints, $relation_type) {
         'href' => 'https://fonts.gstatic.com',
         'crossorigin' => 'anonymous',
     );
-    $hints[] = 'https://cdnjs.cloudflare.com';
     return $hints;
 }
 add_filter('wp_resource_hints', 'a11yhubbr_resource_hints', 10, 2);
